@@ -37,7 +37,6 @@ public class ColorDemo implements EntryPoint {
 
     public void onModuleLoad() {
 	
-	// create a dialog that we'll reuse
 	Panel controls = RootPanel.get("controls");
 	
 	startColor = createTextBox("rgba(255,255,0,1)");
