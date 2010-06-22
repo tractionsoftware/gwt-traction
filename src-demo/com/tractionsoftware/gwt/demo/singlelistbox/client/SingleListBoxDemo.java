@@ -57,7 +57,6 @@ public class SingleListBoxDemo implements EntryPoint {
 	toggle.add(createSetAddMissingValue(true));
 	toggle.add(createSetAddMissingValue(false));
 	
-	// create a dialog that we'll reuse
 	Panel controls1 = RootPanel.get("controls1");
 	controls1.add(createSelectButton("Bananas"));
 	controls1.add(createSelectButton("Pears"));
