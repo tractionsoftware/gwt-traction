@@ -15,8 +15,6 @@
  */
 package com.tractionsoftware.gwt.user.client.util;
 
-import com.google.gwt.core.client.GWT;
-
 /**
  * Represents an rgba color. Immutable.
  */
@@ -97,12 +95,7 @@ public class RgbaColor {
     public static final RgbaColor fromRgba(String rgba) {
 	if (rgba.length() == 0) return getDefaultColor();
 	
-	GWT.log("Parsing: "+rgba, null);
-
 	String[] parts = getRgbaParts(rgba).split(",");
-
-	GWT.log("Parsing: parts="+parts.length, null);
-
 	if (parts.length == 4) {
 	    return new RgbaColor(parseInt(parts[0]),
 				 parseInt(parts[1]),
