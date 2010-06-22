@@ -1,0 +1,10 @@
+/*
+ * 
+ * Shared styles for gwt-traction demos
+ *
+ */
+html { background: #eee; padding: 20px; }
+body { font-family: sans-serif; background: #fff; padding: 20px; }
+a { color: #369; outline: none; text-decoration: none; }
+h2 { margin-top: 0; }
+.desc { float: right; width: 300px; background: #eee; padding: 20px; margin-top: 0; }
