@@ -1,0 +1,233 @@
+<project name="common">
+  <!--##########################
+    Detect current build configuration.
+   -->
+
+  <!-- Platform identification -->
+  <condition property="build.host.islinux">
+    <and>
+      <os family="unix" />
+      <not>
+        <contains string="${os.name}" substring="mac" casesensitive="false" />
+      </not>
+    </and>
+  </condition>
+  <condition property="gwt.platform" value="linux">
+    <isset property="build.host.islinux" />
+  </condition>
+
+  <condition property="build.host.ismac">
+    <and>
+      <os family="unix" />
+      <contains string="${os.name}" substring="mac" casesensitive="false" />
+    </and>
+  </condition>
+  <condition property="gwt.platform" value="mac">
+    <isset property="build.host.ismac" />
+  </condition>
+
+  <condition property="build.host.iswindows">
+    <os family="windows" />
+  </condition>
+  <condition property="gwt.platform" value="windows">
+    <isset property="build.host.iswindows" />
+  </condition>
+  <fail unless="gwt.platform" message="Building on ${os.name} is not supported" />
+
+  <condition property="junit.platform.args" value="-XstartOnFirstThread" else="">
+    <isset property="build.host.ismac" />
+  </condition>
+
+  <!--########################## 
+    Set up properties.
+   -->
+
+
+  <!-- Global Properties -->
+  <property environment="env" />
+
+
+  <!-- All the project specific locations-->
+  <property name="project.build" location="${project.root}/build" />
+  <property name="project.out" location="${project.build}/out" />
+  <property name="project.dist" location="${project.build}/dist" />
+  <property name="project.demos" location="${project.build}/out/demos" />
+  <property name="project.src" location="${project.root}/src" />
+
+  <!-- GWT specific properties -->
+  <property name="gwt.threadsPerProcessor" value="1" />
+  <property name="gwt.threadCount" value="1" />
+  <condition property="gwt.tools" value="${env.GWT_TOOLS}">
+    <isset property="env.GWT_TOOLS" />
+  </condition>
+
+  <condition property="gwt.home" value="${env.GWT_HOME}">
+    <isset property="env.GWT_HOME" />
+  </condition>
+
+  <!-- If not set, try to set tools to a sibling of the project root -->
+  <property name="gwt.tools" value="${project.root}/../tools" />
+  <property name="gwt.tools.lib" location="${gwt.tools}/lib" />
+  <property name="gwt.tools.antlib" location="${gwt.tools}/antlib" />
+  <property name="gwt.dev.jar" location="${gwt.home}/gwt-dev.jar" />
+  <property name="gwt.user.jar" location="${gwt.home}/gwt-user.jar" />
+
+
+
+
+  <!-- Sanity checks -->
+  <available file="${gwt.tools}" type="dir" property="gwt.tools.exists" />
+  <fail unless="gwt.tools.exists"
+        message="can't find gwt tools, please set gwt.tools property (ant -Dgwt.tools=...) or define the GWT_TOOLS environment variable" />
+
+  <available file="${gwt.tools.lib}" type="dir" property="gwt.tools.lib.exists" />
+  <fail unless="gwt.tools.lib.exists"
+        message="can't find gwt tools lib, check your gwt tools directory '${gwt.tools}'" />
+
+  <fail unless="gwt.home"
+        message="can't find gwt home, please set gwt.home property (ant -Dgwt.home=...) or define the GWT_HOME environment variable" />
+
+  <available file="${gwt.user.jar}" type="file" property="gwt.user.exists" />
+  <fail unless="gwt.user.exists"
+        message="gwt user jar does not appear to exist, check your gwt home directory '${gwt.home}'" />
+
+
+  <!-- Javac properties used to invoke java-->
+  <property name="javac.debug" value="true" />
+  <property name="javac.debuglevel" value="lines,vars,source" />
+  <property name="javac.encoding" value="utf-8" />
+  <property name="javac.source" value="1.5" />
+  <property name="javac.target" value="1.5" />
+  <property name="javac.nowarn" value="true" />
+
+  <!-- Java properties used to run java -->
+  <property name="java.stackSize" value="1m" />
+
+
+  <!--########################## 
+    Junit Support
+   -->
+
+  <!-- Headless mode keeps the hosted mode browser and log window
+      from popping up during a unit test run. This is usually desirable,
+      but the WebKit layout engine performs some optimizations in
+      headless mode that causes some GWT unit tests to break.  The
+      solution for the time being is to turn off headless mode on
+      the mac.
+      -->
+  <condition property="junit.headless">
+    <not>
+      <isset property="build.host.ismac" />
+    </not>
+  </condition>
+  <condition property="junit.notheadless.arg" value="-notHeadless" else="">
+    <not>
+      <isset property="junit.headless" />
+    </not>
+  </condition>
+
+
+  <!-- Project specific junit properties -->
+  <property name="project.test" location="${project.build}/test" />
+  <property name="project.test.bin" location="${project.test}/bin" />
+  <property name="project.test.results" location="${project.test}/results" />
+
+  <!-- GWT Junit testing support -->
+  <property name="gwt.junit.port" value="auto" />
+  <property name="gwt.junit.testcase.includes" value="**/*Test.class" />
+
+  <!-- Pulls in tasks defined in ant-contrib, i.e. foreach -->
+  <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+      <pathelement location="${gwt.tools.antlib}/ant-contrib-1.0b3.jar" />
+    </classpath>
+  </taskdef>
+
+  <!-- Global Custom Tasks -->
+  <presetdef name="gwt.ant">
+    <ant inheritall="false" target="${project.target}">
+      <propertyset>
+        <propertyref name="gwt.junit.port" />
+        <propertyref name="gwt.remote.browsers" />
+      </propertyset>
+    </ant>
+  </presetdef>
+
+
+  <presetdef name="gwt.javac">
+    <javac srcdir="${project.src}"
+           destdir="${project.bin}"
+           debug="${javac.debug}"
+           debuglevel="${javac.debuglevel}"
+           source="${javac.source}"
+           target="${javac.target}"
+           nowarn="${javac.nowarn}"
+           encoding="${javac.encoding}" />
+  </presetdef>
+
+  <macrodef name="gwt.junit">
+    <attribute name="test.args" default="" />
+    <attribute name="test.out" default="" />
+    <attribute name="test.reports" default="@{test.out}/reports" />
+    <attribute name="test.cases" default="" />
+    <attribute name="test.heap" default="512M" />
+
+    <element name="extraclasspaths" optional="true" />
+    <sequential>
+      <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
+        <classpath>
+          <pathelement location="${gwt.tools.lib}/junit/junit-3.8.1.jar" />
+          <pathelement location="${gwt.tools.antlib}/ant-junit-1.6.5.jar" />
+        </classpath>
+      </taskdef>
+
+      <echo message="Writing test results to @{test.reports}" />
+      <mkdir dir="@{test.reports}" />
+      <junit dir="@{test.out}"
+             fork="yes"
+             printsummary="withOutAndErr"
+             failureproperty="junit.failure"
+             tempdir="@{test.out}">
+        <jvmarg line="${junit.platform.args}" />
+
+        <jvmarg line="-Xmx@{test.heap} -Xss${java.stackSize}" />
+        <sysproperty key="gwt.args" value="${junit.notheadless.arg} @{test.args}" />
+        <sysproperty key="java.awt.headless" value="${junit.headless}" />
+        <classpath>
+          <pathelement location="${project.test.jar}" />
+          <pathelement location="${project.jar}" />
+          <pathelement location="${gwt.user.jar}" />
+          <pathelement location="${gwt.dev.jar}" />
+          <pathelement location="${gwt.tools.lib}/junit/junit-3.8.1.jar" />
+          <pathelement location="${gwt.tools.lib}/selenium/selenium-java-client-driver.jar" />
+          <extraclasspaths />
+        </classpath>
+
+        <formatter type="plain" />
+        <formatter type="xml" />
+
+        <batchtest todir="@{test.reports}">
+          <fileset refid="@{test.cases}" />
+        </batchtest>
+      </junit>
+    </sequential>
+  </macrodef>
+
+  <!-- Generally useful validation macros-->
+  <macrodef name="property.ensure">
+    <attribute name="name" />
+    <attribute name="location" />
+    <attribute name="message" default="Cannot find dependency ${@{name}}" />
+    <attribute name="unless" default="__nonexistent_property__" />
+    <sequential>
+      <property name="@{name}" location="@{location}" />
+      <condition property="@{name}.exists">
+        <or>
+          <available file="${@{name}}" />
+          <isset property="@{unless}" />
+        </or>
+      </condition>
+      <fail unless="@{name}.exists" message="@{message}" />
+    </sequential>
+  </macrodef>
+</project>

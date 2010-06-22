@@ -1,0 +1,264 @@
+
+<project name="gwt-traction" default="build">
+
+  <!-- "build" is the default gwt-traction target -->
+  <property name="project.target" value="build" />
+
+  <!-- Set up initial environment -->
+  <property name="project.root" location="." />
+
+  <property name="project.build.properties" value="${project.root}/build.properties" />
+
+  <property environment="env" />
+
+  <property file="${project.build.properties}" />
+
+  <!-- Also check for global-gwt-traction.properties in the directory above -->
+  <property file="${project.root}/../global-gwt-traction.properties" />
+
+  <!-- import common config -->
+  <import file="${project.root}/common.ant.xml" />
+
+  <!-- Specify project jars -->
+  <property name="project.jar" value="${project.dist}/gwt-traction.jar" />
+
+  <available file="${gwt.tools}" type="dir" property="gwt.tools.exists" />
+
+  <!-- Setting up the project bin -->
+  <property name="project.bin" value="${project.build}/bin" />
+
+  <!-- Javadoc -->
+  <property name="project.javadoc" location="${project.out}/javadoc" />
+
+  <!-- GWT demo creation properties -->
+  <property name="demo.src.dir" value="${project.root}/src-demo" />
+  <property name="demo.out.dir" value="${project.out}/compiled-demos" />
+  <property name="demo.js.style" value="OBFUSCATED" />
+  <property name="demo.filter" value="**/demo/**/*.gwt.xml" />
+
+  <!--As the ant task selector puts tasks in the order given by the build file,
+    we have sorted all common public tasks first-->
+  <target name="build" depends="checksetup, compile" description="Packages the gwt-traction jar">
+    <mkdir dir="build" />
+    <mkdir dir="${project.dist}" />
+    <jar destfile="${project.jar}">
+      <fileset dir="src">
+      </fileset>
+      <fileset dir="${project.bin}">
+        <exclude name="**/demo/**" />
+      </fileset>
+    </jar>
+  </target>
+
+  <target name="help" description="Short description of gwt-traction properties and tasks">
+    <echo>
+            gwt-traction properties
+
+            gwt.home
+            The location of the GWT jars you wish to compile and run against.
+            
+            gwt.tools
+            The location of your GWT tools dir.
+            
+            gwt.incubator.jar            
+            The location of the GWT incubator jar.
+
+            project.jar
+            Where should the gwt-traction jar be created.
+                        
+            project.build.properties
+            Where you have defined the above propeties.
+            
+            gwt-traction tasks
+            The gwt-traction tasks are self-documenting. The list of public ones are
+            build,help,dist,clean,all.
+        </echo>
+  </target>
+
+  <target name="classpath">
+    <echo>export CLASSPATH=src:src-demo:${project.jar}:${gwt.user.jar}:${gwt.dev.jar}</echo>
+  </target>
+
+  <target name="dist"
+          depends="build, build.demos, createJavadoc"
+          description="Assembles the full gwt-traction distribution.">
+    <mkdir dir="${project.out}" />
+    <mkdir dir="${project.demos}" />
+
+    <javac srcdir="${project.root}/src-demo"
+           destdir="${project.bin}"
+           debug="${javac.debug}"
+           debuglevel="${javac.debuglevel}"
+           source="${javac.source}"
+           target="${javac.target}"
+           nowarn="${javac.nowarn}"
+           encoding="${javac.encoding}">
+      <classpath>
+        <pathelement location="${project.jar}" />
+        <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.dev.jar}" />
+      </classpath>
+    </javac>
+
+
+    <jar destfile="${project.demos}/gwt-traction-demos.jar">
+      <fileset dir="${project.root}/src-demo">
+        <include name="**/demo/**" />
+      </fileset>
+    </jar>
+    <copy todir="${project.root}/demo">
+      <fileset dir="${demo.out.dir}">
+      </fileset>
+    </copy>
+    <copy todir="${project.root}/javadoc">
+      <fileset dir="${project.javadoc}">
+      </fileset>
+    </copy>
+
+    <mkdir dir="${project.dist}" />
+    <zip destfile="${project.dist}/gwt-traction.zip">
+      <zipfileset dir="${project.out}" >
+         <include name="javadoc/**" />
+      </zipfileset>
+      <zipfileset file="${project.jar}" />
+    </zip>
+  </target>
+
+  <target name="clean" description="Cleans intermediate and output files">
+    <delete dir="${project.build}" />
+  </target>
+
+  <target name="all"
+          description="Cleans, builds, and packages gwt-traction"
+          depends="clean,build,dist" />
+
+
+  <target name="createJavadoc">
+    <delete dir="${project.javadoc}" />
+    <mkdir dir="${project.javadoc}" />
+    <javadoc destdir="${project.javadoc}" windowtitle="gwt-traction api">
+      <!-- Link to GWT Javadoc -->
+      <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.1" />
+      <packageset dir="src">
+        <include name="com/tractionsoftware/gwt/**" />
+        <exclude name="**/impl/**" />
+      </packageset>
+      <!-- Javadoc has a bug in it that requires the jars on the class path or the index.html will not be created.-->
+      <classpath>
+        <pathelement location="${project.jar}" />
+        <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.dev.jar}" />
+        <pathelement location="${gwt.tools.lib}/junit/junit-3.8.1.jar" />
+      </classpath>
+    </javadoc>
+  </target>
+
+  <!-- helper tasks -->
+  <target name="checksetup">
+    <fail message="unknown platform" unless="gwt.platform" />
+    <echo message="gwt.home = ${gwt.home}" />
+    <echo message="gwt.tools = ${gwt.tools}" />
+    <echo message="gwt.platform = ${gwt.platform}" />
+  </target>
+
+  <!-- Compile the project -->
+  <target name="compile">
+    <mkdir dir="${project.bin}" />
+    <echo message="Compiling source..." />
+    <gwt.javac destdir="${project.bin}">
+      <classpath>
+        <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.dev.jar}" />
+      </classpath>
+    </gwt.javac>
+
+  </target>
+
+  <!-- Building the demos (using GwtCompilerTask from gwt-incubator) -->
+
+  <target name="gwtc">
+
+    <fail unless="gwt.incubator.jar"
+          message="gwt.incubator.jar must be set to compile the demos" />
+
+    <taskdef name="gwtc" classname="com.google.ant.GwtCompilerTask">
+      <classpath>
+        <path path="${project.bin}" />
+        <pathelement location="${gwt.dev.jar}" />
+        <pathelement location="${gwt.incubator.jar}" />
+      </classpath>
+    </taskdef>
+
+    <property name="gwtc.vm.maxMemory" value="512m" />
+
+    <gwtc src="${gwtc.src.dir}"
+          war="${gwtc.out.dir}"
+          moduleFile="${gwtc.module.file}"
+          style="${gwtc.js.style}"
+          vmMaxMemory="${gwtc.vm.maxMemory}"
+          vmStackSize="${java.stackSize}">
+      <classpath>
+        <path path="${gwtc.src.dir}" />
+        <path path="${project.jar}" />
+        <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.dev.jar}" />
+      </classpath>
+    </gwtc>
+  </target>
+
+  <target name="build.demo.helper" depends="gwtc">
+    <concat destfile="${gwtc.out.dir}/index.html" append="true">
+      <filterchain>
+        <replaceregex flags="g" pattern="\\" replace="/" />
+        <replaceregex pattern="\('.*/src-demo/" replace="('" />
+      </filterchain>
+&lt;script&gt;writeDemoLink('${gwtc.module.file}');&lt;/script&gt;
+	</concat>
+  </target>
+
+  <target name="clean.demos">
+    <delete dir="${demo.out.dir}" />
+  </target>
+
+  <target name="build.demos" depends="build, clean.demos, build.demos.body" />
+
+  <target name="build.demos.body">
+    <delete dir="${demo.out.dir}" />
+    <copy file="demoindex.template" tofile="${demo.out.dir}/index.html" />
+    <foreach target="build.demo.helper" param="gwtc.module.file">
+      <param name="gwtc.src.dir" value="${demo.src.dir}" />
+      <param name="gwtc.out.dir" value="${demo.out.dir}" />
+      <param name="gwtc.js.style" value="${demo.js.style}" />
+      <path>
+        <fileset dir="src-demo">
+          <include name="${demo.filter}" />
+        </fileset>
+      </path>
+    </foreach>
+  </target>
+
+  <target name="dev.color" description="Run ColorDemo">
+    <java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
+        <classpath>
+            <pathelement location="${project.class.path}" />
+            <pathelement location="${project.src}" />
+            <pathelement location="${demo.src.dir}" />
+            <pathelement location="${gwt.user.jar}" />
+            <pathelement location="${gwt.dev.jar}" />
+        </classpath>
+        <jvmarg value="-Xmx512M" />
+        <jvmarg value="-Xdebug" />
+        <arg value="-startupUrl" />
+        <arg value="http://localhost:8888/com.tractionsoftware.gwt.demo.color.ColorDemo/ColorDemo.html" />
+        <arg value="-war" />
+        <arg value="." />
+        <arg value="-logLevel" />
+        <arg value="DEBUG" />
+        <arg value="-bindAddress" />
+        <arg value="192.168.46.1" />
+        <arg value="com.tractionsoftware.gwt.demo.color.ColorDemo" />
+    </java>
+  </target>
+
+</project>
+
