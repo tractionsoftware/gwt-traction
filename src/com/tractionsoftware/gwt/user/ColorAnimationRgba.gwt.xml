@@ -1,5 +1,5 @@
 
-<!--- This module will use a real rgba() value for browser that support it. -->
+<!-- This module will use a real rgba() value for browsers that support it. -->
 
 <module>
   <inherits name='com.google.gwt.user.User'/>
