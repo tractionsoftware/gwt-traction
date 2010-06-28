@@ -15,7 +15,6 @@
  */
 package com.tractionsoftware.gwt.user.client.animation;
 
-import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.tractionsoftware.gwt.user.client.util.RgbaColor;
@@ -24,7 +23,7 @@ import com.tractionsoftware.gwt.user.client.animation.impl.SetColorImpl;
 /**
  * Animates a color transition.
  */
-public class ColorAnimation extends Animation {
+public class ColorAnimation extends TractionAnimation {
 
     static final SetColorImpl impl = GWT.create(SetColorImpl.class);
 

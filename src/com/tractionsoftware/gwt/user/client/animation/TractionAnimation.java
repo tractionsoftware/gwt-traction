@@ -15,44 +15,9 @@
  */
 package com.tractionsoftware.gwt.user.client.animation;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.tractionsoftware.gwt.user.client.animation.impl.SetOpacityImpl;
+import com.google.gwt.animation.client.Animation;
 
-/**
- * Animates an opacity transition.
- */
-public class OpacityAnimation extends TractionAnimation {
-
-    static final SetOpacityImpl impl = GWT.create(SetOpacityImpl.class);
-
-    private Element[] elm;
-    private float fromOpacity;
-
-    // note that we don't store toOpacity. instead we store the offset
-    // that we'll use to compute the animation.
-    private float addOpacity;
-
-    /**
-     * Creates an OpacityAnimation
-     *
-     * @param elm The Elements to modify
-     * @param fromOpacity The opacity value at the start of the animation (0-1)
-     * @param toOpacity The opacity value at the end of the animation (0-1)
-     */
-    public OpacityAnimation(Element[] elm, float fromOpacity, float toOpacity) {
-	this.elm = elm;
-	this.fromOpacity = fromOpacity;
-	this.addOpacity = toOpacity - fromOpacity;
-    }
-
-    @Override
-    protected void onUpdate(double progress) {
-	float newOpacity = fromOpacity + (float) (addOpacity * progress);
-	for (Element e : elm) {
-	    impl.setOpacity(e, newOpacity);
-	}
-    }    
+public abstract class TractionAnimation extends Animation {
 
     /**
      * Sets the animation to the starting point, canceling any
