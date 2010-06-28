@@ -16,18 +16,17 @@
 package com.tractionsoftware.gwt.user.client.animation.impl;
 
 import com.google.gwt.dom.client.Element;
-import com.tractionsoftware.gwt.user.client.util.RgbaColor;
 
 /**
- * Provides an interface for setting a color. IE doesn't support
- * rgba(), so we just use rgb().
+ * IE doesn't support standard CSS opacity and instead requires
+ * -ms-filter or filter to be specified. Oh, and it wants a value
+ * between 0-100.
  */
-public class SetColorImplIE implements SetColorImpl {
+public class SetOpacityImplIE8 implements SetOpacityImpl {
 
-    public void setColor(Element e, String cssProperty, RgbaColor color) {
-	e.getStyle().setProperty(cssProperty, color.toRgb());
-	e.getStyle().setProperty("MsFilter", "\"progid:DXImageTransform.Microsoft.Alpha(Opacity="+(color.a() * 100)+")\"");
-	e.getStyle().setProperty("filter", "alpha(opacity="+(color.a() * 100)+")");
+    public void setOpacity(Element e, float opacity) {
+        e.getStyle().setProperty("MsFilter", "\"progid:DXImageTransform.Microsoft.Alpha(Opacity="+(opacity * 100)+")\"");
+	e.getStyle().setProperty("filter", "alpha(opacity="+((int)(opacity * 100))+")");	
     }
 
 }
