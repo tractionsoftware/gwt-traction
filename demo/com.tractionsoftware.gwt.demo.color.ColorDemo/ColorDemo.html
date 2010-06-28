@@ -5,7 +5,8 @@
 <style>
 body { background-color: #acf !important; }
 button { margin-left: 10px; }
-#box1, #box2, #box3 { font-weight: bold; padding: 70px; text-align: center; margin: 30px; border: 1px solid #000; }
+#box1, #box2, #box3 { font-weight: bold; padding: 70px; text-align: center; border: 1px solid #000; background: #fff; zoom: 1; }
+#box2, #box3 { margin-top: 30px; }
 .gwt-Label { margin-top: 10px; }
 </style>
 <script language='javascript' src='com.tractionsoftware.gwt.demo.color.ColorDemo.nocache.js'></script>
@@ -19,8 +20,10 @@ well. This is different than a real rgba() but works on all browsers.
 <h2>ColorAnimation Demo</h2>
 <div id="controls">
 </div>
+<div style="background: transparent url(bg.png) top left repeat; padding: 30px; margin-top: 40px;">
 <div id="box1">1</div>
 <div id="box2">2</div>
 <div id="box3">3</div>
+</div>
 </body>
 </html>

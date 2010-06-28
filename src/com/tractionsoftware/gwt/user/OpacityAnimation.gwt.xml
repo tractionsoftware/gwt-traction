@@ -1,0 +1,25 @@
+<module>
+  <inherits name='com.google.gwt.user.User'/>
+
+  <replace-with class="com.tractionsoftware.gwt.user.client.animation.impl.SetOpacityImplStandard">
+    <when-type-is class="com.tractionsoftware.gwt.user.client.animation.impl.SetOpacityImpl"/>
+    <any>
+      <when-property-is name="user.agent" value="gecko"/>
+      <when-property-is name="user.agent" value="gecko1_8"/>
+      <when-property-is name="user.agent" value="safari"/>
+      <when-property-is name="user.agent" value="opera"/>
+    </any>
+  </replace-with>
+
+  <replace-with class="com.tractionsoftware.gwt.user.client.animation.impl.SetOpacityImplIE6">
+    <when-type-is class="com.tractionsoftware.gwt.user.client.animation.impl.SetOpacityImpl"/>
+    <when-property-is name="user.agent" value="ie6"/>
+  </replace-with>
+
+  <replace-with class="com.tractionsoftware.gwt.user.client.animation.impl.SetOpacityImplIE8">
+    <when-type-is class="com.tractionsoftware.gwt.user.client.animation.impl.SetOpacityImpl"/>
+    <when-property-is name="user.agent" value="ie8"/>
+  </replace-with>
+
+</module>
+
