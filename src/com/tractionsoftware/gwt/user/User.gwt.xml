@@ -3,5 +3,6 @@
   <inherits name='com.tractionsoftware.gwt.user.Viewport' />
   <inherits name='com.tractionsoftware.gwt.user.DialogBox' />
   <inherits name='com.tractionsoftware.gwt.user.ColorAnimation' />
+  <inherits name='com.tractionsoftware.gwt.user.OpacityAnimation' />
 </module>
 
