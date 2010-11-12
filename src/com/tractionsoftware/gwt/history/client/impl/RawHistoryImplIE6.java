@@ -32,7 +32,6 @@ class RawHistoryImplIE6 extends RawHistoryImpl {
    * @param maybeHtml untrusted string that may contain html
    * @return sanitized string
    */
-  @SuppressWarnings("unused")
   private static String escapeHtml(String maybeHtml) {
     final Element div = DOM.createDiv();
     DOM.setInnerText(div, maybeHtml);
@@ -47,7 +46,6 @@ class RawHistoryImplIE6 extends RawHistoryImpl {
    * For IE6, reading from $wnd.location.hash drops part of the fragment if the
    * fragment contains a '?'. To avoid this bug, we use location.href instead.
    */
-  @SuppressWarnings("unused")
   private static native String getLocationHash() /*-{
     var href = $wnd.location.href;
     var hashLoc = href.lastIndexOf("#");
@@ -114,7 +112,6 @@ class RawHistoryImplIE6 extends RawHistoryImpl {
    * 
    * @return true if a canceled window reload was handled
    */
-  @SuppressWarnings("unused")
   private boolean handleWindowReloadCanceled() {
     if (reloadedWindow) {
       reloadedWindow = false;
@@ -193,7 +190,6 @@ class RawHistoryImplIE6 extends RawHistoryImpl {
     doc.close();
   }-*/;
 
-  @SuppressWarnings("unused")
   private void reloadWindow() {
     reloadedWindow = true;
     Location.reload();

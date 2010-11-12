@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>UTCDateBox Demo</title>
+<style>
+#eventlog select { width: 400px; }
+button { margin-right: 10px; }
+</style>
+<script language='javascript' src='com.tractionsoftware.gwt.demo.utcdatebox.UTCDateBoxDemo.nocache.js'></script>
+</head>
+<body>
+<div class="desc">Select a date in each of the controls and notice the difference in the events that fire. Depending on your timezone and browser, UTCDateBox may report a time other than midnight in your timezone and in timezones west of Greenwich, a different date. However, this will be midnight in UTC.<br><br>Note: You will see two events fire, one for noon and another for midnight. This is a side-affect of the dateformat specified and the way DateBox.DateBoxHandler.onClose is implemented.
+</div>
+<h2>UTCDateBox Demo</h2>
+<h3>DateBox (com.google.gwt.user.datepicker.client.DateBox)</h3>
+<div id="datebox"></div>
+<h3>UTCDateBox (com.tractionsoftware.gwt.user.client.ui.UTCDateBox)</h3>
+<div id="utcdatebox"></div>
+<h3>DateBox and UTCDateBox ValueChangeEvents (most recent on top)</h3>
+<div id="eventlog"></div>
+</body>
+</html>
