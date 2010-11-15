@@ -105,7 +105,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      * Converts a time in UTC to a gwt Date object which is in the timezone of
      * the current browser.
      */
-    public static final Date utc2date(long time) {
+    public static final Date utc2date(Long time) {
 
         // don't accept negative values
         if (time < 0) return null;
@@ -119,10 +119,10 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     /**
      * Converts a gwt Date in the timezone of the current browser to a time in UTC.
      */
-    public static final long date2utc(Date date) {
+    public static final Long date2utc(Date date) {
 
         // use -1 to mean a bogus date
-        if (date == null) return -1;
+        if (date == null) return null;
         
         long time = date.getTime();
         
