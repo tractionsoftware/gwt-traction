@@ -65,7 +65,7 @@ public class ViewportDemo implements EntryPoint {
     }
 
     private void update() {
-	boolean hasFocus = Viewport.get().hasFocus();
+	boolean hasFocus = Viewport.hasFocus();
 	String msg = (hasFocus ? "TRUE" : "FALSE") + " from Viewport.hasFocus()";
 	focusLabel.setText(msg);
 	Window.setTitle(msg);

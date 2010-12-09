@@ -1,0 +1,6 @@
+<module>
+	<inherits name='com.tractionsoftware.gwt.user.User'/>
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<inherits name='com.tractionsoftware.gwt.demostyle.DemoStyle'/>
+	<entry-point class='com.tractionsoftware.gwt.demo.utcdatebox.client.UTCDateBoxDemo'/>        
+</module>
