@@ -28,9 +28,15 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * A wrapper around a DateBox that implements HasValue<Long> where the value is
- * the number of milliseconds since January 1, 1970, 00:00:00 GMT <b>at midnight on
- * the day, month, and year selected</b>. This avoids time zone conversion issues
- * encountered using the DateBox.
+ * the number of milliseconds since January 1, 1970, 00:00:00 GMT <b>at midnight
+ * on the day, month, and year selected</b>. This avoids time zone conversion
+ * issues encountered using the DateBox.
+ * 
+ * <p>
+ * Note: In keeping with the behavior of the GWT DateBox, null is used to
+ * represent no value. This means that you should check for null when calling
+ * getValue(), just as you would for DateBox. With auto-boxing Long/long, this
+ * may seem strange but is consistent.
  */
 public class UTCDateBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long> {
 
@@ -70,14 +76,44 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     // ----------------------------------------------------------------------
     // HasValue 
     
+    /**
+     * Returns the date value specified by the DateBox measured in number of
+     * milliseconds since January 1, 1970, 00:00:00 GMT. This time will always
+     * correspond to midnight in GMT on the date selected.
+     * 
+     * @return The time selected or null if no value is specified by the
+     *         DateBox.
+     */
     public Long getValue() {
         return date2utc(datebox.getValue());
     }
     
+    /**
+     * Sets the value in the DateBox.
+     * 
+     * @param value
+     *            A time measured in the number of milliseconds since January 1,
+     *            1970, 00:00:00 GMT. This time should be at midnight in GMT for
+     *            the Date selected.
+     *            <p>
+     *            If value is null or represents a negative number, the DateBox
+     *            will have no value.
+     */
     public void setValue(Long value) {
         setValue(value, false);
     }
     
+    /**
+     * Sets the value in the DateBox.
+     * 
+     * @param value
+     *            A time measured in the number of milliseconds since January 1,
+     *            1970, 00:00:00 GMT. This time should be at midnight in GMT for
+     *            the Date selected.
+     *            <p>
+     *            If value is null or represents a negative number, the DateBox
+     *            will have no value.
+     */
     public void setValue(Long value, boolean fireEvents) {
         datebox.setValue(utc2date(value), fireEvents);
     }
@@ -104,11 +140,15 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     /**
      * Converts a time in UTC to a gwt Date object which is in the timezone of
      * the current browser.
+     * 
+     * @return The Date corresponding to the time, adjusted for the timezone of
+     *         the current browser. null if the specified time is null or
+     *         represents a negative number.
      */
     public static final Date utc2date(Long time) {
 
         // don't accept negative values
-        if (time < 0) return null;
+        if (time == null || time < 0) return null;
         
         // add the timezone offset
         time += timezoneOffsetMillis(new Date(time));
@@ -117,11 +157,15 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     }
 
     /**
-     * Converts a gwt Date in the timezone of the current browser to a time in UTC.
+     * Converts a gwt Date in the timezone of the current browser to a time in
+     * UTC.
+     * 
+     * @return A Long corresponding to the number of milliseconds since January
+     *         1, 1970, 00:00:00 GMT or null if the specified Date is null.
      */
     public static final Long date2utc(Date date) {
 
-        // use -1 to mean a bogus date
+        // use null for a null date
         if (date == null) return null;
         
         long time = date.getTime();
