@@ -1,0 +1,5 @@
+<module>
+	<inherits name='com.tractionsoftware.gwt.user.AutoSizingTextArea'/>
+	<inherits name='com.tractionsoftware.gwt.demostyle.DemoStyle'/>
+	<entry-point class='com.tractionsoftware.gwt.demo.autosizingtextarea.client.AutoSizingTextAreaDemo'/>        
+</module>

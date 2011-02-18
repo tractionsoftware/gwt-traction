@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>AutoSizingTextArea Demo</title>
+<style>
+body { height: 800px; }
+DIV.small {
+  padding: 5px;
+  width: 300px;
+  border: 2px solid #999;
+}
+DIV.large {
+  padding: 10px;
+  width: 300px;
+  border: 2px solid #999;
+}
+DIV.small textarea, DIV.large textarea {
+  border: 1px dotted #eee;
+}
+DIV.large textarea {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.5em;
+}
+</style>
+<script language='javascript' src='com.tractionsoftware.gwt.demo.autosizingtextarea.AutoSizingTextAreaDemo.nocache.js'></script>
+</head>
+<body>
+<div class="desc">The Large TextArea is a rather extreme example, but it shows how it adjusts for styling.
+<br><br>
+The grey dotted line is there to show the real textarea. Except for font and line-height, style the container, not the textarea.
+<br><br>Here are the styles used in this page:
+<pre>
+DIV.small {
+  padding: 5px;
+  width: 300px;
+  border: 2px solid #999;
+}
+DIV.large {
+  padding: 10px;
+  width: 300px;
+  border: 2px solid #999;
+}
+DIV.small textarea, DIV.large textarea {
+  border: 1px dotted #eee;
+}
+DIV.large textarea {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.5em;
+}
+</pre>
+</div>
+<h2>AutoSizingTextArea Demo</h2>
+<h3>Small TextArea</h3>
+<div id="small"></div>
+<h3>Large TextArea</h3>
+<div id="large"></div>
+</body>
+</html>

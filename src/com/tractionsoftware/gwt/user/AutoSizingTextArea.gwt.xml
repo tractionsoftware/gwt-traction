@@ -1,0 +1,9 @@
+<module>
+  <inherits name='com.google.gwt.user.User' />
+  <stylesheet src='autosize.css' /> 
+
+  <!-- gquery for getComputedStyle -->
+  <inherits name='com.google.gwt.query.Query'/>
+  
+</module>
+
