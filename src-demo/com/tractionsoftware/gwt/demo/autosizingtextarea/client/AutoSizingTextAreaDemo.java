@@ -24,13 +24,13 @@ public class AutoSizingTextAreaDemo implements EntryPoint {
 
     public void onModuleLoad() {
 
-        AutoSizingTextArea small = new AutoSizingTextArea(new TextAreaWithSelection(), 50,600);
+        AutoSizingTextArea small = new AutoSizingTextArea(new TextAreaWithSelection(), 50, 600);
         small.addStyleName("small");
+        RootPanel.get("small").add(small);
 
-        AutoSizingTextArea large = new AutoSizingTextArea(new TextAreaWithSelection(), 50,600);
+        AutoSizingTextArea large = new AutoSizingTextArea(new TextAreaWithSelection(), 50, 600);
         large.addStyleName("large");
+        RootPanel.get("large").add(large);
         
-	RootPanel.get("small").add(small);
-	RootPanel.get("large").add(large);
     }
 }
