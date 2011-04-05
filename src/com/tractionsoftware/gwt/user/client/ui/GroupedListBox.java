@@ -160,7 +160,9 @@ public class GroupedListBox extends SingleListBox {
             group = group.replace("||", "|");
         }
         // convert || -> | in the item name
-        item = item.replace("||", "|");
+        if (item != null) {
+            item = item.replace("||", "|");
+        }
 
         Element parent = getSelectElement();
         Node before = null;
