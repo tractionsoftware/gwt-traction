@@ -16,6 +16,7 @@
 package com.tractionsoftware.gwt.user.client.ui;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.dom.client.KeyCodeEvent;
@@ -201,10 +202,16 @@ public abstract class AutoSizingBase<T extends Widget & HasTextSelection & HasVa
     // style manipulation
 
     public void matchStyles(String name) {
-	// sometimes IE throws an exception. thanks IE!
         String value = MiscUtils.getComputedStyle(box.getElement(), name);
         if (value != null) {
-	    shadow.getElement().getStyle().setProperty(name, value);	
+            try {
+                // we might have a bogus value (e.g. width: -10px). we
+                // just let it fail quietly.
+                shadow.getElement().getStyle().setProperty(name, value);	
+            }
+            catch (Exception e) {
+                GWT.log("Exception in matchStyles for name="+name+" value="+value, e);
+            }
 	}
     }
 

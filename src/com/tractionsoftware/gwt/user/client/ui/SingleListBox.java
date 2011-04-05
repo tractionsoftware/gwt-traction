@@ -41,7 +41,11 @@ public class SingleListBox extends ListBox implements HasValue<String> {
      * Create a new SingleListBox
      */
     public SingleListBox(boolean addMissingValue) {
-	super(false);
+        this(addMissingValue,false);
+    }
+    
+    protected SingleListBox(boolean addMissingValue, boolean isMultipleSelect) {
+	super(isMultipleSelect);
 	setAddMissingValue(addMissingValue);
 
 	// Listen to our own change events and broadcast as
@@ -50,7 +54,7 @@ public class SingleListBox extends ListBox implements HasValue<String> {
 		public void onChange(ChangeEvent event) {
 		    ValueChangeEvent.fire(SingleListBox.this, getValue());
 		}
-	    });
+	    });        
     }
 
     // ----------------------------------------------------------------------
@@ -178,7 +182,10 @@ public class SingleListBox extends ListBox implements HasValue<String> {
 
 	    if (addMissingValues) {
 		list.addItem(value, value);
-		list.setSelectedIndex(list.getItemCount()-1);
+
+		// now that it's there, search again
+		index = findValueInListBox(list, value);
+		list.setSelectedIndex(index);
 		return true;
 	    }
 
