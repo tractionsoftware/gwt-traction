@@ -10,7 +10,7 @@
   <property name="project.build.properties" value="${project.root}/build.properties" />
 
   <!-- Requires gwtquery for getComputedStyle -->
-  <property name="gwtquery.jar" value="${project.root}/lib/gwtquery-1.0.0-SNAPSHOT.jar" />
+  <property name="gwtquery.jar" value="${project.root}/lib/gwtquery-1.0.0-SNAPSHOT-2.2.0.jar" />
 
   <property environment="env" />
 
