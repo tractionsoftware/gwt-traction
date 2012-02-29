@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
-
 import com.tractionsoftware.gwt.user.client.animation.ColorAnimation;
 import com.tractionsoftware.gwt.user.client.util.RgbaColor;
 
@@ -35,6 +34,7 @@ public class ColorDemo implements EntryPoint {
     private TextBox endColor;
     private TextBox duration;
 
+    @Override
     public void onModuleLoad() {
 	
 	Panel controls = RootPanel.get("controls");
@@ -49,8 +49,9 @@ public class ColorDemo implements EntryPoint {
 
 	Button start = new Button("Start");
 	start.addClickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    ColorAnimation animation = new ColorAnimation(new Element[] {
+	    @Override
+	    public void onClick(ClickEvent event) {
+	        ColorAnimation animation = new ColorAnimation(new Element[] {
 								      Document.get().getElementById("box1"),
 								      Document.get().getElementById("box2"),
 								      Document.get().getElementById("box3")
@@ -58,9 +59,9 @@ public class ColorDemo implements EntryPoint {
 								  "backgroundColor",
 								  RgbaColor.from(startColor.getText()),
 								  RgbaColor.from(endColor.getText()));
-		    animation.run(Integer.parseInt(duration.getText()));
-		}
-	    });
+	        animation.run(Integer.parseInt(duration.getText()));
+	    }
+	});
 
 	controls.add(start);
     }    

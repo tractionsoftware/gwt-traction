@@ -31,6 +31,7 @@ public class GroupedListBoxDemo implements EntryPoint {
     private GroupedListBox groupedListBox1;
     private GroupedListBox groupedListBox2;    
 
+    @Override
     public void onModuleLoad() {
 	
 	groupedListBox1 = new GroupedListBox(false);

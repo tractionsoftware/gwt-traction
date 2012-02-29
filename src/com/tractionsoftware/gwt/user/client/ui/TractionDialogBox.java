@@ -47,10 +47,11 @@ public class TractionDialogBox extends DialogBox implements HasOpenHandlers<Trac
 	close = new Anchor();
 	close.setStyleName("x");
 	close.addClickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    onCloseClick(event);
-		}
-	    });
+            @Override
+            public void onClick(ClickEvent event) {
+                onCloseClick(event);
+            }
+	});
 	setCloseIconVisible(showCloseIcon);
 
 	controls = new FlowPanel();
@@ -58,6 +59,7 @@ public class TractionDialogBox extends DialogBox implements HasOpenHandlers<Trac
 	controls.add(close);
     }    
 
+    @Override
     public void setWidget(Widget widget) {
 	if (container.getWidgetCount() == 0) {
 	    // setup
@@ -98,6 +100,7 @@ public class TractionDialogBox extends DialogBox implements HasOpenHandlers<Trac
     // ----------------------------------------------------------------------
     // HasOpenHandlers
     
+    @Override
     public HandlerRegistration addOpenHandler(OpenHandler<TractionDialogBox> handler) {
 	return addHandler(handler, OpenEvent.getType());
     }

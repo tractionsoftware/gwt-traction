@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Element;
  */
 public class SetOpacityImplIE8 implements SetOpacityImpl {
 
+    @Override
     public void setOpacity(Element e, float opacity) {
         e.getStyle().setProperty("MsFilter", "\"progid:DXImageTransform.Microsoft.Alpha(Opacity="+(opacity * 100)+")\"");
 	e.getStyle().setProperty("filter", "alpha(opacity="+((int)(opacity * 100))+")");	

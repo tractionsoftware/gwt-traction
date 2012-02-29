@@ -15,11 +15,13 @@
  */
 package com.tractionsoftware.gwt.user.client.ui;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.shared.*;
-import com.google.gwt.event.logical.shared.*;
 
 /**
  * A subclass of ListBox representing a single select pulldown and
@@ -51,10 +53,11 @@ public class SingleListBox extends ListBox implements HasValue<String> {
 	// Listen to our own change events and broadcast as
 	// ValueChangeEvent<String>
 	addChangeHandler(new ChangeHandler() {
-		public void onChange(ChangeEvent event) {
-		    ValueChangeEvent.fire(SingleListBox.this, getValue());
-		}
-	    });        
+            @Override
+            public void onChange(ChangeEvent event) {
+                ValueChangeEvent.fire(SingleListBox.this, getValue());
+            }
+	});        
     }
 
     // ----------------------------------------------------------------------
@@ -87,6 +90,7 @@ public class SingleListBox extends ListBox implements HasValue<String> {
     /**
      * Returns the current value selected in the ListBox.
      */
+    @Override
     public String getValue() {
 	return getSelectedValue(this);
     }
@@ -97,6 +101,7 @@ public class SingleListBox extends ListBox implements HasValue<String> {
      * @param value the new value
      * @see #setAddMissingValue
      */
+    @Override
     public void setValue(String value) {
 	setValue(value, false);
     }
@@ -108,6 +113,7 @@ public class SingleListBox extends ListBox implements HasValue<String> {
      * @param fireEvents if true, a ValueChangeEvent event will be fired
      * @see #setAddMissingValue
      */
+    @Override
     public void setValue(String value, boolean fireEvents) {
 	boolean added = setSelectedValue(this, value, addMissingValue);
 	if (added && fireEvents) {
@@ -126,6 +132,7 @@ public class SingleListBox extends ListBox implements HasValue<String> {
 	return findValueInListBox(this, value);
     }
 
+    @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
 	return addHandler(handler, ValueChangeEvent.getType());
     }

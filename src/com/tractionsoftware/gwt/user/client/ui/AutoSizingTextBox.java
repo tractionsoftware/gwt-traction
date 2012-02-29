@@ -16,11 +16,11 @@
 package com.tractionsoftware.gwt.user.client.ui;
 
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
@@ -49,6 +49,7 @@ public class AutoSizingTextBox<T extends Widget & HasTextSelection & HasValue<St
 	setExtraSize(extraSize);
     }
 
+    @Override
     protected void onLoad() {
 	setMinFromCss("minWidth");
 	setMaxFromCss("maxWidth");
@@ -58,6 +59,7 @@ public class AutoSizingTextBox<T extends Widget & HasTextSelection & HasValue<St
     /**
      * Returns the size of the shadow element.
      */
+    @Override
     public int getShadowSize() {
 	return Geometry.getW(shadow.getElement());
     }
@@ -66,6 +68,7 @@ public class AutoSizingTextBox<T extends Widget & HasTextSelection & HasValue<St
      * @param text the text that should be set on the shadow to
      * determine the appropriate size of the widget
      */
+    @Override
     public void setShadowText(String text) {
 	shadow.getElement().setInnerHTML(text);
     }
@@ -75,21 +78,24 @@ public class AutoSizingTextBox<T extends Widget & HasTextSelection & HasValue<St
      * extraSize. the implementation should just call setWidth or
      * setHeight as appropriate.
      */
+    @Override
     public void setSize(int size) {
 	setWidth(size);
     }
 
+    @Override
     public void setText(String text) {
 	box.setText(text);
 	if (text.length() == 0) {
 	    setSize(extraSize);
 	} 
 	else {
-	    DeferredCommand.addCommand(new Command() {
-		    public void execute() {
-			sync();
-		    }
-		});
+	    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    sync();
+                }
+            });
 	}
     }
 

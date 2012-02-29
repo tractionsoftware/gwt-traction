@@ -22,7 +22,6 @@ import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptGroupElement;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
-import com.google.gwt.user.client.ui.ListBox;
 
 /**
  * Extends the standard GWT ListBox to automatically provide OPTGROUP

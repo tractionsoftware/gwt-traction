@@ -34,6 +34,7 @@ public class ViewportDemo implements EntryPoint {
     private Label focusLabel;
     private ListBox eventListBox;
 
+    @Override
     public void onModuleLoad() {
 	
 	focusLabel = new Label();
@@ -46,18 +47,20 @@ public class ViewportDemo implements EntryPoint {
 	update();
 	
 	Viewport.get().addFocusHandler(new FocusHandler() {
-		public void onFocus(FocusEvent event) {
-		    addEvent("FOCUS");
-		    update();
-		}
-	    });
+            @Override
+            public void onFocus(FocusEvent event) {
+                addEvent("FOCUS");
+                update();
+            }
+	});
 
 	Viewport.get().addBlurHandler(new BlurHandler() {
-		public void onBlur(BlurEvent event) {
-		    addEvent("BLUR");
-		    update();
-		}
-	    });
+            @Override
+            public void onBlur(BlurEvent event) {
+                addEvent("BLUR");
+                update();
+            }
+	});
     }    
 
     private void addEvent(String event) {

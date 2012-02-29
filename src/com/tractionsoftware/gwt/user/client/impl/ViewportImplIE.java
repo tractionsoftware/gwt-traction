@@ -36,6 +36,7 @@ public class ViewportImplIE implements ViewportImpl {
     private static final class FocusInEvent extends FocusEvent {}
     private static final class FocusOutEvent extends BlurEvent {}
 
+    @Override
     public void addEventListeners() {
 
 	// we create these to map the event names to their events. see

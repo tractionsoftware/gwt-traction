@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
-
 import com.tractionsoftware.gwt.user.client.animation.OpacityAnimation;
 
 public class OpacityDemo implements EntryPoint {
@@ -34,6 +33,7 @@ public class OpacityDemo implements EntryPoint {
     private TextBox endOpacity;
     private TextBox duration;
 
+    @Override
     public void onModuleLoad() {
 	
 	Panel controls = RootPanel.get("controls");
@@ -48,17 +48,18 @@ public class OpacityDemo implements EntryPoint {
 
 	Button start = new Button("Start");
 	start.addClickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    OpacityAnimation animation = new OpacityAnimation(new Element[] {
+	    @Override
+            public void onClick(ClickEvent event) {
+	        OpacityAnimation animation = new OpacityAnimation(new Element[] {
 								      Document.get().getElementById("box1"),
 								      Document.get().getElementById("box2"),
 								      Document.get().getElementById("box3")
 								  },
 								  Float.parseFloat(startOpacity.getText()),
 								  Float.parseFloat(endOpacity.getText()));
-		    animation.run(Integer.parseInt(duration.getText()));
-		}
-	    });
+	        animation.run(Integer.parseInt(duration.getText()));
+	    }
+	});
 
 	controls.add(start);
     }    

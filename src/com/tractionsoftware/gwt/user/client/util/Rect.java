@@ -56,6 +56,7 @@ public final class Rect {
 	return y+h/2;
     }
 
+    @Override
     public final String toString() {
 	return "x="+x+" y="+y+" w="+w+" h="+h+" cx="+getCenterX()+" cy="+getCenterY();
     }

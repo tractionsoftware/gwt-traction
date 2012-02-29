@@ -25,6 +25,7 @@ public class ViewportImplStandard implements ViewportImpl {
     private static JavaScriptObject dispatchFocusEvent;
     private static JavaScriptObject dispatchBlurEvent;
 
+    @Override
     public native void addEventListeners() 
     /*-{
 	@com.tractionsoftware.gwt.user.client.impl.ViewportImplStandard::dispatchFocusEvent = 

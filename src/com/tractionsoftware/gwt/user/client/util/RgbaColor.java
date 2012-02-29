@@ -246,6 +246,7 @@ public class RgbaColor {
 	return "rgba("+r+","+g+","+b+","+a+")";
     }
 
+    @Override
     public String toString() {
 	return toHex();
     }

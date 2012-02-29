@@ -17,6 +17,8 @@ package com.tractionsoftware.gwt.user.client.ui;
 
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.dom.client.KeyCodeEvent;
@@ -28,8 +30,6 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Focusable;
@@ -177,6 +177,7 @@ public abstract class AutoSizingBase<T extends Widget & HasTextSelection & HasVa
      * called after the input is added to the DOM, so we do it in
      * onLoad.
      */
+    @Override
     protected void onLoad() {
 	super.onLoad();
 
@@ -194,6 +195,7 @@ public abstract class AutoSizingBase<T extends Widget & HasTextSelection & HasVa
 	adjustSize();
     }
 
+    @Override
     public T getWidget() {
 	return box;
     }
@@ -227,11 +229,13 @@ public abstract class AutoSizingBase<T extends Widget & HasTextSelection & HasVa
      * On key down we assume the key will go at the end. It's the most
      * common case and not that distracting if that's not true.
      */
+    @Override
     public void onKeyDown(KeyDownEvent event) {
 	char c = MiscUtils.getCharCode(event.getNativeEvent());
 	onKeyCodeEvent(event, box.getValue()+c);
     }    
 
+    @Override
     public void onKeyUp(KeyUpEvent event) {
 	onKeyCodeEvent(event, box.getValue());
     }    
@@ -254,6 +258,7 @@ public abstract class AutoSizingBase<T extends Widget & HasTextSelection & HasVa
 	}	
     }
         
+    @Override
     public void onValueChange(ValueChangeEvent<String> event) {
 	// here, we just match them and adjust the size again. this
 	// will handle backspace and typing over a selection.
@@ -296,27 +301,32 @@ public abstract class AutoSizingBase<T extends Widget & HasTextSelection & HasVa
     // ----------------------------------------------------------------------
     // Focusable (proxy to SuggestBox)
     
+    @Override
     public final int getTabIndex() {
 	return box.getTabIndex();
     }
     
+    @Override
     public final void setTabIndex(int index) {
 	box.setTabIndex(index);
     }
     
+    @Override
     public final void setFocus(boolean focus) {
 	if (focus) {
-	    DeferredCommand.addCommand(new Command() {
-		    public void execute() {
-			box.setFocus(true);
-		    }
-		});
+	    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    box.setFocus(true);                      
+                }
+            });
 	}
 	else {
 	    box.setFocus(false);
 	}
     }
 
+    @Override
     public final void setAccessKey(char key) {
 	box.setAccessKey(key);
     }
@@ -324,10 +334,12 @@ public abstract class AutoSizingBase<T extends Widget & HasTextSelection & HasVa
     // ----------------------------------------------------------------------
     // HasText
 
+    @Override
     public final String getText() {
 	return box.getText();
     }
 
+    @Override
     public abstract void setText(String text);
 
 }

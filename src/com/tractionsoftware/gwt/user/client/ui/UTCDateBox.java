@@ -84,6 +84,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      * @return The time selected or null if no value is specified by the
      *         DateBox.
      */
+    @Override
     public Long getValue() {
         return date2utc(datebox.getValue());
     }
@@ -99,6 +100,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      *            If value is null or represents a negative number, the DateBox
      *            will have no value.
      */
+    @Override
     public void setValue(Long value) {
         setValue(value, false);
     }
@@ -114,6 +116,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      *            If value is null or represents a negative number, the DateBox
      *            will have no value.
      */
+    @Override
     public void setValue(Long value, boolean fireEvents) {
         datebox.setValue(utc2date(value), fireEvents);
     }
