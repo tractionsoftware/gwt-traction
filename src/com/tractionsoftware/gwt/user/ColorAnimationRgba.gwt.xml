@@ -7,7 +7,7 @@
   <replace-with class="com.tractionsoftware.gwt.user.client.animation.impl.SetColorImplRgba">
     <when-type-is class="com.tractionsoftware.gwt.user.client.animation.impl.SetColorImpl"/>
     <any>
-      <when-property-is name="user.agent" value="gecko"/>
+      <when-property-is name="user.agent" value="ie9"/>
       <when-property-is name="user.agent" value="gecko1_8"/>
       <when-property-is name="user.agent" value="safari"/>
       <when-property-is name="user.agent" value="opera"/>

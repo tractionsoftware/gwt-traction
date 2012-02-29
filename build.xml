@@ -79,7 +79,7 @@
   </target>
 
   <target name="classpath">
-    <echo>export CLASSPATH=src:src-demo:${project.jar}:${gwt.user.jar}:${gwt.dev.jar}</echo>
+    <echo>export CLASSPATH=src:src-demo:${project.jar}:${gwt.user.jar}:${gwt.dev.jar}:${gwt.validation.api.jar}:${gwt.validation.api.sources.jar}</echo>
   </target>
 
   <target name="dist"
@@ -99,6 +99,8 @@
       <classpath>
         <pathelement location="${project.jar}" />
         <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.validation.api.jar}" />
+        <pathelement location="${gwt.validation.api.sources.jar}" />
         <pathelement location="${gwt.dev.jar}" />
       </classpath>
     </javac>
@@ -151,6 +153,8 @@
         <pathelement location="${project.jar}" />
         <pathelement location="${gwtquery.jar}" />
         <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.validation.api.jar}" />
+        <pathelement location="${gwt.validation.api.sources.jar}" />
         <pathelement location="${gwt.dev.jar}" />
         <pathelement location="${gwt.tools.lib}/junit/junit-3.8.1.jar" />
       </classpath>
@@ -173,6 +177,8 @@
       <classpath>
         <pathelement location="${gwtquery.jar}" />
         <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.validation.api.jar}" />
+        <pathelement location="${gwt.validation.api.sources.jar}" />
         <pathelement location="${gwt.dev.jar}" />
       </classpath>
     </gwt.javac>
@@ -208,6 +214,8 @@
         <path path="${gwtc.src.dir}" />
         <path path="${project.jar}" />
         <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.validation.api.jar}" />
+        <pathelement location="${gwt.validation.api.sources.jar}" />
         <pathelement location="${gwt.dev.jar}" />
       </classpath>
     </gwtc>
@@ -251,6 +259,8 @@
             <pathelement location="${project.src}" />
             <pathelement location="${demo.src.dir}" />
             <pathelement location="${gwt.user.jar}" />
+            <pathelement location="${gwt.validation.api.jar}" />
+            <pathelement location="${gwt.validation.api.sources.jar}" />
             <pathelement location="${gwt.dev.jar}" />
         </classpath>
         <jvmarg value="-Xmx512M" />
@@ -275,6 +285,8 @@
             <pathelement location="${demo.src.dir}" />
             <pathelement location="${gwtquery.jar}" />
             <pathelement location="${gwt.user.jar}" />
+            <pathelement location="${gwt.validation.api.jar}" />
+            <pathelement location="${gwt.validation.api.sources.jar}" />
             <pathelement location="${gwt.dev.jar}" />
         </classpath>
         <jvmarg value="-Xmx512M" />

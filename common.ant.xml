@@ -71,9 +71,8 @@
   <property name="gwt.tools.antlib" location="${gwt.tools}/antlib" />
   <property name="gwt.dev.jar" location="${gwt.home}/gwt-dev.jar" />
   <property name="gwt.user.jar" location="${gwt.home}/gwt-user.jar" />
-
-
-
+  <property name="gwt.validation.api.sources.jar" location="${gwt.home}/validation-api-1.0.0.GA-sources.jar" />
+  <property name="gwt.validation.api.jar" location="${gwt.home}/validation-api-1.0.0.GA.jar" />
 
   <!-- Sanity checks -->
   <available file="${gwt.tools}" type="dir" property="gwt.tools.exists" />
