@@ -27,9 +27,8 @@
   <replace-with class="com.tractionsoftware.gwt.history.client.impl.RawHistoryImplMozilla">
     <when-type-is class="com.google.gwt.user.client.impl.HistoryImpl"/>
     <any>
-			<when-property-is name="user.agent" value="gecko1_8"/>
-			<when-property-is name="user.agent" value="gecko"/>
-		</any>
+      <when-property-is name="user.agent" value="gecko1_8"/>
+    </any>
   </replace-with>
 
 	<!-- Opera has yet another slightly different implementation. -->
