@@ -15,7 +15,6 @@
 }
 
 .gwt-traction-input-shadow {
-  display: inline;
   position: absolute;
   left: -10000px;
   top: -10000px;
