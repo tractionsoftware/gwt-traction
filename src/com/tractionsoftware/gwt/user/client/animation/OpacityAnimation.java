@@ -58,6 +58,7 @@ public class OpacityAnimation extends TractionAnimation {
      * Sets the animation to the starting point, canceling any
      * animation in progress.
      */
+    @Override
     public void setPositionAtStart() {
 	setPosition(0.0);
     }
@@ -66,6 +67,7 @@ public class OpacityAnimation extends TractionAnimation {
      * Sets the animation to the end point, canceling any animation in
      * progress.
      */
+    @Override
     public void setPositionAtEnd() {
 	setPosition(1.0);
     }
@@ -75,6 +77,7 @@ public class OpacityAnimation extends TractionAnimation {
      * animation in progress. Note that the animation will always
      * reset on run.
      */
+    @Override
     public void setPosition(double progress) {
 	cancel();
 	onUpdate(interpolate(progress));	

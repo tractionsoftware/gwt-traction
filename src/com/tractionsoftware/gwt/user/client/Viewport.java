@@ -15,11 +15,19 @@
  */
 package com.tractionsoftware.gwt.user.client;
 
-import com.tractionsoftware.gwt.user.client.impl.ViewportImpl;
-import com.google.gwt.event.dom.client.*;
-import com.google.gwt.event.shared.*;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
+import com.tractionsoftware.gwt.user.client.impl.ViewportImpl;
 
 /**
  * Provides a browser Window like object that tracks focus and
@@ -70,6 +78,7 @@ public class Viewport implements HasFocusHandlers, HasBlurHandlers {
      * @param handler the handler
      * @return returns the handler registration
      */
+    @Override
     public HandlerRegistration addFocusHandler(FocusHandler handler) {
 	return ensureHandlers().addHandler(FocusEvent.getType(), handler);
     }
@@ -80,6 +89,7 @@ public class Viewport implements HasFocusHandlers, HasBlurHandlers {
      * @param handler the handler
      * @return returns the handler registration
      */
+    @Override
     public HandlerRegistration addBlurHandler(BlurHandler handler) {
 	return ensureHandlers().addHandler(BlurEvent.getType(), handler);
     }
@@ -107,6 +117,7 @@ public class Viewport implements HasFocusHandlers, HasBlurHandlers {
 
     private HandlerManager handlerManager;
 
+    @Override
     public void fireEvent(GwtEvent<?> event) {
 	if (handlerManager != null) {
 	    handlerManager.fireEvent(event);

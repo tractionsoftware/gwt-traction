@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Element;
  */
 public class SetOpacityImplStandard implements SetOpacityImpl {
 
+    @Override
     public void setOpacity(Element e, float opacity) {
 	e.getStyle().setProperty("opacity", String.valueOf(opacity));
     }

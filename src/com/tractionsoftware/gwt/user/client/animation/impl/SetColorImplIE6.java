@@ -24,6 +24,7 @@ import com.tractionsoftware.gwt.user.client.util.RgbaColor;
  */
 public class SetColorImplIE6 implements SetColorImpl {
 
+    @Override
     public void setColor(Element e, String cssProperty, RgbaColor color) {
 	e.getStyle().setProperty(cssProperty, color.toRgb());
 	e.getStyle().setProperty("zoom", "1");

@@ -15,19 +15,18 @@
  */
 package com.tractionsoftware.gwt.demo.dialogbox.client;
 
+import java.util.Date;
+
+import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
-
 import com.tractionsoftware.gwt.user.client.ui.TractionDialogBox;
-
-import java.util.Date;
 
 public class DialogBoxDemo implements EntryPoint {
 
@@ -35,30 +34,33 @@ public class DialogBoxDemo implements EntryPoint {
     private ListBox eventListBox;
     private TractionDialogBox dialog;
 
+    @Override
     public void onModuleLoad() {
-	
-	eventListBox = new ListBox(true);
-	eventListBox.setVisibleItemCount(20);
-	RootPanel.get("eventlog").add(eventListBox);
-	
-	// create a dialog that we'll reuse
-	dialog = new TractionDialogBox(false, false, true);
-	dialog.setText("Example Dialog Box");
-	dialog.setGlassEnabled(true);
-	dialog.setWidget(new HTML("Dialog contents go here!<br>Click the (X) icon to close."));
-	dialog.addOpenHandler(new OpenHandler() {
-		public void onOpen(OpenEvent event) {
-		    addEvent("OPEN");
-		}
-	    });
 
-	open = new Button("Open Dialog Box");
-	open.addClickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    dialog.center();
-		}
-	    });
-	RootPanel.get("openbutton").add(open);
+        eventListBox = new ListBox(true);
+        eventListBox.setVisibleItemCount(20);
+        RootPanel.get("eventlog").add(eventListBox);
+
+        // create a dialog that we'll reuse
+        dialog = new TractionDialogBox(false, false, true);
+        dialog.setText("Example Dialog Box");
+        dialog.setGlassEnabled(true);
+        dialog.setWidget(new HTML("Dialog contents go here!<br>Click the (X) icon to close."));
+        dialog.addOpenHandler(new OpenHandler() {
+            @Override
+            public void onOpen(OpenEvent event) {
+                addEvent("OPEN");
+            }
+        });
+
+        open = new Button("Open Dialog Box");
+        open.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                dialog.center();
+            }
+        });
+        RootPanel.get("openbutton").add(open);
 
     }    
 

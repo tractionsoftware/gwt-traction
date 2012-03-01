@@ -1,10 +1,15 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!doctype html>
 <html>
 <head>
 <title>AutoSizingTextArea Demo</title>
-<meta http-equiv="X-UA-Compatible" content="IE=7, IE=8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <style>
 body { height: 850px; }
+textarea {
+  font-family: sans-serif;
+  padding: 0;
+  margin: 0;
+} 
 DIV.small {
   padding: 5px;
   width: 300px;
@@ -28,9 +33,19 @@ DIV.large textarea {
 <body>
 <div class="desc">The Large TextArea is a rather extreme example, but it shows how it adjusts for styling.
 <br><br>
-The grey dotted line is there to show the real textarea. Except for font and line-height, style the container, not the textarea.
+The grey dotted line is there to show the real textarea. Except for
+font and line-height, style the container, not the textarea.
+<br><br>For IE, it helps to specify the font-family for textarea.
+<br><br>If things aren't working as expected, use development tools like
+Firebug to inspect the textarea and its shadow and make sure the
+computed styles match.
 <br><br>Here are the styles used in this page:
 <pre>
+textarea {
+  font-family: sans-serif;
+  padding: 0;
+  margin: 0;
+} 
 DIV.small {
   padding: 5px;
   width: 300px;

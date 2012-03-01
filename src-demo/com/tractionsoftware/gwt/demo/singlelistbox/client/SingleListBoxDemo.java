@@ -15,79 +15,82 @@
  */
 package com.tractionsoftware.gwt.demo.singlelistbox.client;
 
+import java.util.Date;
+
+import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-
 import com.tractionsoftware.gwt.user.client.ui.SingleListBox;
-
-import java.util.Date;
 
 public class SingleListBoxDemo implements EntryPoint {
 
     private ListBox eventListBox;
     private SingleListBox singleListBox;
 
+    @Override
     public void onModuleLoad() {
-	
-	eventListBox = new ListBox(true);
-	eventListBox.setVisibleItemCount(20);
-	RootPanel.get("eventlog").add(eventListBox);
-	
-	singleListBox = new SingleListBox();
-	singleListBox.addItem("Apples");
-	singleListBox.addItem("Bananas");
-	singleListBox.addItem("Oranges");
-	singleListBox.addItem("Pears");	
-	singleListBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-		public void onValueChange(ValueChangeEvent<String> event) {
-		    addEvent("ValueChangeEvent: "+event.getValue());
-		}
-	    });
-	Panel select = RootPanel.get("select");
-	select.add(singleListBox);
 
-	Panel toggle = RootPanel.get("toggle");
-	toggle.add(createSetAddMissingValue(true));
-	toggle.add(createSetAddMissingValue(false));
-	
-	Panel controls1 = RootPanel.get("controls1");
-	controls1.add(createSelectButton("Bananas"));
-	controls1.add(createSelectButton("Pears"));
+        eventListBox = new ListBox(true);
+        eventListBox.setVisibleItemCount(20);
+        RootPanel.get("eventlog").add(eventListBox);
 
-	Panel controls2 = RootPanel.get("controls2");
-	controls2.add(createSelectButton("Kiwis"));
-	controls2.add(createSelectButton("Watermelons"));
-    }    
+        singleListBox = new SingleListBox();
+        singleListBox.addItem("Apples");
+        singleListBox.addItem("Bananas");
+        singleListBox.addItem("Oranges");
+        singleListBox.addItem("Pears");
+        singleListBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<String> event) {
+                addEvent("ValueChangeEvent: " + event.getValue());
+            }
+        });
+        Panel select = RootPanel.get("select");
+        select.add(singleListBox);
+
+        Panel toggle = RootPanel.get("toggle");
+        toggle.add(createSetAddMissingValue(true));
+        toggle.add(createSetAddMissingValue(false));
+
+        Panel controls1 = RootPanel.get("controls1");
+        controls1.add(createSelectButton("Bananas"));
+        controls1.add(createSelectButton("Pears"));
+
+        Panel controls2 = RootPanel.get("controls2");
+        controls2.add(createSelectButton("Kiwis"));
+        controls2.add(createSelectButton("Watermelons"));
+    }
 
     private void addEvent(String event) {
-	eventListBox.insertItem(new Date()+" - "+event, 0);
+        eventListBox.insertItem(new Date() + " - " + event, 0);
     }
 
     private Button createSelectButton(final String value) {
-	Button ret = new Button("setValue(\""+value+"\",true)");
-	ret.addClickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    singleListBox.setValue(value, true);
-		}
-	    });
-	return ret;
+        Button ret = new Button("setValue(\"" + value + "\",true)");
+        ret.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                singleListBox.setValue(value, true);
+            }
+        });
+        return ret;
     }
 
     private Button createSetAddMissingValue(final boolean addMissingValue) {
-	Button ret = new Button("setAddMissingValue("+addMissingValue+")");
-	ret.addClickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    singleListBox.setAddMissingValue(addMissingValue);
-		}
-	    });
-	return ret;
+        Button ret = new Button("setAddMissingValue(" + addMissingValue + ")");
+        ret.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                singleListBox.setAddMissingValue(addMissingValue);
+            }
+        });
+        return ret;
     }
-    
+
 }

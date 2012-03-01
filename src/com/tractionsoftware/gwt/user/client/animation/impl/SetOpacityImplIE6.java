@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.Element;
  */
 public class SetOpacityImplIE6 implements SetOpacityImpl {
 
+    @Override
     public void setOpacity(Element e, float opacity) {
 	e.getStyle().setProperty("zoom", "1");	
 	e.getStyle().setProperty("filter", "alpha(opacity="+((int)(opacity * 100))+")");	

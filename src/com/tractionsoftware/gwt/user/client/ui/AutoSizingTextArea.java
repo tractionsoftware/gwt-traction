@@ -16,10 +16,10 @@
 package com.tractionsoftware.gwt.user.client.ui;
 
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.TextArea;
@@ -46,6 +46,7 @@ public class AutoSizingTextArea extends AutoSizingBase<TextAreaWithSelection, Te
 	setMaxSize(maxSize);
     }
 
+    @Override
     protected void onLoad() {
 	Element boxElement = box.getElement();
 
@@ -70,11 +71,13 @@ public class AutoSizingTextArea extends AutoSizingBase<TextAreaWithSelection, Te
 	super.onLoad();
     }
 
+    @Override
     public void onResize(ResizeEvent event) {
  	matchStyles("width");
 	adjustSize();
     }
 
+    @Override
     public void setHeight(int height) {
 	div.setHeight(divExtra+height+"px");	
 	box.setHeight(height+"px");
@@ -83,6 +86,7 @@ public class AutoSizingTextArea extends AutoSizingBase<TextAreaWithSelection, Te
     /**
      * Returns the size of the shadow element
      */
+    @Override
     public int getShadowSize() {
 	Element shadowElement = shadow.getElement();
 	shadowElement.setScrollTop(10000);	    	    
@@ -93,6 +97,7 @@ public class AutoSizingTextArea extends AutoSizingBase<TextAreaWithSelection, Te
      * @param text the text that should be set on the shadow to
      * determine the appropriate size of the widget
      */
+    @Override
     public void setShadowText(String text) {
 	shadow.setValue(text);
     }
@@ -102,6 +107,7 @@ public class AutoSizingTextArea extends AutoSizingBase<TextAreaWithSelection, Te
      * extraSize. the implementation should just call setWidth or
      * setHeight as appropriate.
      */
+    @Override
     public void setSize(int size) {
 	setHeight(size);
 	if (size == maxSize) {
@@ -109,13 +115,15 @@ public class AutoSizingTextArea extends AutoSizingBase<TextAreaWithSelection, Te
 	}
     }
 
+    @Override
     public void setText(String text) {
 	box.setText(text);
-	DeferredCommand.addCommand(new Command() {
-		public void execute() {
-		    sync();
-		}
-	    });
+	Scheduler.get().scheduleDeferred(new ScheduledCommand() {            
+            @Override
+            public void execute() {
+                sync();
+            }
+        });
     }
 
 }

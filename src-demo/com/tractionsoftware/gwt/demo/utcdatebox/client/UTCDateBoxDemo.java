@@ -33,6 +33,7 @@ public class UTCDateBoxDemo implements EntryPoint {
     private DateBox datebox;
     private UTCDateBox utcdatebox;
 
+    @Override
     public void onModuleLoad() {
 
         eventListBox = new ListBox(true);
@@ -42,6 +43,7 @@ public class UTCDateBoxDemo implements EntryPoint {
 
         datebox = new DateBox(new DatePicker(), null, new DateBox.DefaultFormat(DateTimeFormat.getFormat("MMM dd, yyyy")));
         datebox.addValueChangeHandler(new ValueChangeHandler<Date>() {
+            @Override
             public void onValueChange(ValueChangeEvent<Date> event) {
                 addEvent("DateBox", event.getValue(), event.getValue().getTime());
             }
@@ -50,6 +52,7 @@ public class UTCDateBoxDemo implements EntryPoint {
 
         utcdatebox = new UTCDateBox(new DatePicker(), -1, new DateBox.DefaultFormat(DateTimeFormat.getFormat("MMM dd, yyyy")));
         utcdatebox.addValueChangeHandler(new ValueChangeHandler<Long>() {
+            @Override
             public void onValueChange(ValueChangeEvent<Long> event) {
                 addEvent("UTCDateBox", new Date(event.getValue()), event.getValue());
             }

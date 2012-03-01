@@ -1,0 +1,6 @@
+<module>
+  <inherits name='com.google.gwt.user.User' />
+
+  <!-- gquery for getComputedStyle -->
+  <inherits name='com.google.gwt.query.Query'/>
+</module>

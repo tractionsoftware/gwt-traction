@@ -22,6 +22,7 @@ import com.tractionsoftware.gwt.user.client.ui.TextAreaWithSelection;
 
 public class AutoSizingTextAreaDemo implements EntryPoint {
 
+    @Override
     public void onModuleLoad() {
 
         AutoSizingTextArea small = new AutoSizingTextArea(new TextAreaWithSelection(), 50, 600);
