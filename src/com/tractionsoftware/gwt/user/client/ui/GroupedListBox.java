@@ -15,10 +15,11 @@
  */
 package com.tractionsoftware.gwt.user.client.ui;
 
+import java.util.ArrayList;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
-import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptGroupElement;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
@@ -98,28 +99,194 @@ import com.google.gwt.dom.client.SelectElement;
  */
 public class GroupedListBox extends SingleListBox {
 
-    public GroupedListBox() {}
+    private ArrayList<OptGroup> groups = new ArrayList<OptGroup>();
+
+    private static abstract class OptGroup {
+
+        protected String name;
+        protected int count = 0;
+        
+        public OptGroup(String name) {
+            this.name = name;
+        }
+        
+        public boolean isMatchingGroup(String groupName) {
+            return name.equals(groupName);
+        }
+        
+        public int getCount() {
+            return count;
+        }
+        
+        public abstract void remove();
+        public abstract OptionElement getChildOption(int index);        
+        public abstract Node getInsertBeforeElement(int index);
+        public abstract Element getInsertParent();
+
+        public void increment() {
+            count++;
+        }
+
+        public void decrement() {
+            count--;
+            if (count == 0) {
+                remove();
+            }
+        }
+        
+    }
+    
+    /**
+     * Keeps track of OptGroup elements to avoid hitting the DOM
+     * constantly.
+     */
+    private final class RealOptGroup extends OptGroup {
+        
+        private OptGroupElement element;
+        
+        public RealOptGroup(String name) {
+            super(name);
+            this.element = Document.get().createOptGroupElement();
+            this.element.setLabel(name);
+        }
+        
+        @Override
+        public void remove() {
+            element.removeFromParent();
+        }
+
+        @Override
+        public Node getInsertBeforeElement(int index) {
+            Node before;
+
+            // adjust the index to inside the group
+            int adjusted = getIndexInGroup(name, index);
+
+            // we had a real index (wasn't negative which means
+            // add to the end), but it was too low for this group.
+            // put it at the beginning of the group.
+            if (adjusted < 0 && index >= 0) {
+                adjusted = 0;
+            }
+
+            // check the range and if it's out of range, we'll
+            // just add it to the end
+            // of the group (before == null)
+            if (0 <= adjusted && adjusted < count) {
+                before = element.getChild(adjusted);
+            }
+            else {
+                before = null;
+            }
+
+            return before;
+        }
+
+        @Override
+        public Element getInsertParent() {
+            return element;
+        }
+        
+        public Element getElement() {
+            return element;
+        }
+
+        @Override
+        public OptionElement getChildOption(int index) {
+            return option(element.getChild(index));
+        }
+        
+    }
+
+    /**
+     * Used for ungrouped elements at the beginning of the list.
+     */
+    private final class FakeOptGroup extends OptGroup {
+        
+        public FakeOptGroup() {
+            super("");
+        }
+        
+        @Override
+        public void remove() {
+            while (count-- > 0) {
+                getElement().getFirstChild().removeFromParent();
+            }
+            count = 0;
+        }
+
+        @Override
+        public Node getInsertBeforeElement(int index) {
+            Node before = null;
+            Element parent = getElement();
+
+            // make sure we're not past the initial "group" of
+            // ungrouped options
+            int max = getIndexOfFirstGroup();
+            if (index < 0 || index > max) {
+                if (max < getChildCount()) {
+                    before = parent.getChild(max);
+                }
+            }
+            else if (0 <= index && index < getChildCount()) {
+                before = parent.getChild(index);
+            }
+
+            return before;
+        }
+
+        @Override
+        public Element getInsertParent() {
+            return getElement();
+        }
+
+        @Override
+        public OptionElement getChildOption(int index) {
+            return option(getElement().getChild(index));
+        }
+
+    }
+    
+    public GroupedListBox() {
+        this(false);
+    }
     
     public GroupedListBox(boolean isMultipleSelect) {
         super(true,isMultipleSelect);
+        addFakeOptGroup();
     }
-    
+
     @Override
     public void clear() {
         super.clear();
         
         // we need special handling to remove any OPTGROUP elements
-        Element elm = getElement();
-        while (elm.hasChildNodes()) {
-            elm.removeChild(elm.getFirstChild());
+        for (OptGroup group : groups) {
+            group.remove();
         }
+        
+        groups.clear();
+        addFakeOptGroup();
     }
 
     @Override
     public int getItemCount() {
         return getElement().getElementsByTagName("OPTION").getLength();
     }
-
+    
+    /**
+     * This is provided for testing purposes only. getItemCount() uses
+     * the DOM and this uses the data-structures that we maintain to
+     * improve DOM access.
+     */
+    public int getItemCountFromGroups() {
+        int ret = 0;
+        for (OptGroup group : groups) {
+            ret += group.getCount();
+        }
+        return ret;
+    }
+    
     @Override
     public String getItemText(int index) {
         OptionElement opt = getOption(index);
@@ -142,6 +309,18 @@ public class GroupedListBox extends SingleListBox {
     }
     
     @Override
+    protected void onLoad() {
+        super.onLoad();
+        addFakeOptGroup();
+    }
+    
+    @Override
+    protected void onUnload() {
+        super.onUnload();
+        groups.clear();
+    }
+
+    @Override
     public void insertItem(String item, String value, int index) {
         // find the delimiter if there is one
         int pipe = (item != null) ? item.indexOf('|') : -1;
@@ -162,57 +341,29 @@ public class GroupedListBox extends SingleListBox {
         if (item != null) {
             item = item.replace("||", "|");
         }
+        // make sure we always have a group
+        if (group == null) {
+            group = "";
+        }
 
-        Element parent = getSelectElement();
-        Node before = null;
+        Element parent;
+        Node before;
         
-        if (group != null) {
-            OptGroupElement optgroup = findOptGroupElement(group);
-            if (optgroup != null) {
-                // add it to this optgroup
-                parent = optgroup;
-
-                // adjust the index to inside the group
-                int adjusted = getIndexInGroup(group, index);
-                
-                // we had a real index (wasn't negative which means
-                // add to the end), but it was too low for this group.
-                // put it at the beginning of the group.
-                if (adjusted < 0 && index >= 0) {
-                    adjusted = 0;
-                }
-                
-                // check the range and if it's out of range, we'll
-                // just add it to the end
-                // of the group (before == null)
-                if (0 <= adjusted && adjusted < optgroup.getChildCount()) {
-                    before = optgroup.getChild(adjusted); 
-                }
-            } else {
-                // add a new group and add the item to it
-                optgroup = Document.get().createOptGroupElement();
-                optgroup.setLabel(group);
-                parent.appendChild(optgroup);
-                parent = optgroup;
-                before = null;
-            }
+        OptGroup optgroup = findOptGroup(group);
+        if (optgroup != null) {
+            parent = optgroup.getInsertParent();
+            before = optgroup.getInsertBeforeElement(index);
         }
         else {
-            // make sure we're not past the initial "group" of
-            // ungrouped options
-            int max = getIndexOfFirstGroup();
-            if (index < 0 || index > max) {
-                before = (max < parent.getChildCount()) ? parent.getChild(max) : null;
-            }
-            else if (0 <= index && index < parent.getChildCount()) {
-                before = parent.getChild(index);
-            }
+            optgroup = createOptGroup(group);
+            parent = optgroup.getInsertParent();
+            before = null;
         }
-        
+        optgroup.increment();
+                
         OptionElement option = createOption(item, value);
         parent.insertBefore(option, before);
     }
-
 
     @Override
     public boolean isItemSelected(int index) {
@@ -222,14 +373,25 @@ public class GroupedListBox extends SingleListBox {
 
     @Override
     public void removeItem(int index) {
-        OptionElement option = getOption(index);
-        Element parent = option.getParentElement();
-        option.removeFromParent();
         
-        // remove empty OPTGROUPs
-        if ("OPTGROUP".equals(parent.getTagName()) && !parent.hasChildNodes()) {
-            parent.removeFromParent();
+        int childIndex = index;
+        for (OptGroup group : groups) {
+            int count = group.getCount();
+            if (childIndex < count) {
+                
+                // do the remove
+                OptionElement element = group.getChildOption(childIndex);
+                element.removeFromParent();
+                
+                group.decrement();
+                return;
+            }
+            else {
+                childIndex -= count;
+            }
         }
+
+        throw new IndexOutOfBoundsException("problem in removeItem: index="+index+" range=[0-"+(getItemCount()-1)+"]");                
     }
 
     @Override
@@ -276,32 +438,77 @@ public class GroupedListBox extends SingleListBox {
     // Convenience for dealing with the DOM directly instead of using
     // SelectElement.getOptions, etc
     
+    protected int getChildCount() {
+        // number in the ungrouped group, plus the number of groups,
+        // minus one for the fake, ungrouped group
+        return groups.get(0).getCount() + groups.size() - 1;
+    }
+    
+    /**
+     * We always keep a FakeOptGroup at the top.
+     */
+    private void addFakeOptGroup() {
+        if (groups.isEmpty()) {
+            groups.add(new FakeOptGroup());
+        }
+    }
+
+    /**
+     * Returns the FakeOptGroup at the top.
+     */
+    private OptGroup getFakeOptGroup() {
+        return groups.get(0);
+    }
+    
+    protected OptGroup findOptGroup(String groupName) {
+        for (OptGroup group : groups) {
+            if (group.isMatchingGroup(groupName)) {
+                return group;
+            }
+        }
+        return null;
+    }    
+    
+    protected OptGroup getOptGroup(int index) {
+        int childIndex = index;
+        for (OptGroup group : groups) {
+            int count = group.getCount();
+            if (childIndex < count) {
+                return group;
+            }
+            else {
+                childIndex -= count;
+            }
+        }
+
+        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");                
+    }
+    
+    protected RealOptGroup createOptGroup(String groupName) {
+        RealOptGroup newgroup = new RealOptGroup(groupName);
+        groups.add(newgroup);
+
+        // make sure we put the new OPTGROUP in the SELECT
+        getElement().appendChild(newgroup.getElement());
+        
+        return newgroup;
+    }    
+    
     protected OptionElement getOption(int index) {
         checkIndex(index);
         
-        // first check ungrouped
-        Element elm = getElement();
-        int sz = elm.getChildCount();
-        int firstGroup = getIndexOfFirstGroup();
-        if (index >= 0 && index < firstGroup && index < sz) {
-            return option(elm.getChild(index));
-        }
-
-        // then go through the groups
-        int childIndex = index - firstGroup;
-        for (int i = firstGroup; i < sz; i++) {
-            Node child = elm.getChild(i);
-            if (isGroup(child)) {
-                if (childIndex < child.getChildCount()) {
-                    return option(child.getChild(childIndex));
-                }
-                else {
-                    childIndex -= child.getChildCount();
-                }
+        int childIndex = index;
+        for (OptGroup group : groups) {
+            int count = group.getCount();
+            if (childIndex < count) {
+                return group.getChildOption(childIndex);
+            }
+            else {
+                childIndex -= count;
             }
         }
-        
-        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");
+
+        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");        
     }
     
     private OptionElement option(Node node) {
@@ -309,66 +516,23 @@ public class GroupedListBox extends SingleListBox {
         return OptionElement.as(Element.as(node));
     }
 
-    private OptGroupElement optgroup(Node node) {
-        if (node == null) return null;
-        return OptGroupElement.as(Element.as(node));
-    }
-
     protected int getIndexOfFirstGroup() {
-        Element elm = getElement();
-        int sz = elm.getChildCount();
-        for (int i=0; i<sz; i++) {
-            if (isGroup(elm.getChild(i))) {
-                return i;
-            }
-        }
-        return sz;
+        return getFakeOptGroup().getCount();
     }
     
-    protected boolean isGroup(Node node) {
-        return "OPTGROUP".equals(node.getNodeName());
-    }
-    
-    protected boolean isMatchingGroup(Node child, String group) {
-        if (isGroup(child)) {
-            OptGroupElement optgroup = optgroup(child);
-            return group.equals(optgroup.getLabel());
-        }
-        else {
-            return false;
-        }
-    }
-    
-    protected OptGroupElement findOptGroupElement(String name) {
-        if (name == null) return null;
-        NodeList<Element> optgroups = getElement().getElementsByTagName("OPTGROUP");
-        for (int i=0; i<optgroups.getLength(); i++) {
-            Element optgroup = optgroups.getItem(i);
-            if (isMatchingGroup(optgroup, name)) {
-                return OptGroupElement.as(optgroup);
-            }
-        }
-        return null;
-    }
-        
-    protected int getIndexInGroup(String group, int index) {
-        if (group == null) return index;
+    protected int getIndexInGroup(String groupName, int index) {
+        if (groupName == null) return index;
         
         int adjusted = index;
-        Element elm = getElement();
-        int sz = elm.getChildCount();
-        for (int i=0; i<sz; i++) {
-            Node child = elm.getChild(i);
-            if (isMatchingGroup(child, group)) {
+        
+        for (OptGroup group : groups) {
+            if (group.isMatchingGroup(groupName)) {
                 break;
             }
-            if (isGroup(child)) {
-                adjusted -= child.getChildCount();
-            }
             else {
-                adjusted -= 1;
+                adjusted -= group.getCount();
             }
-        }       
+        }
         return adjusted;
     }
     
