@@ -183,6 +183,7 @@ public abstract class AutoSizingBase<T extends Widget & HasTextSelection & HasVa
 
 	// these styles need to be the same for the box and shadow so
 	// that we can measure properly
+	matchStyles("display");
 	matchStyles("fontSize");
 	matchStyles("fontFamily");
 	matchStyles("fontWeight");
