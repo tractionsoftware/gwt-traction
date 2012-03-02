@@ -129,9 +129,6 @@ public class GroupedListBox extends SingleListBox {
 
         public void decrement() {
             count--;
-            if (count == 0) {
-                remove();
-            }
         }
         
     }
@@ -152,7 +149,7 @@ public class GroupedListBox extends SingleListBox {
         
         @Override
         public void remove() {
-            getElement().removeChild(element);
+            element.removeFromParent();
         }
 
         @Override
@@ -379,7 +376,8 @@ public class GroupedListBox extends SingleListBox {
     public void removeItem(int index) {
         
         int childIndex = index;
-        for (OptGroup group : groups) {
+        for (int i=0; i<groups.size(); i++) {
+            OptGroup group = groups.get(i);            
             int count = group.getCount();
             if (childIndex < count) {
                 
@@ -388,6 +386,13 @@ public class GroupedListBox extends SingleListBox {
                 element.removeFromParent();
                 
                 group.decrement();
+                
+                // remove empty groups
+                if (group.getCount() <= 0) {
+                    group.remove();
+                    groups.remove(i);
+                }
+                
                 return;
             }
             else {
