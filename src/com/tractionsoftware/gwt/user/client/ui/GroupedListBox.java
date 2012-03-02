@@ -152,7 +152,7 @@ public class GroupedListBox extends SingleListBox {
         
         @Override
         public void remove() {
-            element.removeFromParent();
+            getElement().removeChild(element);
         }
 
         @Override
@@ -209,8 +209,12 @@ public class GroupedListBox extends SingleListBox {
         
         @Override
         public void remove() {
+            Element select = getElement();
             while (count-- > 0) {
-                getElement().getFirstChild().removeFromParent();
+                Element option = select.getFirstChildElement();
+                if (option != null) {
+                    select.removeChild(option);
+                }
             }
             count = 0;
         }
