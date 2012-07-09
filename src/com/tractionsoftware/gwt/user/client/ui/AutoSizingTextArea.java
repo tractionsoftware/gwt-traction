@@ -20,6 +20,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.TextArea;
@@ -33,6 +34,7 @@ import com.tractionsoftware.gwt.user.client.util.MiscUtils;
 public class AutoSizingTextArea extends AutoSizingBase<TextAreaWithSelection, TextArea> implements ResizeHandler {
     
     protected int divExtra = 0;
+    protected HandlerRegistration resizeRegistration = null;
 
     public AutoSizingTextArea() {
 	this(new TextAreaWithSelection());
@@ -66,11 +68,22 @@ public class AutoSizingTextArea extends AutoSizingBase<TextAreaWithSelection, Te
 	divExtra += MiscUtils.getComputedStyleInt(boxElement, "paddingTop");
 	divExtra += MiscUtils.getComputedStyleInt(boxElement, "paddingBottom");
 
-	Window.addResizeHandler(this);
+	resizeRegistration = Window.addResizeHandler(this);
 
 	super.onLoad();
     }
 
+    @Override
+    protected void onUnload() {
+        // fix leak reported in issue #4
+        if (resizeRegistration != null) {
+            resizeRegistration.removeHandler();
+            resizeRegistration = null;
+        }
+        
+        super.onUnload();
+    }
+    
     @Override
     public void onResize(ResizeEvent event) {
  	matchStyles("width");
