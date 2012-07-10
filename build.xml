@@ -63,9 +63,6 @@
             gwt.tools
             The location of your GWT tools dir.
             
-            gwt.incubator.jar            
-            The location of the GWT incubator jar.
-
             project.jar
             Where should the gwt-traction jar be created.
                         
@@ -185,30 +182,31 @@
 
   </target>
 
-  <!-- Building the demos (using GwtCompilerTask from gwt-incubator) -->
-
   <target name="gwtc">
 
-    <fail unless="gwt.incubator.jar"
-          message="gwt.incubator.jar must be set to compile the demos" />
+    <!-- convert from module file path to module name -->
+    
+    <propertyregex property="gwtc.module.name" 
+                   input="${gwtc.module.file}"
+                   regexp="${gwtc.src.dir}[/\\](.*)\.gwt\.xml"
+                   select="\1"
+                   casesensitive="false" />
+    
+    <propertyregex property="gwtc.module.name" 
+                   input="${gwtc.module.name}"
+                   override="true"
+                   global="true"
+                   regexp="[/\\]"
+                   replace="\." />
 
-    <taskdef name="gwtc" classname="com.google.ant.GwtCompilerTask">
-      <classpath>
-        <path path="${project.bin}" />
-        <pathelement location="${gwtquery.jar}" />
-        <pathelement location="${gwt.dev.jar}" />
-        <pathelement location="${gwt.incubator.jar}" />
-      </classpath>
-    </taskdef>
-
-    <property name="gwtc.vm.maxMemory" value="512m" />
-
-    <gwtc src="${gwtc.src.dir}"
-          war="${gwtc.out.dir}"
-          moduleFile="${gwtc.module.file}"
-          style="${gwtc.js.style}"
-          vmMaxMemory="${gwtc.vm.maxMemory}"
-          vmStackSize="${java.stackSize}">
+    <java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+      <jvmarg value="-Xmx512m" />
+      <arg value="-war" />
+      <arg value="${gwtc.out.dir}" />
+      <arg value="-style" />
+      <arg value="${gwtc.js.style}" />
+      <arg value="-strict" />
+      <arg value="${gwtc.module.name}" />
       <classpath>
         <pathelement location="${gwtquery.jar}" />
         <path path="${gwtc.src.dir}" />
@@ -218,7 +216,7 @@
         <pathelement location="${gwt.validation.api.sources.jar}" />
         <pathelement location="${gwt.dev.jar}" />
       </classpath>
-    </gwtc>
+    </java>
   </target>
 
   <target name="build.demo.helper" depends="gwtc">
