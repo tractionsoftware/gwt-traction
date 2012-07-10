@@ -21,5 +21,11 @@
     <when-property-is name="user.agent" value="ie8"/>
   </replace-with>
 
+  <source path='client'>
+    <include name='animation/*.java' />
+    <include name='animation/impl/*.java' />
+    <include name='util/RgbaColor.java' />
+  </source>  
+
 </module>
 

@@ -1,6 +1,6 @@
 <module>
         <inherits name='com.google.gwt.user.theme.standard.Standard' />
 	<inherits name='com.tractionsoftware.gwt.demostyle.DemoStyle' />
-	<inherits name='com.tractionsoftware.gwt.user.User' />
+	<inherits name='com.tractionsoftware.gwt.user.DialogBox' />
 	<entry-point class='com.tractionsoftware.gwt.demo.dialogbox.client.DialogBoxDemo' />        
 </module>

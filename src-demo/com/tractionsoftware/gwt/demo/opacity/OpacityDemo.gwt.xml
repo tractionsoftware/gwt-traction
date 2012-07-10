@@ -1,5 +1,5 @@
 <module>
-	<inherits name='com.tractionsoftware.gwt.user.User'/>
+	<inherits name='com.tractionsoftware.gwt.user.OpacityAnimation'/>
 	<inherits name='com.tractionsoftware.gwt.demostyle.DemoStyle'/>
 	<entry-point class='com.tractionsoftware.gwt.demo.opacity.client.OpacityDemo'/>        
 </module>

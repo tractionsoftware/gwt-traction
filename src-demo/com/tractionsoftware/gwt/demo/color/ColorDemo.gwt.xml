@@ -1,6 +1,5 @@
 <module>
-	<inherits name='com.tractionsoftware.gwt.user.User'/>
+	<inherits name='com.tractionsoftware.gwt.user.ColorAnimationRgba'/>
 	<inherits name='com.tractionsoftware.gwt.demostyle.DemoStyle'/>
-<!--	<inherits name='com.tractionsoftware.gwt.user.ColorAnimationRgba'/> -->
 	<entry-point class='com.tractionsoftware.gwt.demo.color.client.ColorDemo'/>        
 </module>

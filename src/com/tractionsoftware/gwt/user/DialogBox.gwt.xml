@@ -1,4 +1,9 @@
 <module>
   <inherits name='com.google.gwt.user.User'/> 
   <stylesheet src='dialogbox.css' /> 
+
+  <source path='client'>
+    <include name='ui/TractionDialogBox.java' />
+  </source>  
+
 </module>

@@ -19,5 +19,10 @@
     </any>
   </replace-with>
 
+  <source path='client'>
+    <include name='Viewport.java' />
+    <include name='impl/ViewportImpl*.java' />
+  </source>
+
 </module>
 
