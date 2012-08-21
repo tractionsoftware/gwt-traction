@@ -133,7 +133,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     // ----------------------------------------------------------------------
     // conversion methods that convert to dates in UTC time
     
-    private static final long DAY_IN_MS = 24L*60L*60L*1000L; 
+    public static final long DAY_IN_MS = 24L*60L*60L*1000L; 
     
     public static final long trimTimeToMidnight(long time) {
         // first trim to midnight
