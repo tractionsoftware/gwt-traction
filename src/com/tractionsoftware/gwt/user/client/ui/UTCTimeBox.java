@@ -13,6 +13,10 @@ package com.tractionsoftware.gwt.user.client.ui;
 
 import java.util.Date;
 
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -91,21 +95,46 @@ import com.google.gwt.user.client.ui.TextBox;
 public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long> {
 
     private TextBox textbox;
-    private DateTimeFormat dateTimeFmt;
-    private DateTimeFormat timeFmt;
-    private DateTimeFormat dateFmt;
+    private DateTimeFormat timeFormat;
+    private DateTimeFormat zoneFormat;
     
-    private String referenceDateInShortFormat;
     private long referenceDateAtMidnight = 0;
-    private long timeZoneOffsetMillis;
+    private long referenceTimeZoneOffsetMillis;
+    
+    private Long lastKnownValue;
+    
+    private class TextBoxHandler implements KeyDownHandler, KeyUpHandler {
+
+        @Override
+        public void onKeyDown(KeyDownEvent event) {
+            switch (event.getNativeKeyCode()) {
+            
+            }
+        }
+
+        @Override
+        public void onKeyUp(KeyUpEvent event) {
+            syncValueToText();
+        }
+
+        
+    }
     
     public UTCTimeBox() {
+        this(DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT));
+    }
+    
+    public UTCTimeBox(DateTimeFormat timeFormat) {
         this.textbox = new TextBox();
-        this.dateFmt = DateTimeFormat.getFormat(PredefinedFormat.DATE_SHORT); 
-        this.timeFmt = DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT);
-        this.dateTimeFmt = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_SHORT);
+        this.timeFormat = timeFormat;
+        this.zoneFormat = DateTimeFormat.getFormat("z");
 
-        setReferenceDate(null);
+        TextBoxHandler handler = new TextBoxHandler();
+        textbox.addKeyDownHandler(handler);
+        textbox.addKeyUpHandler(handler);
+        
+        setReferenceDate(new Date().getTime());
+        textbox.setStyleName("gwt-TimeBox");
         initWidget(textbox);
     }
     
@@ -116,6 +145,13 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         return textbox;
     }
 
+    /**
+     * Returns text to indicate the time zone.
+     */
+    public String getTimeZoneDisplay() {
+        return zoneFormat.format(getReferenceDate());
+    }
+    
     // ----------------------------------------------------------------------
     // coordination with dates
     
@@ -129,12 +165,10 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
      * date at midnight in UTC.
      */
     public void setReferenceDate(Long referenceDate) {
-        if (referenceDate == null) {
-            referenceDate = new Date().getTime();
+        if (referenceDate != null) {
+            referenceDateAtMidnight = UTCDateBox.trimTimeToMidnight(referenceDate);
+            referenceTimeZoneOffsetMillis = UTCDateBox.timezoneOffsetMillis(new Date(referenceDate));
         }
-        referenceDateAtMidnight = UTCDateBox.trimTimeToMidnight(referenceDate);
-        referenceDateInShortFormat = dateFmt.format(new Date(referenceDateAtMidnight));
-        timeZoneOffsetMillis = UTCDateBox.timezoneOffsetMillis(new Date(referenceDate));
     }
 
     // ----------------------------------------------------------------------
@@ -157,16 +191,33 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     
     @Override
     public void setValue(Long value) {
-        setValue(value, false);
+        setValue(value, true, false);
     }
 
     @Override
     public void setValue(Long value, boolean fireEvents) {
-        setReferenceDate(getDateValue(value));
-        syncTextToValue(value);
-        if (fireEvents) fireValueChangeEvent();
+        setValue(value, true, fireEvents);
     }
     
+    public void setValue(Long value, boolean updateTextBox, boolean fireEvents) {
+        setReferenceDate(getDateValue(value));
+        
+        if (updateTextBox) {
+            syncTextToValue(value);
+        }
+
+        // keep track of the last known value so that we only fire
+        // when it's different.
+        Long oldValue = lastKnownValue;
+        lastKnownValue = value;
+        
+        if (fireEvents && !isSameValue(oldValue, value)) fireValueChangeEvent();
+    }
+    
+    private boolean isSameValue(Long a, Long b) {
+        return (a == null) ? (b == null) : a.equals(b);
+    }
+
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Long> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
@@ -195,8 +246,12 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             textbox.setValue("");
         }
         else {
-            textbox.setValue(timeFmt.format(new Date(value)));
+            textbox.setValue(timeFormat.format(new Date(value)));
         }
+    }
+    
+    private void syncValueToText() {
+        setValue(getValueFromText(), false, true);
     }
     
     private Long getValueFromText() {
@@ -205,9 +260,10 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             return null;
         }
         else {
-            String text = getText();            
-            Date date = dateTimeFmt.parse(referenceDateInShortFormat + " " + text);
-            return new Long(referenceDateAtMidnight + getTimeValue(date.getTime()));        
+            String text = getText();
+            Date date = new Date(referenceDateAtMidnight);
+            int num = timeFormat.parse(text, 0, date);
+            return (num != 0) ? new Long(referenceDateAtMidnight + getTimeValue(date.getTime())) : null;
         }
     }    
 
@@ -237,7 +293,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     }
 
     private long normalizeInLocalRange(long time) {
-        return ((time - timeZoneOffsetMillis) % UTCDateBox.DAY_IN_MS) + timeZoneOffsetMillis;
+        return ((time - referenceTimeZoneOffsetMillis) % UTCDateBox.DAY_IN_MS) + referenceTimeZoneOffsetMillis;
     }
-        
+
 }

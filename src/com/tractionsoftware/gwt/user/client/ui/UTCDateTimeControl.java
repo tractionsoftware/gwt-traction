@@ -11,14 +11,18 @@
 
 package com.tractionsoftware.gwt.user.client.ui;
 
+import java.util.Date;
+
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
@@ -37,22 +41,29 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
 
     private UTCDateBox date;
     private UTCTimeBox time;
+    private InlineLabel zone;
+    private InlineLabel debug;
 
+    /**
+     * Creates a new date/time control with default formats based no
+     * the user's locale.
+     */
     public UTCDateTimeControl() {
-        this(new DateBox.DefaultFormat());
+        this(new DateBox.DefaultFormat(), DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT));
     }
     
     /**
-     * The format is only used for date formatting. Currently the time
-     * format is always based on {@link DateTimeFormat#getMediumTimeFormat()}.
+     * Creates a new date/time control with the specified formats.
      */
-    public UTCDateTimeControl(DateTimeFormat format) {
-        this(new DateBox.DefaultFormat(format));
+    public UTCDateTimeControl(DateTimeFormat dateFormat, DateTimeFormat timeFormat) {
+        this(new DateBox.DefaultFormat(dateFormat), timeFormat);
     }
     
-    public UTCDateTimeControl(DateBox.Format format) {
-        date = new UTCDateBox(new DatePicker(), -1, format);
-        time = new UTCTimeBox();
+    public UTCDateTimeControl(DateBox.Format dateFormat, DateTimeFormat timeFormat) {
+        date = new UTCDateBox(new DatePicker(), -1, dateFormat);
+        time = new UTCTimeBox(timeFormat);
+        zone = new InlineLabel();
+        debug = new InlineLabel();
 
         // tie them together and listen for changes because changing
         // the date will affect the resulting time
@@ -63,10 +74,31 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
                 time.fireValueChangeEvent();
             }
         });
+        time.addValueChangeHandler(new ValueChangeHandler<Long>() {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<Long> event) {
+                Long value = event.getValue();
+                if (value != null) {
+                    debug.setText(new Date(value).toString());                    
+                }
+                else {                    
+                    debug.setText("null");                    
+                }
+                zone.setText(time.getTimeZoneDisplay());
+            }
+            
+        });
         
         FlowPanel panel = new FlowPanel();
         panel.add(date);
         panel.add(time);
+        panel.add(zone);
+        panel.add(debug);
+        
+        zone.addStyleName("gwt-DateTimeControl-zone");
+        panel.addStyleName("gwt-DateTimeControl");
+        
         initWidget(panel);
     }
     
@@ -115,7 +147,8 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
     // style
     
     public void setVisibleLength(int length) {
+        // we make the timebox a little smaller than the datebox
         date.getDateBox().getTextBox().setVisibleLength(length);
-        time.getTextBox().setVisibleLength(length);
+        time.getTextBox().setVisibleLength(length-3);
     }
 }
