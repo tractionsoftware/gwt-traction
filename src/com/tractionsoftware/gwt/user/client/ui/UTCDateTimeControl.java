@@ -70,6 +70,21 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
         initWidget(panel);
     }
     
+    public UTCDateBox getDateBox() {
+        return date;
+    }
+    
+    public UTCTimeBox getTimeBox() {
+        return time;
+    }
+    
+    public String getDateText() {
+        return date.getDateBox().getTextBox().getValue();
+    }
+    public String getTimeText() {
+        return time.getText();
+    }
+    
     // ----------------------------------------------------------------------
     // HasValue
     
@@ -86,7 +101,7 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
 
     @Override
     public void setValue(Long value, boolean fireEvents) {
-        date.setValue(UTCDateBox.trimTimeToMidnight(value));
+        date.setValue(time.getDateValue(value));
         time.setValue(value, fireEvents);
     }
 

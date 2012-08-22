@@ -121,7 +121,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
         datebox.setValue(utc2date(value), fireEvents);
     }
 
-    private void fireValueChangeEvent(long value) {
+    public void fireValueChangeEvent(long value) {
         ValueChangeEvent.fire(this, new Long(value));             
     }
 

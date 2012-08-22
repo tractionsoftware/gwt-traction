@@ -162,7 +162,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
 
     @Override
     public void setValue(Long value, boolean fireEvents) {
-        setReferenceDate(value);
+        setReferenceDate(getDateValue(value));
         syncTextToValue(value);
         if (fireEvents) fireValueChangeEvent();
     }
@@ -218,6 +218,13 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     
     public Long getTimeValue(Long value) {
         return normalizeInLocalRange(value.longValue());
+    }
+
+    public Long getDateValue(Long value) {
+        // the trim is probably unnecessary
+        //Date date = new Date(value - getTimeValue(value));        
+        //return UTCDateBox.date2utc(date);
+        return (value != null) ? value - getTimeValue(value) : null;
     }
     
     public void setTimeValue(Long value) {
