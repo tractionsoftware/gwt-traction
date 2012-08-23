@@ -11,8 +11,6 @@
 
 package com.tractionsoftware.gwt.user.client.ui;
 
-import java.util.Date;
-
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -42,7 +40,6 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
     private UTCDateBox date;
     private UTCTimeBox time;
     private InlineLabel zone;
-    private InlineLabel debug;
 
     /**
      * Creates a new date/time control with default formats based no
@@ -63,7 +60,6 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
         date = new UTCDateBox(new DatePicker(), -1, dateFormat);
         time = new UTCTimeBox(timeFormat);
         zone = new InlineLabel();
-        debug = new InlineLabel();
 
         // tie them together and listen for changes because changing
         // the date will affect the resulting time
@@ -78,13 +74,6 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
 
             @Override
             public void onValueChange(ValueChangeEvent<Long> event) {
-                Long value = event.getValue();
-                if (value != null) {
-                    debug.setText(new Date(value).toString());                    
-                }
-                else {                    
-                    debug.setText("null");                    
-                }
                 zone.setText(time.getTimeZoneDisplay());
             }
             
@@ -94,7 +83,6 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
         panel.add(date);
         panel.add(time);
         panel.add(zone);
-        panel.add(debug);
         
         zone.addStyleName("gwt-DateTimeControl-zone");
         panel.addStyleName("gwt-DateTimeControl");
@@ -128,7 +116,7 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
 
     @Override
     public void setValue(Long value) {
-        setValue(value, false);
+        setValue(value, true);
     }
 
     @Override
