@@ -74,6 +74,21 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     }
 
     // ----------------------------------------------------------------------
+    // Interaction with the textbox
+    
+    public String getText() {
+        return datebox.getTextBox().getValue();
+    }
+    
+    public void setText(String text) {
+        String oldValue = getText();
+        datebox.getTextBox().setValue(text, true);
+        if (oldValue == null || !oldValue.equals(text)) {
+            ValueChangeEvent.fire(this, getValue());
+        }
+    }
+
+    // ----------------------------------------------------------------------
     // HasValue 
     
     /**

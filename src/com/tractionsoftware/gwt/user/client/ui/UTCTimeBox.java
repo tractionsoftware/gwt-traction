@@ -30,12 +30,11 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
@@ -132,7 +131,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             case KeyCodes.KEY_ENTER:
             case KeyCodes.KEY_TAB:
                 // accept current value
-                if (menu.isVisible()) {
+                if (menu.isShowing()) {
                     menu.acceptHighlighted();
                 }
                 // fall through
@@ -166,15 +165,13 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         }
     }
     
-    private class TimeBoxMenuOption extends ComplexPanel {
+    private class TimeBoxMenuOption extends FlowPanel {
 
         private long offsetFromMidnight;
         private String value;
         
         public TimeBoxMenuOption(long offsetFromMidnight) {
             this.offsetFromMidnight = offsetFromMidnight;
-
-            setElement(DOM.createElement("LI"));
 
             long time = referenceDateAtMidnight + referenceTimeZoneOffsetMillis + offsetFromMidnight;            
             value = timeFormat.format(new Date(time));
@@ -221,7 +218,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         
     }
     
-    private class TimeBoxMenu extends ComplexPanel {
+    private class TimeBoxMenu extends PopupPanel {
         
         private static final long INTERVAL = 30*60*1000L;
         private static final long DAY = 24*60*60*1000L;
@@ -230,11 +227,13 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         private int highlightedOptionIndex = -1;
         
         public TimeBoxMenu() {
-            setElement(DOM.createElement("UL"));
+            super(true);
             setStyleName("gwt-TimeBox-menu");
+            addAutoHidePartner(textbox.getElement());            
             
-            int numOptions = (int) (DAY / INTERVAL);
+            FlowPanel container = new FlowPanel();
             
+            int numOptions = (int) (DAY / INTERVAL);            
             options = new TimeBoxMenuOption[numOptions];
             
             // we need to use times for formatting, but we don't keep
@@ -242,15 +241,17 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             // insert into the textbox.
             for (int i=0; i<numOptions; i++) {
                 options[i] = new TimeBoxMenuOption(i * INTERVAL);
-                add(options[i], getElement());
+                container.add(options[i]);
             }
+            
+            add(container);
         }
         
         public void adjustHighlight(int value) {
             
             // make the list of times visible if it isn't
-            if (!isVisible()) {
-                setVisible(true);
+            if (!isShowing()) {
+                showTimePicker();
             }
             
             // highlight the new value
@@ -296,43 +297,41 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             }
         }
         
-        @Override
-        public void setVisible(boolean visible) {
-            super.setVisible(visible);
+        public void showTimePicker() {
 
-            if (visible) {
-                int lastOptionLessThanCurrentTime = 0;
+            showRelativeTo(textbox);
+            
+            int lastOptionLessThanCurrentTime = 0;
 
-                // reset while we try to find an option to highlight
-                highlightedOptionIndex = -1;
-                
-                Long currentTime = getValue();
-                for (int i=0; i<options.length; i++) {
-                    TimeBoxMenuOption option = options[i];
+            // reset while we try to find an option to highlight
+            highlightedOptionIndex = -1;
 
-                    boolean isEqual = option.isTimeEqualTo(currentTime); 
-                    if (isEqual) {
-                        highlightedOptionIndex = i;
-                    }
-                    option.setSelected(isEqual);
-                    option.setHighlighted(isEqual);
+            Long currentTime = getValue();
+            for (int i = 0; i < options.length; i++) {
+                TimeBoxMenuOption option = options[i];
 
-                    if (option.isTimeLessThan(currentTime)) {
-                        lastOptionLessThanCurrentTime = i;
-                    }
+                boolean isEqual = option.isTimeEqualTo(currentTime);
+                if (isEqual) {
+                    highlightedOptionIndex = i;
                 }
+                option.setSelected(isEqual);
+                option.setHighlighted(isEqual);
 
-                int index;
-                if (hasHighlightedOption()) {
-                    index = highlightedOptionIndex;                    
-                } 
-                else {
-                    index = normalizeOptionIndex(lastOptionLessThanCurrentTime);
+                if (option.isTimeLessThan(currentTime)) {
+                    lastOptionLessThanCurrentTime = i;
                 }
-                // include a little extra to center the current time
-                setHighlightedIndex(index);
-                scrollToIndex(index + 6);        
             }
+
+            int index;
+            if (hasHighlightedOption()) {
+                index = highlightedOptionIndex;
+            }
+            else {
+                index = normalizeOptionIndex(lastOptionLessThanCurrentTime);
+            }
+            // include a little extra to center the current time
+            setHighlightedIndex(index);
+            scrollToIndex(index + 6);
         }
         
     }
@@ -359,8 +358,6 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         container.add(textbox);
 
         menu = new TimeBoxMenu();
-        menu.setVisible(false);
-        container.add(menu);        
         
         initWidget(container);
     }
@@ -384,11 +381,11 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     
     public void showMenu() {
         // make the menu visible and select the appropriate value 
-        menu.setVisible(true);
+        menu.showTimePicker();
     }
     
     public void hideMenu() {
-        menu.setVisible(false);
+        menu.hide();
     }
     
     // ----------------------------------------------------------------------
@@ -475,6 +472,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     
     public void setText(String text) {
         textbox.setValue(text);
+        syncValueToText();
     }
 
     // ----------------------------------------------------------------------

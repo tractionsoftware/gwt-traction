@@ -98,11 +98,21 @@ public class UTCDateTimeControl extends Composite implements HasValue<Long>, Has
         return time;
     }
     
+    // ----------------------------------------------------------------------
+    // Interaction with the text boxes
+    
     public String getDateText() {
-        return date.getDateBox().getTextBox().getValue();
+        return date.getText();
     }
+    public void setDateText(String text) {
+        date.setText(text);
+    }
+
     public String getTimeText() {
         return time.getText();
+    }
+    public void setTimeText(String text) {
+        time.setText(text);
     }
     
     // ----------------------------------------------------------------------
