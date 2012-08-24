@@ -38,67 +38,15 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
- * Time is represented as the number of milliseconds after midnight in
- * UTC relative to a specified reference date. It is meant to be used
- * with UTCDateBox. If you add the value of this control with that of
- * the UTCDateBox, you get a specific minute in time in UTC selected
- * from the user's time zone.
+ * Time is represented as the number of milliseconds after midnight
+ * independent of time zone.
  * 
- * Here are some sample values for EDT (GMT-4):
+ * It will use the GWT DateTimeFormat to parse in the browser
+ * timezone, but it will then convert the time to be independent of
+ * timezone.
  * 
- * 12:00 AM => 14400000 = 4 hours<br>
- * 01:00 AM => 18000000 = 5 hours<br>
- * 02:00 AM => 21600000 = 6 hours<br>
- * 03:00 AM => 25200000 = 7 hours<br>
- * 04:00 AM => 28800000 = 8 hours<br>
- * 05:00 AM => 32400000 = 9 hours<br>
- * 06:00 AM => 36000000 = 10 hours<br>
- * 07:00 AM => 39600000 = 11 hours<br>
- * 08:00 AM => 43200000 = 12 hours<br>
- * 09:00 AM => 46800000 = 13 hours<br>
- * 10:00 AM => 50400000 = 14 hours<br>
- * 11:00 AM => 54000000 = 15 hours<br>
- * 12:00 PM => 57600000 = 16 hours<br>
- * 01:00 PM => 61200000 = 17 hours<br>
- * 02:00 PM => 64800000 = 18 hours<br>
- * 03:00 PM => 68400000 = 19 hours<br>
- * 04:00 PM => 72000000 = 20 hours<br>
- * 05:00 PM => 75600000 = 21 hours<br>
- * 06:00 PM => 79200000 = 22 hours<br>
- * 07:00 PM => 82800000 = 23 hours<br>
- * 08:00 PM => 86400000 = 24 hours<br>
- * 09:00 PM => 90000000 = 25 hours<br>
- * 10:00 PM => 93600000 = 26 hours<br>
- * 11:00 PM => 97200000 = 27 hours<br>
- * 
- * Here are some sample values for JST (GMT+9):
- * 
- * 12:00 AM => -32400000 = -9 hours <br>
- * 01:00 AM => -28800000 = -8 hours <br>
- * 02:00 AM => -25200000 = -7 hours <br>
- * 03:00 AM => -21600000 = -6 hours <br>
- * 04:00 AM => -18000000 = -5 hours <br>
- * 05:00 AM => -14400000 = -4 hours <br>
- * 06:00 AM => -10800000 = -3 hours <br>
- * 07:00 AM => -7200000 = -2 hours <br>
- * 08:00 AM => -3600000 = -1 hours <br>
- * 09:00 AM => 0 = 0 hours <br>
- * 10:00 AM => 3600000 = 1 hours <br>
- * 11:00 AM => 7200000 = 2 hours <br>
- * 12:00 PM => 10800000 = 3 hours <br>
- * 01:00 PM => 14400000 = 4 hours <br>
- * 02:00 PM => 18000000 = 5 hours <br>
- * 03:00 PM => 21600000 = 6 hours <br>
- * 04:00 PM => 25200000 = 7 hours <br>
- * 05:00 PM => 28800000 = 8 hours <br>
- * 06:00 PM => 32400000 = 9 hours <br>
- * 07:00 PM => 36000000 = 10 hours <br>
- * 08:00 PM => 39600000 = 11 hours <br>
- * 09:00 PM => 43200000 = 12 hours <br>
- * 10:00 PM => 46800000 = 13 hours <br>
- * 11:00 PM => 50400000 = 14 hours <br>
- * 
- * The control supports an unspecified value of null with a blank textbox.
+ * The control supports an unspecified value of null with a blank
+ * textbox.
  * 
  * @author andy
  */
@@ -108,12 +56,8 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     
     private TextBox textbox;
     private DateTimeFormat timeFormat;
-    private DateTimeFormat zoneFormat;
     
     private TimeBoxMenu menu;
-    
-    private long referenceDateAtMidnight = 0;
-    private long referenceTimeZoneOffsetMillis;
     
     private Long lastKnownValue;
     
@@ -173,7 +117,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         public TimeBoxMenuOption(long offsetFromMidnight) {
             this.offsetFromMidnight = offsetFromMidnight;
 
-            long time = referenceDateAtMidnight + referenceTimeZoneOffsetMillis + offsetFromMidnight;            
+            long time = UTCDateBox.timezoneOffsetMillis(new Date(0)) + offsetFromMidnight;            
             value = timeFormat.format(new Date(time));
 
             Anchor a = new Anchor(value);
@@ -203,8 +147,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         }
         
         private long getTime() {
-            long time = referenceDateAtMidnight + referenceTimeZoneOffsetMillis + offsetFromMidnight;
-            return time;
+            return offsetFromMidnight;
         }
         
         public boolean isTimeEqualTo(long time) {
@@ -343,15 +286,12 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     public UTCTimeBox(DateTimeFormat timeFormat) {
         this.textbox = new TextBox();
         this.timeFormat = timeFormat;
-        this.zoneFormat = DateTimeFormat.getFormat("z");
 
         TextBoxHandler handler = new TextBoxHandler();
         textbox.addKeyDownHandler(handler);
         textbox.addKeyUpHandler(handler);
         textbox.addBlurHandler(handler);
         textbox.addClickHandler(handler);
-        
-        setReferenceDate(new Date().getTime());
         
         container = new FlowPanel();
         container.setStyleName("gwt-TimeBox");
@@ -369,13 +309,6 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         return textbox;
     }
 
-    /**
-     * Returns text to indicate the time zone.
-     */
-    public String getTimeZoneDisplay() {
-        return zoneFormat.format(getReferenceDate());
-    }
-    
     // ----------------------------------------------------------------------
     // menu
     
@@ -388,25 +321,6 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         menu.hide();
     }
     
-    // ----------------------------------------------------------------------
-    // coordination with dates
-    
-    public Date getReferenceDate() {
-        return new Date(referenceDateAtMidnight);
-    }
-    
-    /**
-     * Because time zones vary throughout the year (EST vs EDT), we
-     * need a reference Date when parsing a time. This should be a
-     * date at midnight in UTC.
-     */
-    public void setReferenceDate(Long referenceDate) {
-        if (referenceDate != null) {
-            referenceDateAtMidnight = UTCDateBox.trimTimeToMidnight(referenceDate);
-            referenceTimeZoneOffsetMillis = UTCDateBox.timezoneOffsetMillis(new Date(referenceDate));
-        }
-    }
-
     // ----------------------------------------------------------------------
     // HasValue
     
@@ -436,7 +350,6 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     }
     
     public void setValue(Long value, boolean updateTextBox, boolean fireEvents) {
-        setReferenceDate(getDateValue(value));
         
         if (updateTextBox) {
             syncTextToValue(value);
@@ -479,12 +392,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     // synchronization between text and value
     
     private void syncTextToValue(Long value) {
-        if (value == null) {
-            textbox.setValue("");
-        }
-        else {
-            textbox.setValue(timeFormat.format(new Date(value)));
-        }
+        textbox.setValue(value2text(value));
     }
     
     private void syncValueToText() {
@@ -492,45 +400,38 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     }
     
     private Long getValueFromText() {
-        // need to update the parsed value
-        if (!hasValue()) {
-            return null;
-        }
-        else {
-            String text = getText();
-            Date date = new Date(referenceDateAtMidnight);
-            int num = timeFormat.parse(text, 0, date);
-            return (num != 0) ? new Long(referenceDateAtMidnight + getTimeValue(date.getTime())) : null;
-        }
+        return text2value(getText());
     }    
 
-    public Long getTimeValue() {
-        Long ret = getValue();
-        return ret != null ? getTimeValue(ret) : null;
-    }
-    
-    public Long getTimeValue(Long value) {
-        return normalizeInLocalRange(value.longValue());
+    private long normalizeInLocalRange(long time) {
+        return (time + UTCDateBox.DAY_IN_MS) % UTCDateBox.DAY_IN_MS;
     }
 
-    public Long getDateValue(Long value) {
-        // the trim is probably unnecessary
-        //Date date = new Date(value - getTimeValue(value));        
-        //return UTCDateBox.date2utc(date);
-        return (value != null) ? value - getTimeValue(value) : null;
+    // ----------------------------------------------------------------------
+    // parsing and formatting
+
+    private Long text2value(String text) {
+        if (text.trim().length() == 0) {
+            return null;
+        } else {
+            Date date = new Date(0);
+            int num = timeFormat.parse(text, 0, date);
+            return (num != 0) ? new Long(normalizeInLocalRange(date.getTime() - UTCDateBox.timezoneOffsetMillis(date))) : null;
+        }
     }
     
-    public void setTimeValue(Long value) {
-        if (value != null) {
-            setValue(referenceDateAtMidnight + value);
+    private String value2text(Long value) {
+        if (value == null) {
+            return "";
         }
         else {
-            setValue(null);
+            // midnight 1/1/1970 GMT
+            Date date = new Date(0);
+            // offset by timezone and value
+            date.setTime(UTCDateBox.timezoneOffsetMillis(date) + value.longValue());
+            // format it
+            return timeFormat.format(date);
         }
     }
-
-    private long normalizeInLocalRange(long time) {
-        return ((time - referenceTimeZoneOffsetMillis) % UTCDateBox.DAY_IN_MS) + referenceTimeZoneOffsetMillis;
-    }
-
+    
 }
