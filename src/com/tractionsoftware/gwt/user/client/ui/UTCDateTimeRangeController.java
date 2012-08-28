@@ -27,17 +27,21 @@ import com.google.gwt.user.client.ui.HasValue;
  */
 public class UTCDateTimeRangeController {
 
-    private UTCDateTimeControl start;
-    private UTCDateTimeControl end;
+    private UTCDateBox startDate;
+    private UTCTimeBox startTime;
+    
+    private UTCDateBox endDate;
+    private UTCTimeBox endTime;
+    
     private HasValue<Boolean> allDayCheckbox;
     
-    // we need to keep track of intervals because once the fields
-    // change, it's too late to know what they were.
-    private long dateIntervalMillis;
-    private long timeIntervalMillis;
+    // we need to keep track of interval because once the fields
+    // change, it's too late to know what they were. note that the
+    // interval is always measured in millis and may be greater than
+    // DAY_IN_MS
+    private long intervalMillis;
     
-    private long defaultDateIntervalMillis = 0; // same start/end dates
-    private long defaultTimeIntervalMillis = 60*60*1000L; // 1 hr 
+    private long defaultIntervalMillis = 60*60*1000L; // 1 hr
     
     /**
      * Creates a controller that will manage the date/time range
@@ -49,15 +53,9 @@ public class UTCDateTimeRangeController {
      * 
      * @param end
      *            The control for the end date/time
-     * 
-     * @param allDayCheckbox
-     *            If specified, when the all day checkbox is checked,
-     *            the time controls of the date/time controls will be
-     *            hidden. null can be used to indicate that no all day
-     *            checkbox is used.
      */
-    public UTCDateTimeRangeController(UTCDateTimeControl start, UTCDateTimeControl end) {
-        this(start, end, null);
+    public UTCDateTimeRangeController(UTCDateBox startDate, UTCTimeBox startTime, UTCDateBox endDate, UTCTimeBox endTime) {
+        this(startDate, startTime, endDate, endTime, null);
     }
 
     /**
@@ -76,69 +74,47 @@ public class UTCDateTimeRangeController {
      *            the time controls of the date/time controls will be
      *            hidden.
      */
-    public UTCDateTimeRangeController(UTCDateTimeControl start, UTCDateTimeControl end, HasValue<Boolean> allDayCheckbox) {
-        this.start = start;
-        this.end = end;
+    public UTCDateTimeRangeController(UTCDateBox startDate, UTCTimeBox startTime, UTCDateBox endDate, UTCTimeBox endTime, HasValue<Boolean> allDayCheckbox) {
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endDate = endDate;
+        this.endTime = endTime;
         this.allDayCheckbox = allDayCheckbox;
-        updateIntervals();
+        updateInterval();
 
         // attach the event handlers
         if (allDayCheckbox != null) {
             allDayCheckbox.addValueChangeHandler(new AllDayCheckboxHandler());
         }
         
-        start.getDateBox().addValueChangeHandler(new StartDateHandler());
-        start.getTimeBox().addValueChangeHandler(new StartTimeHandler());
+        StartDateTimeHandler startHandler = new StartDateTimeHandler();
+        EndDateTimeHandler endHandler = new EndDateTimeHandler();
         
-        end.getDateBox().addValueChangeHandler(new EndDateHandler());
-        end.getTimeBox().addValueChangeHandler(new EndTimeHandler());
-    }
-
-    /**
-     * Returns the current default date interval
-     */
-    public long getDefaultDateIntervalMillis() {
-        return defaultDateIntervalMillis;
-    }
-
-    /**
-     * Sets the default date interval in milliseconds. By default this is 0.
-     */
-    public void setDefaultDateIntervalMillis(long defaultDateIntervalMillis) {
-        this.defaultDateIntervalMillis = defaultDateIntervalMillis;
+        startDate.addValueChangeHandler(startHandler);
+        startTime.addValueChangeHandler(startHandler);
+        
+        endDate.addValueChangeHandler(endHandler);
+        endTime.addValueChangeHandler(endHandler);
     }
 
     /**
      * Returns the current default time interval
      */
-    public long getDefaultTimeIntervalMillis() {
-        return defaultTimeIntervalMillis;
+    public long getDefaultIntervalMillis() {
+        return defaultIntervalMillis;
     }
 
     /**
      * Sets the default time interval in milliseconds. By default this
      * is 60 minutes (60*60*1000).
      */
-    public void setDefaultTimeIntervalMillis(long defaultTimeIntervalMillis) {
-        this.defaultTimeIntervalMillis = defaultTimeIntervalMillis;
+    public void setDefaultIntervalMillis(long defaultIntervalMillis) {
+        this.defaultIntervalMillis = defaultIntervalMillis;
+        updateInterval();
     }
 
     // ----------------------------------------------------------------------
     // values 
-    
-    /**
-     * Returns the value for the start field.
-     */
-    public Long getStartValue() {
-        return getValue(start);
-    }
-
-    /**
-     * Returns the value for the end field.
-     */
-    public Long getEndValue() {
-        return getValue(end);
-    }
     
     /**
      * Returns true if the all day checkbox is checked
@@ -147,35 +123,19 @@ public class UTCDateTimeRangeController {
         return allDayCheckbox != null && allDayCheckbox.getValue();
     }
     
-    private Long getValue(UTCDateTimeControl control) {
-        return isAllDay() ? control.getDateBox().getValue() : control.getTimeBox().getValue();        
-    }
-    
     // ----------------------------------------------------------------------
     // interval management
     
-    private void updateIntervals() {
-        dateIntervalMillis = getInterval(start.getDateBox(), end.getDateBox(), defaultDateIntervalMillis);
-        timeIntervalMillis = getInterval(start, end, defaultTimeIntervalMillis);
-    }
-    
-    /**
-     * Determines the interval between two fields.
-     * 
-     * @param start
-     *            The field with the start value.
-     * @param end
-     *            The field with the end value.
-     * @param defaultInterval
-     *            If either of the start or end values is unspecified,
-     *            this will be used as a default.
-     * @return The interval between the start and end valeus (end -
-     *         start).
-     */
-    private long getInterval(HasValue<Long> start, HasValue<Long> end, long defaultInterval) {
-        Long startValue = start.getValue();
-        Long endValue = end.getValue();
-        return (startValue != null && endValue != null) ? endValue - startValue : defaultInterval;
+    private void updateInterval() {
+        intervalMillis = getCombinedValue(endDate, endTime) - getCombinedValue(startDate, startTime);
+        
+        // if this is zero, most likely the times aren't set and the
+        // dates are the same. in this case we don't really want a
+        // zero interval. if we *really* want a zero interval, the
+        // default would be zero so this is safe.
+        if (intervalMillis == 0) {
+            intervalMillis = defaultIntervalMillis;
+        }
     }
     
     // ----------------------------------------------------------------------
@@ -186,8 +146,8 @@ public class UTCDateTimeRangeController {
         @Override
         public void onValueChange(ValueChangeEvent<Boolean> event) {
             boolean allDay = event.getValue();
-            start.getTimeBox().setVisible(!allDay);
-            end.getTimeBox().setVisible(!allDay);
+            startTime.setVisible(!allDay);
+            endTime.setVisible(!allDay);
         }
         
     }
@@ -196,64 +156,88 @@ public class UTCDateTimeRangeController {
      * When the start date changes, we want to push end date forward,
      * matching the existing interval.
      */
-    private class StartDateHandler implements ValueChangeHandler<Long> {
+    private class StartDateTimeHandler implements ValueChangeHandler<Long> {
 
         @Override
         public void onValueChange(ValueChangeEvent<Long> event) {
-            Long startValue = start.getDateBox().getValue();
-            end.getDateBox().setValue(startValue + dateIntervalMillis);
-        }
-        
-    }
-    
-    private class StartTimeHandler implements ValueChangeHandler<Long> {
-
-        @Override
-        public void onValueChange(ValueChangeEvent<Long> event) {
-            // ignore time changes that flow through from date changes
-            // when there is no time set.
-            Long startValue = start.getTimeBox().getTimeValue();
-            if (startValue != null) {
-                end.setValue(start.getValue() + timeIntervalMillis);            
+            if (startTime.getValue() != null) {
+                setCombinedValue(endDate, endTime, getCombinedValue(startDate, startTime) + intervalMillis, true);                
+            }
+            else {
+                setCombinedValue(endDate, endTime, getCombinedValue(startDate, startTime) + datePartMillis(intervalMillis), false);                
             }
         }
         
     }
-    
+
     /**
      * When the end date changes, if the interval is improper (start >
      * end), we want to adjust the start backward, maintaining the
      * interval.
      */
-    private class EndDateHandler implements ValueChangeHandler<Long> {
+    private class EndDateTimeHandler implements ValueChangeHandler<Long> {
 
         @Override
         public void onValueChange(ValueChangeEvent<Long> event) {
-            Long startValue = start.getDateBox().getValue();
-            if (startValue == null || startValue > end.getDateBox().getValue()) {
-                start.getDateBox().setValue(end.getDateBox().getValue() - dateIntervalMillis);
+            long startCombined = getCombinedValue(startDate, startTime);
+            long endCombined = getCombinedValue(endDate, endTime);
+            if (isMissingStartDate() || isMissingOnlyStartTime() || startCombined > endCombined) {
+                if (endTime.getValue() != null) {
+                    setCombinedValue(startDate, startTime, endCombined - intervalMillis, true);
+                }
+                else {
+                    setCombinedValue(startDate, startTime, endCombined - datePartMillis(intervalMillis), false);                    
+                }
             }
             else {
-                updateIntervals();
+                updateInterval();
             }
+        }
+
+        private boolean isMissingStartDate() {
+            return startDate.getValue() == null;
+        }
+        
+        private boolean isMissingOnlyStartTime() {
+            return startTime.getValue() == null && startDate.getValue() != null && endDate.getValue() != null && endTime.getValue() != null;
         }
         
     }
     
-    private class EndTimeHandler implements ValueChangeHandler<Long> {
-
-        @Override
-        public void onValueChange(ValueChangeEvent<Long> event) {
-            Long startValue = start.getValue();
-            if (startValue == null || startValue > end.getValue()) {
-                start.setValue(end.getValue() - timeIntervalMillis);
-            }
-            else {
-                updateIntervals();
-            }
+    /**
+     * This allows us to treat a datetime as a single value. We don't
+     * actually expose this because the timezone issues make it too
+     * confusing to clients.
+     */
+    private long getCombinedValue(UTCDateBox date, UTCTimeBox time) {
+        Long dateValue = date.getValue();
+        Long timeValue = time.getValue();
+        return (timeValue != null) ? dateValue + timeValue : dateValue; 
+    }
+    
+    /**
+     * This allows us to treat a datetime as a single value. We don't
+     * actually expose this because the timezone issues make it too
+     * confusing to clients.
+     * 
+     * @param setTimeValue
+     *            Sometimes we don't want to set the time value
+     *            explicitly. Generally this is the case when we
+     *            haven't specified a time.
+     */
+    private void setCombinedValue(UTCDateBox date, UTCTimeBox time, long value, boolean setTimeValue) {
+        date.setValue(datePartMillis(value), false);        
+        if (setTimeValue) {
+            time.setValue(timePartMillis(value), false);
         }
-
-        
+    }
+    
+    private long datePartMillis(long datetime) {
+        return datetime - timePartMillis(datetime);
+    }
+    
+    private long timePartMillis(long datetime) {
+        return datetime % UTCDateBox.DAY_IN_MS;        
     }
     
 }

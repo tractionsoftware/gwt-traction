@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -44,6 +45,10 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     
     public UTCDateBox() {
         init(new DateBox());
+    }
+    
+    public UTCDateBox(DateTimeFormat format) {
+        this(new DatePicker(), 0, new DateBox.DefaultFormat(format));
     }
     
     public UTCDateBox(DatePicker picker, long date, DateBox.Format format) {
