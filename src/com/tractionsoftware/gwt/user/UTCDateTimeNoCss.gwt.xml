@@ -1,0 +1,10 @@
+<module>
+  <inherits name='com.google.gwt.user.User'/> 
+
+  <source path='client'>
+    <include name='ui/UTCDateBox.java' />
+    <include name='ui/UTCTimeBox.java' />
+    <include name='ui/UTCDateTimeRangeController.java' />
+  </source>  
+
+</module>

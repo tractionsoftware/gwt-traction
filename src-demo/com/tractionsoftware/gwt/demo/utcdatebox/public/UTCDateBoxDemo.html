@@ -3,6 +3,7 @@
 <head>
 <title>UTCDateBox Demo</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="gwt:property" content="locale=en">
 <style>
 #eventlog select { width: 400px; }
 button { margin-right: 10px; }
@@ -10,7 +11,16 @@ button { margin-right: 10px; }
 <script language='javascript' src='com.tractionsoftware.gwt.demo.utcdatebox.UTCDateBoxDemo.nocache.js'></script>
 </head>
 <body>
-<div class="desc">Select a date in each of the controls and notice the difference in the events that fire. Depending on your timezone and browser, UTCDateBox may report a time other than midnight in your timezone and in timezones west of Greenwich, a different date. However, this will be midnight in UTC.<br><br>Note: You will see two events fire, one for noon and another for midnight. This is a side-affect of the dateformat specified and the way the standard GWT DateBox.DateBoxHandler.onClose is implemented. The first event will fire for noon and the second event for midnight.
+<div class="desc">Select a date in each of the controls and notice the
+  difference in the events that fire. Depending on your timezone and
+  browser, UTCDateBox may report a time other than midnight in your
+  timezone and in timezones west of Greenwich, a different
+  date. However, this will be midnight in UTC.<br><br>Note: You will
+  see two events fire, one for noon and another for midnight. This is
+  a side-affect of the dateformat specified and the way the standard
+  GWT DateBox.DateBoxHandler.onClose is implemented. The first event
+  will fire for noon and the second event for midnight. <br><br>Note:
+  These demos use the "en" locale with default date/time formats, but other locales and formats can be specified.
 </div>
 <h2>UTCDateBox Demo</h2>
 <h3>DateBox (com.google.gwt.user.datepicker.client.DateBox)</h3>

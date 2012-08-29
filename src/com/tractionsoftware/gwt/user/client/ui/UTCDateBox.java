@@ -22,6 +22,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -44,7 +45,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     private DateBox datebox;
     
     public UTCDateBox() {
-        init(new DateBox());
+        this(DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM));
     }
     
     public UTCDateBox(DateTimeFormat format) {
@@ -197,6 +198,10 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
         time -= timezoneOffsetMillis(date);
         
         return time;
+    }
+
+    public static final Long getValueForToday() {
+        return trimTimeToMidnight(date2utc(new Date()));
     }
     
     /**

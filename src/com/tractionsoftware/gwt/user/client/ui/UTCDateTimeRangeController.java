@@ -51,12 +51,6 @@ public class UTCDateTimeRangeController {
      * Creates a controller that will manage the date/time range
      * consisting of 2 date/time controls and an optional
      * allDayCheckbox.
-     * 
-     * @param start
-     *            The control for the start date/time
-     * 
-     * @param end
-     *            The control for the end date/time
      */
     public UTCDateTimeRangeController(UTCDateBox startDate, UTCTimeBox startTime, UTCDateBox endDate, UTCTimeBox endTime) {
         this(startDate, startTime, endDate, endTime, null);
@@ -66,17 +60,6 @@ public class UTCDateTimeRangeController {
      * Creates a controller that will manage the date/time range
      * consisting of 2 date/time controls and an optional
      * allDayCheckbox.
-     * 
-     * @param start
-     *            The control for the start date/time
-     *            
-     * @param end
-     *            The control for the end date/time
-     * 
-     * @param allDayCheckbox
-     *            If specified, when the all day checkbox is checked,
-     *            the time controls of the date/time controls will be
-     *            hidden.
      */
     public UTCDateTimeRangeController(UTCDateBox startDate, UTCTimeBox startTime, UTCDateBox endDate, UTCTimeBox endTime, HasValue<Boolean> allDayCheckbox) {
         this.startDate = startDate;
@@ -110,7 +93,8 @@ public class UTCDateTimeRangeController {
 
     /**
      * Sets the default time interval in milliseconds. By default this
-     * is 60 minutes (60*60*1000).
+     * is 60 minutes (60*60*1000). The is the default between the
+     * start and end date/time.
      */
     public void setDefaultIntervalMillis(long defaultIntervalMillis) {
         this.defaultIntervalMillis = defaultIntervalMillis;
