@@ -20,7 +20,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
- * The date time range controller just manages existing controls and
+ * The date/time range controller just manages existing controls and
  * is not a control itself. It ensures that a range is consistent
  * (start < end) and provides some conveniences like automatically
  * adjusting the end time when the start time changes. These behaviors
@@ -209,9 +209,10 @@ public class UTCDateTimeRangeController {
     }
     
     /**
-     * This allows us to treat a datetime as a single value. We don't
-     * actually expose this because the timezone issues make it too
-     * confusing to clients.
+     * This allows us to treat a datetime as a single value, making it
+     * easy for comparison and adjustment. We don't actually expose
+     * this because the timezone issues make it too confusing to
+     * clients.
      */
     private long getCombinedValue(UTCDateBox date, UTCTimeBox time) {
         Long dateValue = date.getValue();
@@ -236,9 +237,10 @@ public class UTCDateTimeRangeController {
     }
     
     /**
-     * This allows us to treat a datetime as a single value. We don't
-     * actually expose this because the timezone issues make it too
-     * confusing to clients.
+     * This allows us to treat a datetime as a single value, making it
+     * easy for comparison and adjustment. We don't actually expose
+     * this because the timezone issues make it too confusing to
+     * clients.
      * 
      * @param setTimeValue
      *            Sometimes we don't want to set the time value

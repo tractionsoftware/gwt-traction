@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 
 /**
@@ -57,14 +58,15 @@ import com.google.gwt.user.client.ui.TextBox;
 public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long> {
 
     private FlowPanel container;
-    
     private TextBox textbox;
-    private DateTimeFormat timeFormat;
-    
     private TimeBoxMenu menu;
-    
+    private DateTimeFormat timeFormat;
     private Long lastKnownValue;
     
+    /**
+     * Keyboard handler for the TextBox shows and hides the menu,
+     * scrolls through the menu, and accepts a value.
+     */
     private class TextBoxHandler implements KeyDownHandler, KeyUpHandler, BlurHandler, ClickHandler {
 
         @Override
@@ -113,7 +115,10 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         }
     }
     
-    private class TimeBoxMenuOption extends FlowPanel {
+    /**
+     * A single option is represented by an anchor in a div. 
+     */
+    private class TimeBoxMenuOption extends SimplePanel {
 
         private long offsetFromMidnight;
         private String value;
@@ -121,11 +126,12 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         public TimeBoxMenuOption(long offsetFromMidnight) {
             this.offsetFromMidnight = offsetFromMidnight;
 
+            // format the time in the local time zone
             long time = UTCDateBox.timezoneOffsetMillis(new Date(0)) + offsetFromMidnight;            
             value = timeFormat.format(new Date(time));
 
-            Anchor a = new Anchor(value);
-            a.addClickHandler(new ClickHandler() {
+            Anchor anchor = new Anchor(value);
+            anchor.addClickHandler(new ClickHandler() {
 
                 @Override
                 public void onClick(ClickEvent event) {
@@ -135,7 +141,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
 
                 
             });
-            add(a, getElement());
+            setWidget(anchor);
         }
         
         public void acceptValue() {
@@ -165,6 +171,9 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         
     }
     
+    /**
+     * The menu is a div with a bunch of TimeBoxMenuOptions
+     */
     private class TimeBoxMenu extends PopupPanel {
         
         private static final long INTERVAL = 30*60*1000L;
@@ -194,7 +203,14 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             add(container);
         }
         
-        public void adjustHighlight(int value) {
+        /**
+         * Moves the highlighted value
+         * 
+         * @param distance
+         *            The number of values to move (typically -1 or 1
+         *            for keyboard handling)
+         */
+        public void adjustHighlight(int distance) {
             
             // make the list of times visible if it isn't
             if (!isShowing()) {
@@ -202,21 +218,31 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             }
             
             // highlight the new value
-            int index = normalizeOptionIndex(highlightedOptionIndex + value);
+            int index = normalizeOptionIndex(highlightedOptionIndex + distance);
             setHighlightedIndex(index);
             scrollToIndex(index);
         }
         
+        /**
+         * Accepts the highlighted value
+         */
         public void acceptHighlighted() {
             if (hasHighlightedOption()) {
                 options[highlightedOptionIndex].acceptValue();
             }
         }
-        
+
+        /**
+         * Returns true if there is an option currently highlighted
+         */
         private boolean hasHighlightedOption() {
             return (highlightedOptionIndex != -1);
         }
-        
+
+        /**
+         * Normalizes the option index to be within the range
+         * [0,options.length)
+         */
         private int normalizeOptionIndex(int index) {
             if (index < 0) {
                 return 0;
@@ -229,10 +255,17 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             }
         }
         
+        /**
+         * Makes sure the specified index is visible using
+         * scrollIntoView.
+         */
         public void scrollToIndex(int index) {
             options[normalizeOptionIndex(index)].getElement().scrollIntoView();
         }
         
+        /**
+         * Highlights the specified index.
+         */
         public void setHighlightedIndex(int index) {
             if (index != highlightedOptionIndex) {
                 if (hasHighlightedOption()) {
@@ -244,6 +277,9 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             }
         }
         
+        /**
+         * Displays the time picker (a.k.a. this menu).
+         */
         public void showTimePicker() {
 
             showRelativeTo(textbox);
@@ -283,10 +319,16 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         
     }
     
+    /**
+     * By default the predefined SHORT time format will be used.
+     */
     public UTCTimeBox() {
         this(DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT));
     }
     
+    /**
+     * Allows a UTCTimeBox to be created with a specified format.
+     */
     public UTCTimeBox(DateTimeFormat timeFormat) {
         this.textbox = new TextBox();
         this.timeFormat = timeFormat;
@@ -316,11 +358,17 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     // ----------------------------------------------------------------------
     // menu
     
+    /**
+     * Displays the time picker menu
+     */
     public void showMenu() {
         // make the menu visible and select the appropriate value 
         menu.showTimePicker();
     }
     
+    /**
+     * Hides the time picker menu
+     */
     public void hideMenu() {
         menu.hide();
     }
@@ -328,32 +376,34 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     // ----------------------------------------------------------------------
     // HasValue
     
-    public boolean hasValue() { 
-        return getText().trim().length() > 0;
-    }
-    
     /**
-     * Returns a full date based on the time and the reference date.
-     * 
-     * @return A Long corresponding to the number of milliseconds since January
-     *         1, 1970, 00:00:00 GMT or null if the specified time is null.
+     * Returns the time value (as milliseconds since midnight independent
+     * of time zone)
      */
     @Override
     public Long getValue() {
         return getValueFromText();
     }
     
+    /**
+     * Sets the time value (as milliseconds since midnight independent
+     * of time zone)
+     */
     @Override
     public void setValue(Long value) {
         setValue(value, true, true);
     }
 
+    /**
+     * Sets the time value (as milliseconds since midnight independent
+     * of time zone)
+     */
     @Override
     public void setValue(Long value, boolean fireEvents) {
         setValue(value, true, fireEvents);
     }
     
-    public void setValue(Long value, boolean updateTextBox, boolean fireEvents) {
+    protected void setValue(Long value, boolean updateTextBox, boolean fireEvents) {
         
         if (updateTextBox) {
             syncTextToValue(value);
@@ -364,20 +414,18 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         Long oldValue = lastKnownValue;
         lastKnownValue = value;
         
-        if (fireEvents && !isSameValue(oldValue, value)) fireValueChangeEvent();
+        if (fireEvents && !isSameValue(oldValue, value)) {
+            ValueChangeEvent.fire(this, getValue());        
+        }
     }
     
-    private boolean isSameValue(Long a, Long b) {
+    protected boolean isSameValue(Long a, Long b) {
         return (a == null) ? (b == null) : a.equals(b);
     }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Long> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    protected void fireValueChangeEvent() {
-        ValueChangeEvent.fire(this, getValue());        
     }
     
     // ----------------------------------------------------------------------
@@ -395,26 +443,26 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     // ----------------------------------------------------------------------
     // synchronization between text and value
     
-    private void syncTextToValue(Long value) {
+    protected void syncTextToValue(Long value) {
         textbox.setValue(value2text(value));
     }
     
-    private void syncValueToText() {
+    protected void syncValueToText() {
         setValue(getValueFromText(), false, true);
     }
     
-    private Long getValueFromText() {
+    protected Long getValueFromText() {
         return text2value(getText());
     }    
 
-    private long normalizeInLocalRange(long time) {
+    protected long normalizeInLocalRange(long time) {
         return (time + UTCDateBox.DAY_IN_MS) % UTCDateBox.DAY_IN_MS;
     }
 
     // ----------------------------------------------------------------------
     // parsing and formatting
 
-    private Long text2value(String text) {
+    protected Long text2value(String text) {
         if (text.trim().length() == 0) {
             return null;
         } else {
@@ -424,12 +472,12 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         }
     }
     
-    private String value2text(Long value) {
+    protected String value2text(Long value) {
         if (value == null) {
             return "";
         }
         else {
-            // midnight 1/1/1970 GMT
+            // midnight GMT
             Date date = new Date(0);
             // offset by timezone and value
             date.setTime(UTCDateBox.timezoneOffsetMillis(date) + value.longValue());
