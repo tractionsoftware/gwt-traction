@@ -161,7 +161,7 @@ public class UTCDateTimeRangeController {
         @Override
         public void onValueChange(ValueChangeEvent<Long> event) {
             if (startTime.getValue() != null) {
-                setCombinedValue(endDate, endTime, getCombinedValue(startDate, startTime) + intervalMillis, true);                
+                setCombinedValue(endDate, endTime, getCombinedValue(startDate, startTime) + intervalMillis, true);
             }
             else {
                 setCombinedValue(endDate, endTime, getCombinedValue(startDate, startTime) + datePartMillis(intervalMillis), false);                
@@ -181,7 +181,7 @@ public class UTCDateTimeRangeController {
         public void onValueChange(ValueChangeEvent<Long> event) {
             long startCombined = getCombinedValue(startDate, startTime);
             long endCombined = getCombinedValue(endDate, endTime);
-            if (isMissingStartDate() || isMissingOnlyStartTime() || startCombined > endCombined) {
+            if (isMissingStartDate() || isMissingOnlyStartTime() || (endCombined != 0 && startCombined > endCombined)) {
                 if (endTime.getValue() != null) {
                     setCombinedValue(startDate, startTime, endCombined - intervalMillis, true);
                 }
@@ -212,7 +212,23 @@ public class UTCDateTimeRangeController {
     private long getCombinedValue(UTCDateBox date, UTCTimeBox time) {
         Long dateValue = date.getValue();
         Long timeValue = time.getValue();
-        return (timeValue != null) ? dateValue + timeValue : dateValue; 
+    
+        if (dateValue != null) {
+            if (timeValue != null) {
+                return dateValue + timeValue;
+            }
+            else {
+                return dateValue;
+            }
+        }
+        else {
+            if (timeValue != null) {
+                return timeValue;
+            }
+            else {
+                return 0;
+            }
+        }
     }
     
     /**
