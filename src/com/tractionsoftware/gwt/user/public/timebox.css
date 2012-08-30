@@ -1,6 +1,5 @@
-.gwt-TimeBox {
-  position: relative;
-  display: inline-block;
+.gwt-TimeBox.invalid {
+  color: #900;    
 }
 .gwt-TimeBox-menu {
   z-index: 10;
