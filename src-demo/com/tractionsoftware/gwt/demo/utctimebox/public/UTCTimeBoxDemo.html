@@ -21,7 +21,9 @@ button { margin-right: 10px; }
 <body>
 <div class="desc">To simplify the handling of times in different time
   zones, time is always represented as the number of milliseconds
-  after midnight independent of time zone. <br><br>The UTCDateTimeUtils class
+  after midnight independent of time zone.<br><br>It handles flexible
+  input and normalizes the value when the control loses focus. For
+  example, type "12p" in the box and hit TAB.<br><br>The UTCDateTimeUtils class
   is provided for use on the server to allow conversion to a Date on a
   known day in a known TimeZone. <br><br>Note: These demos use the "en" locale with
   default date/time formats, but other locales and formats can be specified.

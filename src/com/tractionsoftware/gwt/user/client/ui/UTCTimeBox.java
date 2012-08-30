@@ -70,7 +70,7 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
 
     private static final String CLASSNAME_INVALID = "invalid";
     private static DateTimeFormat[] fallbackTimeFormats = null;
-    private static String[] fallbackFormatStrings = new String[] { "hh:mm a", "hh:mma", "HH:mm" };
+    private static String[] fallbackFormatStrings = new String[] { "hh:mma", "HH:mm" };
 
     private TextBox textbox;
     private TimeBoxMenu menu;
