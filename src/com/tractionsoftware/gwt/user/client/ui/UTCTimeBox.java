@@ -97,14 +97,22 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
                 // accept current value
                 if (menu.isShowing()) {
                     menu.acceptHighlighted();
+                    hideMenu();
+                    clearInvalidStyle();
+                } 
+                else {
+                    validate();
                 }
-                // fall through
+                break;
             case KeyCodes.KEY_ESCAPE:
-            default:
+                validate();
                 hideMenu();
                 break;
+            default:
+                hideMenu();
+                clearInvalidStyle();
+                break;
             }
-            clearInvalidStyle();
         }
 
         @Override
@@ -487,7 +495,9 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     // parsing and formatting
 
     protected Long text2value(String text) {
-        if (text.trim().length() == 0) {
+        
+        text = text.trim();
+        if (text.length() == 0) {
             return null;
         }
         else {
@@ -505,14 +515,15 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     }
 
     /**
-     * Attempts to insert a colon so that a value without a colon can be parsed.
+     * Attempts to insert a colon so that a value without a colon can
+     * be parsed.
      */
     protected static final Long parseUsingFallbacksWithColon(String text, DateTimeFormat timeFormat) {
         if (text.indexOf(':') == -1) {
-            text = text.replace(" ","");
+            text = text.replace(" ", "");
             int numdigits = 0;
             int lastdigit = 0;
-            for (int i=0; i<text.length(); i++) {
+            for (int i = 0; i < text.length(); i++) {
                 char c = text.charAt(i);
                 if (Character.isDigit(c)) {
                     numdigits++;
@@ -522,12 +533,12 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
             if (numdigits == 1 || numdigits == 2) {
                 // insert :00
                 int colon = lastdigit + 1;
-                text = text.substring(0,colon) + ":00" + text.substring(colon);
+                text = text.substring(0, colon) + ":00" + text.substring(colon);
             }
             else if (numdigits > 2) {
                 // insert :
-                int colon = lastdigit-1;
-                text = text.substring(0,colon) + ":" + text.substring(colon);
+                int colon = lastdigit - 1;
+                text = text.substring(0, colon) + ":" + text.substring(colon);
             }
             return parseUsingFallbacks(text, timeFormat);
         }
