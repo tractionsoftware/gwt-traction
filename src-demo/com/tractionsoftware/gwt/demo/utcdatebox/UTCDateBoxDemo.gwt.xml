@@ -1,6 +1,8 @@
 <module>
-	<inherits name='com.tractionsoftware.gwt.user.UTCDateBox'/>
-	<inherits name='com.google.gwt.user.theme.standard.Standard' />
-	<inherits name='com.tractionsoftware.gwt.demostyle.DemoStyle'/>
-	<entry-point class='com.tractionsoftware.gwt.demo.utcdatebox.client.UTCDateBoxDemo'/>        
+  <inherits name="com.google.gwt.i18n.I18N"/>
+  <inherits name='com.tractionsoftware.gwt.user.UTCDateBox'/>
+  <inherits name='com.google.gwt.user.theme.standard.Standard' />
+  <inherits name='com.tractionsoftware.gwt.demostyle.DemoStyle'/>
+  <entry-point class='com.tractionsoftware.gwt.demo.utcdatebox.client.UTCDateBoxDemo'/>        
+  <extend-property name="locale" values="en"/>
 </module>

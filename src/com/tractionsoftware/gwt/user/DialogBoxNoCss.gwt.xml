@@ -1,3 +1,8 @@
 <module>
   <inherits name='com.google.gwt.user.User'/> 
+
+  <source path='client'>
+    <include name='ui/TractionDialogBox.java' />
+  </source>  
+
 </module>

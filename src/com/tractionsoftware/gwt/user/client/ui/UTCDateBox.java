@@ -21,6 +21,8 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -43,7 +45,11 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     private DateBox datebox;
     
     public UTCDateBox() {
-        init(new DateBox());
+        this(DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM));
+    }
+    
+    public UTCDateBox(DateTimeFormat format) {
+        this(new DatePicker(), 0, new DateBox.DefaultFormat(format));
     }
     
     public UTCDateBox(DatePicker picker, long date, DateBox.Format format) {
@@ -71,6 +77,21 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      */
     public DateBox getDateBox() {
         return datebox;
+    }
+
+    // ----------------------------------------------------------------------
+    // Interaction with the textbox
+    
+    public String getText() {
+        return datebox.getTextBox().getValue();
+    }
+    
+    public void setText(String text) {
+        String oldValue = getText();
+        datebox.getTextBox().setValue(text, true);
+        if (oldValue == null || !oldValue.equals(text)) {
+            ValueChangeEvent.fire(this, getValue());
+        }
     }
 
     // ----------------------------------------------------------------------
@@ -121,7 +142,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
         datebox.setValue(utc2date(value), fireEvents);
     }
 
-    private void fireValueChangeEvent(long value) {
+    public void fireValueChangeEvent(long value) {
         ValueChangeEvent.fire(this, new Long(value));             
     }
 
@@ -133,7 +154,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     // ----------------------------------------------------------------------
     // conversion methods that convert to dates in UTC time
     
-    private static final long DAY_IN_MS = 24L*60L*60L*1000L; 
+    public static final long DAY_IN_MS = 24L*60L*60L*1000L; 
     
     public static final long trimTimeToMidnight(long time) {
         // first trim to midnight
@@ -177,6 +198,10 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
         time -= timezoneOffsetMillis(date);
         
         return time;
+    }
+
+    public static final Long getValueForToday() {
+        return trimTimeToMidnight(date2utc(new Date()));
     }
     
     /**

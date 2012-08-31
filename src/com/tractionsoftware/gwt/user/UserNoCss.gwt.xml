@@ -2,6 +2,7 @@
   <inherits name='com.google.gwt.user.User' />
   <inherits name='com.tractionsoftware.gwt.user.Viewport' />
   <inherits name='com.tractionsoftware.gwt.user.DialogBoxNoCss' />
+  <inherits name='com.tractionsoftware.gwt.user.UTCDateTimeNoCss' />
   <inherits name='com.tractionsoftware.gwt.user.ColorAnimation' />
   <inherits name='com.tractionsoftware.gwt.user.OpacityAnimation' />
 </module>
