@@ -417,15 +417,6 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
      * of time zone)
      */
     @Override
-    public void setValue(Long value) {
-        setValue(value, true, true);
-    }
-
-    /**
-     * Sets the time value (as milliseconds since midnight independent
-     * of time zone)
-     */
-    @Override
     public void setValue(Long value, boolean fireEvents) {
         setValue(value, true, fireEvents);
     }
@@ -505,6 +496,11 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
         textbox.setVisibleLength(length);
     }
 
+    @Override
+    public void setTabIndex(int tabIndex) {
+        textbox.setTabIndex(tabIndex);
+    }
+    
     public void clearInvalidStyle() {
         textbox.removeStyleName(CLASSNAME_INVALID);
     }

@@ -44,14 +44,27 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
 
     private DateBox datebox;
     
+    /**
+     * Creates a new UTCDateBox with the medium date format for the
+     * current locale.
+     */
     public UTCDateBox() {
         this(DateTimeFormat.getFormat(PredefinedFormat.DATE_MEDIUM));
     }
     
+    /**
+     * Creates a new UTCDateBox with the specified date format.
+     */
     public UTCDateBox(DateTimeFormat format) {
         this(new DatePicker(), 0, new DateBox.DefaultFormat(format));
     }
-    
+
+    /**
+     * Creates a new UTCDateBox
+     * 
+     * @deprecated Use {@link UTCDateBox#UTCDateBox(DateTimeFormat)} instead.
+     */
+    @Deprecated
     public UTCDateBox(DatePicker picker, long date, DateBox.Format format) {
         init(new DateBox(picker, utc2date(date), format));
     }
@@ -70,15 +83,6 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
         initWidget(datebox);
     }
         
-    /**
-     * Provides access to the underlying DateBox. Beware using this directly
-     * because anything that returns a Date might need to be adjusted to UTC
-     * using date2utc.
-     */
-    public DateBox getDateBox() {
-        return datebox;
-    }
-
     // ----------------------------------------------------------------------
     // Interaction with the textbox
     
@@ -151,6 +155,21 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
+    /**
+     * Sets the visible length of the text input for this date box.
+     * This will be ignored for HTML5 inputs.
+     */
+    public void setVisibleLength(int length) {
+        datebox.getTextBox().setVisibleLength(length);
+    }
+    
+    /**
+     * Sets the tabindex for this control.
+     */
+    public void setTabIndex(int tabIndex) {
+        datebox.getTextBox().setTabIndex(tabIndex);
+    }
+    
     // ----------------------------------------------------------------------
     // conversion methods that convert to dates in UTC time
     

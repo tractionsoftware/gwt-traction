@@ -22,7 +22,6 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
@@ -123,11 +122,6 @@ public class UTCTimeBoxImplHtml5 extends UTCTimeBoxImplShared {
     }
 
     @Override
-    public void setValue(Long value) {
-        widget.setValue(value);
-    }
-
-    @Override
     public void setValue(Long value, boolean fireEvents) {
         widget.setValue(value, fireEvents);
     }
@@ -156,6 +150,11 @@ public class UTCTimeBoxImplHtml5 extends UTCTimeBoxImplShared {
         setValue(text2value(text), true);
     }
 
+    @Override
+    public void setTabIndex(int tabIndex) {
+        widget.setTabIndex(tabIndex);
+    }
+    
     // ----------------------------------------------------------------------
     // the core translation methods of this class using the form HH:mm
 

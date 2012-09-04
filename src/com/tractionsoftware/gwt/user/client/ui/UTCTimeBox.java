@@ -85,6 +85,10 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         impl.setVisibleLength(length);
     }
 
+    public void setTabIndex(int tabIndex) {
+        impl.setTabIndex(tabIndex);
+    }
+    
     /**
      * If this is a text based control, it will validate the value
      * that has been typed.

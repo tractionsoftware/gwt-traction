@@ -52,6 +52,16 @@ public abstract class UTCTimeBoxImplShared implements UTCTimeBoxImpl {
     @Override
     public void validate() {}
     
+
+    /**
+     * Sets the time value (as milliseconds since midnight independent
+     * of time zone)
+     */
+    @Override
+    public final void setValue(Long value) {
+        setValue(value, true);
+    }    
+    
     // ----------------------------------------------------------------------
     
     public UTCTimeBoxImplShared() {
