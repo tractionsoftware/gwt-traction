@@ -17,16 +17,18 @@ package com.tractionsoftware.gwt.user.client.ui;
 
 import java.util.Date;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.gwt.user.datepicker.client.DatePicker;
+import com.tractionsoftware.gwt.user.client.ui.impl.UTCDateBoxImpl;
 
 /**
  * A wrapper around a DateBox that implements HasValue<Long> where the value is
@@ -40,9 +42,9 @@ import com.google.gwt.user.datepicker.client.DatePicker;
  * getValue(), just as you would for DateBox. With auto-boxing Long/long, this
  * may seem strange but is consistent.
  */
-public class UTCDateBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long> {
+public class UTCDateBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long>, HasText {
 
-    private DateBox datebox;
+    private UTCDateBoxImpl impl;
     
     /**
      * Creates a new UTCDateBox with the medium date format for the
@@ -56,46 +58,35 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      * Creates a new UTCDateBox with the specified date format.
      */
     public UTCDateBox(DateTimeFormat format) {
-        this(new DatePicker(), 0, new DateBox.DefaultFormat(format));
+        impl = GWT.create(UTCDateBoxImpl.class);
+        impl.setDateFormat(format);
+        initWidget(impl.asWidget());
     }
 
     /**
      * Creates a new UTCDateBox
      * 
-     * @deprecated Use {@link UTCDateBox#UTCDateBox(DateTimeFormat)} instead.
+     * @deprecated Use {@link UTCDateBox#UTCDateBox(DateTimeFormat)}
+     *             instead. DatePicker and DateBox.Format are now
+     *             ignored.
      */
     @Deprecated
     public UTCDateBox(DatePicker picker, long date, DateBox.Format format) {
-        init(new DateBox(picker, utc2date(date), format));
+        this();
+        impl.setValue(date2utc(new Date(date)));
     }
     
-    private void init(DateBox datebox) {
-        this.datebox = datebox;
-        
-        datebox.addValueChangeHandler(new ValueChangeHandler<Date>() {
-
-            @Override
-            public void onValueChange(ValueChangeEvent<Date> event) {
-                // pass this event onto our handlers after converting the value
-                fireValueChangeEvent(date2utc(event.getValue()));
-            }});
-        
-        initWidget(datebox);
-    }
-        
     // ----------------------------------------------------------------------
     // Interaction with the textbox
     
+    @Override
     public String getText() {
-        return datebox.getTextBox().getValue();
+        return impl.getText();
     }
     
+    @Override
     public void setText(String text) {
-        String oldValue = getText();
-        datebox.getTextBox().setValue(text, true);
-        if (oldValue == null || !oldValue.equals(text)) {
-            ValueChangeEvent.fire(this, getValue());
-        }
+        impl.setText(text);
     }
 
     // ----------------------------------------------------------------------
@@ -111,7 +102,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      */
     @Override
     public Long getValue() {
-        return date2utc(datebox.getValue());
+        return impl.getValue();
     }
     
     /**
@@ -143,16 +134,12 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      */
     @Override
     public void setValue(Long value, boolean fireEvents) {
-        datebox.setValue(utc2date(value), fireEvents);
-    }
-
-    public void fireValueChangeEvent(long value) {
-        ValueChangeEvent.fire(this, new Long(value));             
+        impl.setValue(value, fireEvents);
     }
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Long> handler) {
-        return addHandler(handler, ValueChangeEvent.getType());
+        return impl.addValueChangeHandler(handler);
     }
 
     /**
@@ -160,14 +147,14 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
      * This will be ignored for HTML5 inputs.
      */
     public void setVisibleLength(int length) {
-        datebox.getTextBox().setVisibleLength(length);
+        impl.setVisibleLength(length);
     }
     
     /**
      * Sets the tabindex for this control.
      */
     public void setTabIndex(int tabIndex) {
-        datebox.getTextBox().setTabIndex(tabIndex);
+        impl.setTabIndex(tabIndex);
     }
     
     // ----------------------------------------------------------------------

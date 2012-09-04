@@ -1,18 +1,6 @@
 <module>
   <inherits name='com.google.gwt.user.User'/> 
-
-  <!-- use feature detection to see if input type=datetime is available -->
-  <define-property name="supportsDateTimeInput" values="y,n"/>
-  <property-provider name="supportsDateTimeInput">
-    <![CDATA[
-             try {
-                var i = document.createElement("input");
-                i.setAttribute("type", "datetime");
-                return (i.type !== "text") ? "y" : "n";
-             }
-             catch (e) { return "n"; }
-    ]]>
-  </property-provider>
+  <inherits name='com.tractionsoftware.gwt.user.UTCDateBox'/>
 
   <!-- HTML4 TextBox-based implementation -->
   <replace-with class="com.tractionsoftware.gwt.user.client.ui.impl.UTCTimeBoxImplHtml4">
@@ -39,10 +27,9 @@
 
   <source path='client'>
     <include name='ui/UTCDateBox.java' />
-    <include name='ui/UTCDateBox.java' />
     <include name='ui/UTCTimeBox.java' />
     <include name='ui/UTCDateTimeRangeController.java' />
-    <include name='ui/impl/UTCTimeBox*.java' />
+    <include name='ui/impl/UTC*.java' />
   </source>  
 
 </module>
