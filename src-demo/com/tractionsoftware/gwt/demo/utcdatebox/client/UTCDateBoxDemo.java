@@ -50,7 +50,7 @@ public class UTCDateBoxDemo implements EntryPoint {
         });
         RootPanel.get("datebox").add(datebox);
 
-        utcdatebox = new UTCDateBox(new DatePicker(), -1, new DateBox.DefaultFormat(DateTimeFormat.getFormat("MMM dd, yyyy")));
+        utcdatebox = new UTCDateBox();
         utcdatebox.addValueChangeHandler(new ValueChangeHandler<Long>() {
             @Override
             public void onValueChange(ValueChangeEvent<Long> event) {
