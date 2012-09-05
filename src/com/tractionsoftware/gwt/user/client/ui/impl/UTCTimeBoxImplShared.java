@@ -14,13 +14,14 @@ package com.tractionsoftware.gwt.user.client.ui.impl;
 import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.Composite;
 import com.tractionsoftware.gwt.user.client.ui.UTCDateBox;
 
 /**
  * @author andy
  *
  */
-public abstract class UTCTimeBoxImplShared implements UTCTimeBoxImpl {
+public abstract class UTCTimeBoxImplShared extends Composite implements UTCTimeBoxImpl {
 
     protected static DateTimeFormat[] fallbackTimeFormats = null;
     protected static String[] fallbackFormatStrings = new String[] { "hh:mma", "HH:mm" };
@@ -59,7 +60,7 @@ public abstract class UTCTimeBoxImplShared implements UTCTimeBoxImpl {
      */
     @Override
     public final void setValue(Long value) {
-        setValue(value, true);
+        setValue(value, false);
     }    
     
     // ----------------------------------------------------------------------

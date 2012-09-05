@@ -27,6 +27,7 @@
   </replace-with>
 
   <source path='client'>
+    <include name='ui/InputWidget.java' />
     <include name='ui/UTCDateBox.java' />
     <include name='ui/UTCTimeBox.java' />
     <include name='ui/UTCDateTimeRangeController.java' />

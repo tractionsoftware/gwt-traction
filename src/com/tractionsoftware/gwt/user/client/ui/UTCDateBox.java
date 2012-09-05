@@ -73,7 +73,7 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     @Deprecated
     public UTCDateBox(DatePicker picker, long date, DateBox.Format format) {
         this();
-        impl.setValue(date2utc(new Date(date)));
+        impl.setValue(date);
     }
     
     // ----------------------------------------------------------------------

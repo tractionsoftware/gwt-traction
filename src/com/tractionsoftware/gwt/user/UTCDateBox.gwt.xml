@@ -20,7 +20,7 @@
   </replace-with>
 
   <!-- HTML5 input type=date/time implementation -->
-  <replace-with class="com.tractionsoftware.gwt.user.client.ui.impl.UTCDateBoxImplHtml4">
+  <replace-with class="com.tractionsoftware.gwt.user.client.ui.impl.UTCDateBoxImplHtml5">
     <when-type-is class="com.tractionsoftware.gwt.user.client.ui.impl.UTCDateBoxImpl"/>
     <all>
       <!-- uses javascript test above -->
@@ -38,6 +38,7 @@
   </replace-with>
 
   <source path='client'>
+    <include name='ui/InputWidget.java' />
     <include name='ui/UTCDateBox.java' />
     <include name='ui/impl/UTC*.java' />
   </source>  

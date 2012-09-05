@@ -28,7 +28,6 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Anchor;
@@ -36,7 +35,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.tractionsoftware.gwt.user.client.ui.UTCDateBox;
 
 /**
@@ -344,19 +342,11 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
 
         textbox.setStyleName("gwt-TimeBox");
         
-        System.err.println("Created UTCTimeBoxImplHtml4");        
+        System.err.println("Created UTCTimeBoxImplHtml4");
+        
+        initWidget(textbox);
     }
     
-    @Override
-    public Widget asWidget() {
-        return textbox;
-    }
-
-    @Override
-    public void fireEvent(GwtEvent<?> event) {
-        textbox.fireEvent(event);
-    }
-
     @Override
     public void setTimeFormat(DateTimeFormat timeFormat) {
         super.setTimeFormat(timeFormat);
@@ -443,7 +433,7 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
 
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Long> handler) {
-        return textbox.addHandler(handler, ValueChangeEvent.getType());
+        return addHandler(handler, ValueChangeEvent.getType());
     }
 
     // ----------------------------------------------------------------------
@@ -488,7 +478,7 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
                 valid = false;
             }
         }
-        textbox.setStyleName(CLASSNAME_INVALID, !valid);
+        setStyleName(CLASSNAME_INVALID, !valid);
     }
 
     @Override
@@ -500,9 +490,9 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
     public void setTabIndex(int tabIndex) {
         textbox.setTabIndex(tabIndex);
     }
-    
+
     public void clearInvalidStyle() {
-        textbox.removeStyleName(CLASSNAME_INVALID);
+        removeStyleName(CLASSNAME_INVALID);
     }
 
 }

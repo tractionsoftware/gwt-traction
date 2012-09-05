@@ -11,14 +11,20 @@
 
 package com.tractionsoftware.gwt.user.client.ui.impl;
 
-
-
+import com.google.gwt.user.client.ui.Composite;
 
 /**
  * @author andy
  */
-public abstract class UTCDateBoxImplShared implements UTCDateBoxImpl {
-    
+public abstract class UTCDateBoxImplShared extends Composite implements UTCDateBoxImpl {
+
+    /**
+     * Sets the visible length of the date input. The HTML5
+     * implementation will ignore this.
+     */
+    @Override
+    public void setVisibleLength(int length) {}
+
     /**
      * Sets the date value (as milliseconds at midnight UTC since 1/1/1970)
      */
