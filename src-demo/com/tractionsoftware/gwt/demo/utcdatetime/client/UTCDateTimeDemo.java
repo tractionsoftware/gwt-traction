@@ -67,8 +67,8 @@ public class UTCDateTimeDemo implements EntryPoint {
         endPanel.add(endDate);
         endPanel.add(endTime);
         
-        startDate.setValue(UTCDateBox.getValueForToday());
-        startTime.setValue(UTCTimeBox.getValueForNextHour());
+        startDate.setValue(UTCDateBox.getValueForToday(), true);
+        startTime.setValue(UTCTimeBox.getValueForNextHour(), true);
     }    
 
     private UTCDateBox createDateBox(final String name) {

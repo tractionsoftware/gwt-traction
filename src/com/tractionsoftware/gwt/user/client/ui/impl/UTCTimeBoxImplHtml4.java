@@ -190,13 +190,14 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
 
         private TimeBoxMenuOption[] options;
         private int highlightedOptionIndex = -1;
+        private FlowPanel container;
 
         public TimeBoxMenu() {
             super(true);
             setStyleName("gwt-TimeBox-menu");
             addAutoHidePartner(textbox.getElement());
 
-            FlowPanel container = new FlowPanel();
+            container = new FlowPanel();
 
             int numOptions = (int) (DAY / INTERVAL);
             options = new TimeBoxMenuOption[numOptions];
@@ -270,6 +271,7 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
          */
         public void scrollToIndex(int index) {
             options[normalizeOptionIndex(index)].getElement().scrollIntoView();
+            container.getElement().setScrollLeft(0);
         }
 
         /**
