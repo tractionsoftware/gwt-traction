@@ -1,4 +1,4 @@
-# { 13 }
+# { 11 }
 # { 'locale' : 'default' , 'supportsDateTimeInput' : 'y' , 'user.agent' : 'safari' }
 # jsName, jsniIdent, className, memberName, sourceUri, sourceLine
 $clinit_EntryPoint,com.google.gwt.core.client.EntryPoint::$clinit()V,com.google.gwt.core.client.EntryPoint,$clinit,jar:file:/Users/ajm/src/hg/proteus/lib/gwt/gwt-user.jar!/com/google/gwt/core/client/EntryPoint.java,22

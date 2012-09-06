@@ -1,5 +1,6 @@
-# { 4 }
+# { 3 }
 # { 'locale' : 'en' , 'supportsDateTimeInput' : 'n' , 'user.agent' : 'opera' }
+# { 'locale' : 'en' , 'supportsDateTimeInput' : 'y' , 'user.agent' : 'opera' }
 # jsName, jsniIdent, className, memberName, sourceUri, sourceLine
 G,,com.google.gwt.animation.client.Animation,,jar:file:/Users/ajm/src/hg/proteus/lib/gwt/gwt-user.jar!/com/google/gwt/animation/client/Animation.java,27
 $$init,com.google.gwt.animation.client.Animation::$$init(Lcom/google/gwt/animation/client/Animation;)V,com.google.gwt.animation.client.Animation,$$init,jar:file:/Users/ajm/src/hg/proteus/lib/gwt/gwt-user.jar!/com/google/gwt/animation/client/Animation.java,27

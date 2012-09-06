@@ -135,7 +135,7 @@ public class UTCDateTimeUtils {
             // figure out if there are extra millis in the value
             // (there shoudn't be since the time box control doesn't
             // typically render millis)
-            extraMillis = (int) (localTimeInDay % 60 * 1000);
+            extraMillis = (int) (localTimeInDay % (60 * 1000));
             
             // trim off the seconds
             localTimeInDay -= extraMillis;

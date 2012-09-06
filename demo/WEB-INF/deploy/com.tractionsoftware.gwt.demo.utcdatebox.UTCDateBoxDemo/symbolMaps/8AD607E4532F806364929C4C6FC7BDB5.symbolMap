@@ -1,4 +1,4 @@
-# { 15 }
+# { 13 }
 # { 'locale' : 'en' , 'supportsDateTimeInput' : 'y' , 'user.agent' : 'safari' }
 # jsName, jsniIdent, className, memberName, sourceUri, sourceLine
 G,,com.google.gwt.animation.client.Animation,,jar:file:/Users/ajm/src/hg/proteus/lib/gwt/gwt-user.jar!/com/google/gwt/animation/client/Animation.java,27

@@ -1,4 +1,4 @@
-# { 8 }
+# { 6 }
 # { 'locale' : 'default' , 'supportsDateTimeInput' : 'n' , 'user.agent' : 'ie8' }
 # { 'locale' : 'default' , 'supportsDateTimeInput' : 'y' , 'user.agent' : 'ie8' }
 # jsName, jsniIdent, className, memberName, sourceUri, sourceLine

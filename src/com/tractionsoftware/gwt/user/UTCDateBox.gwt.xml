@@ -32,7 +32,7 @@
         <when-property-is name="user.agent" value="safari"/>
 
         <!-- opera supports datetime since Jun 2006, but it's lame -->
-        <when-property-is name="user.agent" value="opera"/>
+        <!-- <when-property-is name="user.agent" value="opera"/> -->
       </any>
     </all>
   </replace-with>
