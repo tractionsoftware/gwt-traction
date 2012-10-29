@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.datepicker.client.DateBox;
 import com.tractionsoftware.gwt.user.client.ui.InputWidget;
 import com.tractionsoftware.gwt.user.client.ui.UTCDateBox;
 
@@ -142,5 +143,10 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
         if (value == null) return "";
         Date date = UTCDateBox.utc2date(value);
         return date != null ? fmt.format(date) : null;
+    }
+
+    @Override
+    public DateBox getDateBox() {
+        return null;
     }
 }

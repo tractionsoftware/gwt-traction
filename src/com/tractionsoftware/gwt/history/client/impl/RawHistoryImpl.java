@@ -69,7 +69,7 @@ public class RawHistoryImpl extends com.google.gwt.user.client.impl.HistoryImpl 
      * No decoding for RawHistory.
      */
     @Override
-    protected String decodeFragment(String encodedFragment) {
+    public String decodeFragment(String encodedFragment) {
 	return encodedFragment;
     }
 
@@ -77,7 +77,7 @@ public class RawHistoryImpl extends com.google.gwt.user.client.impl.HistoryImpl 
      * No encoding for RawHistory.
      */
     @Override
-    protected String encodeFragment(String fragment) {
+    public String encodeFragment(String fragment) {
 	return fragment;
     }
     

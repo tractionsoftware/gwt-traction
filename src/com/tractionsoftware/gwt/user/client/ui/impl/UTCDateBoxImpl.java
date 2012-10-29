@@ -20,6 +20,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.datepicker.client.DateBox;
 
 /**
  * Interface for UTCDateBox implementations that are quite different
@@ -45,5 +46,12 @@ public interface UTCDateBoxImpl extends IsWidget, HasValue<Long>, HasValueChange
      * Sets the tab index for the control. 
      */
     public void setTabIndex(int tabIndex);
+
+    /**
+     * Returns the DateBox (if any) that this implementation uses. For
+     * HTML5, this will return null. This was only added to make my
+     * r52 tree compile and I don't intend to check it in.
+     */
+    public DateBox getDateBox();
     
 }

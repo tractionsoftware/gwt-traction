@@ -21,7 +21,7 @@ package com.tractionsoftware.gwt.history.client.impl;
 class RawHistoryImplMozilla extends RawHistoryImplTimer {
 
   @Override
-  protected String decodeFragment(String encodedFragment) {
+  public String decodeFragment(String encodedFragment) {
     // Mozilla browsers pre-decode the result of location.hash, so there's no
     // need to decode it again (which would in fact be incorrect).
     return encodedFragment;

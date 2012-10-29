@@ -156,6 +156,10 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     public void setTabIndex(int tabIndex) {
         impl.setTabIndex(tabIndex);
     }
+
+    public DateBox getDateBox() {
+        return impl.getDateBox();
+    }
     
     // ----------------------------------------------------------------------
     // conversion methods that convert to dates in UTC time
@@ -217,5 +221,5 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     public static final long timezoneOffsetMillis(Date date) {
         return date.getTimezoneOffset()*60*1000;        
     }
-    
+
 }

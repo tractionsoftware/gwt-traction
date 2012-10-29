@@ -109,4 +109,9 @@ public class UTCDateBoxImplHtml4 extends UTCDateBoxImplShared {
         datebox.getTextBox().setTabIndex(tabIndex);
     }
 
+    @Override
+    public DateBox getDateBox() {
+        return datebox;
+    }
+
 }
