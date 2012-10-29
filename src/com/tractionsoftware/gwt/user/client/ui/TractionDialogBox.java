@@ -20,6 +20,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.HasOpenHandlers;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -96,7 +97,7 @@ public class TractionDialogBox extends DialogBox implements HasOpenHandlers<Trac
     protected void onCloseClick(ClickEvent event) {
 	hide();
     }
-
+    
     // ----------------------------------------------------------------------
     // HasOpenHandlers
     
@@ -105,13 +106,43 @@ public class TractionDialogBox extends DialogBox implements HasOpenHandlers<Trac
 	return addHandler(handler, OpenEvent.getType());
     }
     
+    /**
+     * Overrides show to call {@link #adjustGlassSize()} if the dialog
+     * is already showing and fires an {@link OpenEvent} after the
+     * normal show.
+     */
     @Override
     public void show() {
 	boolean fireOpen = !isShowing();
 	super.show();
+	
+	// adjust the size of the glass
+	if (isShowing()) {
+	    adjustGlassSize();
+	}
+
+	// fire the open event
 	if (fireOpen) {
 	    OpenEvent.fire(this, this);
 	}
     }
+    
+    // ----------------------------------------------------------------------
+    
+    /**
+     * This can be called to adjust the size of the dialog glass. It
+     * is implemented using JSNI to bypass the "private" keyword on
+     * the glassResizer.
+     */
+    public void adjustGlassSize() {
+        getGlassResizer().onResize(null);
+    }
+
+    /**
+     * Bypass "private" on glassResizer
+     */
+    private native ResizeHandler getGlassResizer() /*-{
+        return this.@com.google.gwt.user.client.ui.PopupPanel::glassResizer;
+    }-*/;
     
 }
