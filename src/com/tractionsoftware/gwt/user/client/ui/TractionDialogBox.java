@@ -135,7 +135,10 @@ public class TractionDialogBox extends DialogBox implements HasOpenHandlers<Trac
      * the glassResizer.
      */
     public void adjustGlassSize() {
-        getGlassResizer().onResize(null);
+        if (isGlassEnabled()) {
+            ResizeHandler handler = getGlassResizer();
+            if (handler != null) handler.onResize(null);
+        }
     }
 
     /**
