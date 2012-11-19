@@ -24,8 +24,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -75,7 +73,7 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
      * Keyboard handler for the TextBox shows and hides the menu,
      * scrolls through the menu, and accepts a value.
      */
-    private class TextBoxHandler implements KeyDownHandler, KeyUpHandler, BlurHandler, ClickHandler {
+    private class TextBoxHandler implements KeyDownHandler, BlurHandler, ClickHandler {
 
         @Override
         public void onKeyDown(KeyDownEvent event) {
@@ -95,6 +93,12 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
                     clearInvalidStyle();
                 } 
                 else {
+                    
+                    // added a sync here because this is when we
+                    // accept the value we've typed if we're typing in
+                    // a new value.
+                    syncValueToText();
+                    
                     validate();
                 }
                 break;
@@ -107,11 +111,6 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
                 clearInvalidStyle();
                 break;
             }
-        }
-
-        @Override
-        public void onKeyUp(KeyUpEvent event) {
-            syncValueToText();
         }
 
         @Override
@@ -337,13 +336,10 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
 
         TextBoxHandler handler = new TextBoxHandler();
         textbox.addKeyDownHandler(handler);
-        textbox.addKeyUpHandler(handler);
         textbox.addBlurHandler(handler);
         textbox.addClickHandler(handler);
 
         textbox.setStyleName("gwt-TimeBox");
-        
-        System.err.println("Created UTCTimeBoxImplHtml4");
         
         initWidget(textbox);
     }

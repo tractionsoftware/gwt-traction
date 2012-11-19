@@ -35,7 +35,6 @@ public class UTCTimeBoxImplHtml5 extends UTCTimeBoxImplShared {
     public UTCTimeBoxImplHtml5() {
         widget = new InputWidget("time");
         setTimeFormat(timeInputFormat);
-        System.err.println("Created UTCTimeBoxImplHtml5");
         
         widget.addValueChangeHandler(new ValueChangeHandler() {
 

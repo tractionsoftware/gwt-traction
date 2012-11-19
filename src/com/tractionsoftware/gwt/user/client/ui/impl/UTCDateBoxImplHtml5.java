@@ -51,8 +51,6 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
         });
         
         initWidget(widget);        
-    
-        System.err.println("Created UTCDateBoxImplHtml5");
     }
 
     /**
