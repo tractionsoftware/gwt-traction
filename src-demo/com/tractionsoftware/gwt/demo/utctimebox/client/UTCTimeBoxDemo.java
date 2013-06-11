@@ -19,6 +19,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.tractionsoftware.gwt.user.client.ui.UTCTimeBox;
@@ -46,6 +47,19 @@ public class UTCTimeBoxDemo implements EntryPoint {
         timebox.setValue(UTCTimeBox.getValueForNextHour());
         
         RootPanel.get("utctimebox").add(timebox);
+        
+        CheckBox enabled = new CheckBox("Enabled");
+        enabled.setValue(true);
+        RootPanel.get("utctimebox-enabled").add(enabled);
+        enabled.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                timebox.setEnabled(event.getValue());
+            }
+            
+        });
+
     }    
 
     private void addEvent(String name, Long time) {

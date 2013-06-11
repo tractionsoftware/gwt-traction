@@ -31,6 +31,7 @@
     <include name='ui/UTCTimeBox.java' />
     <include name='ui/UTCDateTimeRangeController.java' />
     <include name='ui/impl/UTC*.java' />
+    <include name='util/DomUtils.java' />
   </source>  
 
 </module>

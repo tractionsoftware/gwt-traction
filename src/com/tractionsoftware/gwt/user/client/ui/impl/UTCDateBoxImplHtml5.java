@@ -24,6 +24,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.tractionsoftware.gwt.user.client.ui.InputWidget;
 import com.tractionsoftware.gwt.user.client.ui.UTCDateBox;
+import com.tractionsoftware.gwt.user.client.util.DomUtils;
 
 /**
  * Uses an HTML5 input type=date control to implement the UTCDateBox
@@ -99,6 +100,18 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
         }
         setValue(value, true);
     }
+
+    // ----------------------------------------------------------------------
+    
+    @Override
+    public boolean isEnabled() {
+        return DomUtils.isEnabled(widget.getElement());
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        DomUtils.setEnabled(widget.getElement(), enabled);
+    }    
     
     // ----------------------------------------------------------------------
     

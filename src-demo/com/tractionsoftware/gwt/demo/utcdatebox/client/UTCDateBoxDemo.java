@@ -21,6 +21,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -58,6 +59,19 @@ public class UTCDateBoxDemo implements EntryPoint {
             }
         });
         RootPanel.get("utcdatebox").add(utcdatebox);
+        
+        CheckBox enabled = new CheckBox("Enabled");
+        enabled.setValue(true);
+        RootPanel.get("utcdatebox-enabled").add(enabled);
+        enabled.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+            @Override
+            public void onValueChange(ValueChangeEvent<Boolean> event) {
+                utcdatebox.setEnabled(event.getValue());
+            }
+            
+        });
+        
     }    
 
     private void addEvent(String name, Date date, long time) {

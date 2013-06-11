@@ -24,14 +24,16 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.tractionsoftware.gwt.user.client.ui.impl.UTCTimeBoxImpl;
+import com.tractionsoftware.gwt.user.client.util.DomUtils;
 
 /**
  * @author andy
  */
-public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long>, HasText {
+public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long>, HasText, HasEnabled {
 
     public UTCTimeBoxImpl impl;
     
@@ -82,6 +84,16 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         impl.setText(text);
     }
 
+    @Override
+    public boolean isEnabled() {
+        return DomUtils.isEnabled(getElement());
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        DomUtils.setEnabled(getElement(), enabled);
+    }    
+    
     /**
      * The HTML5 implementation will ignore this.
      */
@@ -114,5 +126,4 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         return value - (value % hour) + hour;
     }
 
-    
 }

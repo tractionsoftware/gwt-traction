@@ -41,6 +41,7 @@
     <include name='ui/InputWidget.java' />
     <include name='ui/UTCDateBox.java' />
     <include name='ui/impl/UTC*.java' />
+    <include name='util/DomUtils.java' />
   </source>  
 
 </module>

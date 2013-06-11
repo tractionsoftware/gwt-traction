@@ -26,6 +26,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.tractionsoftware.gwt.user.client.ui.UTCDateBox;
+import com.tractionsoftware.gwt.user.client.util.DomUtils;
 
 /**
  * @author andy
@@ -78,6 +79,16 @@ public class UTCDateBoxImplHtml4 extends UTCDateBoxImplShared {
         }        
     }
 
+    @Override
+    public boolean isEnabled() {
+        return DomUtils.isEnabled(datebox.getTextBox().getElement());
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        DomUtils.setEnabled(datebox.getTextBox().getElement(), enabled);
+    }    
+    
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Long> handler) {
         return handlerManager.addHandler(ValueChangeEvent.getType(), handler);

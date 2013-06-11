@@ -24,6 +24,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -42,7 +43,7 @@ import com.tractionsoftware.gwt.user.client.ui.impl.UTCDateBoxImpl;
  * getValue(), just as you would for DateBox. With auto-boxing Long/long, this
  * may seem strange but is consistent.
  */
-public class UTCDateBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long>, HasText {
+public class UTCDateBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long>, HasText, HasEnabled {
 
     private UTCDateBoxImpl impl;
     
@@ -142,6 +143,21 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
         return impl.addValueChangeHandler(handler);
     }
 
+    // ----------------------------------------------------------------------
+    // HasEnabled
+
+    @Override
+    public boolean isEnabled() {
+        return impl.isEnabled();
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        impl.setEnabled(enabled);
+    }
+
+    // ----------------------------------------------------------------------
+    
     /**
      * Sets the visible length of the text input for this date box.
      * This will be ignored for HTML5 inputs.
