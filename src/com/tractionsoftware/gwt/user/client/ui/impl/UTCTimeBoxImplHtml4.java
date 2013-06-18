@@ -146,6 +146,7 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
                 public void onClick(ClickEvent event) {
                     acceptValue();
                     hideMenu();
+                    clearInvalidStyle();
                 }
 
             });
@@ -302,14 +303,14 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
             for (int i = 0; i < options.length; i++) {
                 TimeBoxMenuOption option = options[i];
 
-                boolean isEqual = option.isTimeEqualTo(currentTime);
+                boolean isEqual = currentTime != null && option.isTimeEqualTo(currentTime);
                 if (isEqual) {
                     highlightedOptionIndex = i;
                 }
                 option.setSelected(isEqual);
                 option.setHighlighted(isEqual);
 
-                if (option.isTimeLessThan(currentTime)) {
+                if (currentTime != null && option.isTimeLessThan(currentTime)) {
                     lastOptionLessThanCurrentTime = i;
                 }
             }
