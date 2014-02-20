@@ -9,9 +9,6 @@
 
   <property name="project.build.properties" value="${project.root}/build.properties" />
 
-  <!-- Requires gwtquery for getComputedStyle -->
-  <property name="gwtquery.jar" value="${project.root}/lib/gwtquery-1.2.0.jar" />
-
   <property environment="env" />
 
   <property file="${project.build.properties}" />
@@ -148,7 +145,6 @@
       <!-- Javadoc has a bug in it that requires the jars on the class path or the index.html will not be created.-->
       <classpath>
         <pathelement location="${project.jar}" />
-        <pathelement location="${gwtquery.jar}" />
         <pathelement location="${gwt.user.jar}" />
         <pathelement location="${gwt.validation.api.jar}" />
         <pathelement location="${gwt.validation.api.sources.jar}" />
@@ -172,7 +168,6 @@
     <echo message="Compiling source..." />
     <gwt.javac destdir="${project.bin}">
       <classpath>
-        <pathelement location="${gwtquery.jar}" />
         <pathelement location="${gwt.user.jar}" />
         <pathelement location="${gwt.validation.api.jar}" />
         <pathelement location="${gwt.validation.api.sources.jar}" />
@@ -208,7 +203,6 @@
       <arg value="-strict" />
       <arg value="${gwtc.module.name}" />
       <classpath>
-        <pathelement location="${gwtquery.jar}" />
         <path path="${gwtc.src.dir}" />
         <path path="${project.jar}" />
         <pathelement location="${gwt.user.jar}" />
@@ -281,7 +275,6 @@
             <pathelement location="${project.class.path}" />
             <pathelement location="${project.src}" />
             <pathelement location="${demo.src.dir}" />
-            <pathelement location="${gwtquery.jar}" />
             <pathelement location="${gwt.user.jar}" />
             <pathelement location="${gwt.validation.api.jar}" />
             <pathelement location="${gwt.validation.api.sources.jar}" />

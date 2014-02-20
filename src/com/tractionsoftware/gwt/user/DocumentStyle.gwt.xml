@@ -1,0 +1,18 @@
+<module>
+
+  <!-- Document Style copied from GwtQuery -->
+  <!-- https://code.google.com/p/gwtquery -->
+  <replace-with class="com.tractionsoftware.gwt.user.client.impl.DocumentStyleImpl">
+    <when-type-assignable class="com.tractionsoftware.gwt.user.client.impl.DocumentStyleImpl"/>
+  </replace-with>
+  <replace-with class="com.tractionsoftware.gwt.user.client.impl.DocumentStyleImplIE">
+    <when-type-assignable class="com.tractionsoftware.gwt.user.client.impl.DocumentStyleImpl"/>
+    <any>
+      <when-property-is name="user.agent" value="ie6"/>
+      <when-property-is name="user.agent" value="ie8"/>
+      <when-property-is name="user.agent" value="ie9"/>
+    </any>
+  </replace-with>
+
+</module>
+
