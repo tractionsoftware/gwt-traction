@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>gwt-traction demos</title>
+    <script>
+  function makeLink(moduleName,htmlFileName){
+    return moduleName + '/' + htmlFileName + '.html';
+  }
+
+  function writeDemoLink(moduleFilePath) {
+    var moduleName = moduleFilePath.substring(0, moduleFilePath.length - 8).replace(/\//g, '.');
+    var htmlFileName = moduleName.replace(/.*\./, '');
+    document.getElementById('demoList').innerHTML += 
+    '<p><a target="_blank" href="' + makeLink(moduleName,htmlFileName) + '">' + htmlFileName + '</a></p>' 
+   }
+    </script>
+   <style>
+   html { background: #eee; padding: 20px; }
+   body { font-family: sans-serif; background: #fff; padding: 20px; }
+   div { width: 240px; }
+   p { margin-bottom: 0; }
+   a { color: #369; outline: none; text-decoration: none; font-weight: bold; }
+   a:hover { text-decoration: underline; }
+   </style>
+   </head>
+  <body>
+    <h3>gwt-traction demos</h3>
+    <div id="demoList"></div>
+  </body>
+</html>
+
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/autosizingtextarea/AutoSizingTextAreaDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/color/ColorDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/dialogbox/DialogBoxDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/groupedlistbox/GroupedListBoxDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/opacity/OpacityDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/singlelistbox/SingleListBoxDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/utcdatebox/UTCDateBoxDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/utcdatetime/UTCDateTimeDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/utctimebox/UTCTimeBoxDemo.gwt.xml');</script>
+	
+      
+<script>writeDemoLink('com/tractionsoftware/gwt/demo/viewport/ViewportDemo.gwt.xml');</script>
+	

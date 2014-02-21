@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+<title>UTCTimeBox Demo</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="gwt:property" content="locale=en">
+<style>
+#eventlog select { width: 400px; }
+.gwt-TimeBox {
+    margin-left: 5px;
+}
+.gwt-TimeBox, .gwt-DateBox {
+    font-size: 14px;
+    padding: 2px;
+    width: 120px;
+}
+button { margin-right: 10px; }
+</style>
+<script language='javascript' src='com.tractionsoftware.gwt.demo.utctimebox.UTCTimeBoxDemo.nocache.js'></script>
+</head>
+<body>
+<div class="desc">To simplify the handling of times in different time
+  zones, time is always represented as the number of milliseconds
+  after midnight independent of time zone.<br><br>It handles flexible
+  input and normalizes the value when the control loses focus. For
+  example, type "12p" in the box and hit TAB.<br><br>The UTCDateTimeUtils class
+  is provided for use on the server to allow conversion to a Date on a
+  known day in a known TimeZone. <br><br>Note: These demos use the "en" locale with
+  default date/time formats, but other locales and formats can be specified.
+</div>
+<h2>UTCTimeBox Demo<span id="utctimebox-enabled"></span></h2>
+<div id="utctimebox"></div>
+<h3>UTCTimeBox ValueChangeEvents (most recent on top)</h3>
+<div id="eventlog"></div>
+</body>
+</html>

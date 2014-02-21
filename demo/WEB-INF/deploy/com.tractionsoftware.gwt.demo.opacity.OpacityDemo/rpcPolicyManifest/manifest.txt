@@ -1,0 +1,2 @@
+# Module com.tractionsoftware.gwt.demo.opacity.OpacityDemo
+# RPC service class, partial path of RPC policy file

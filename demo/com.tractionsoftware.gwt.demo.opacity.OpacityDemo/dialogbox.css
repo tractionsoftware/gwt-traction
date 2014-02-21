@@ -1,0 +1,18 @@
+.gwt-DialogBox .dialogContainer {
+  position: relative;  
+}
+.gwt-DialogBox .dialogControls { 
+  position: absolute;
+  top: -24px;
+  right: 4px;
+}
+.gwt-DialogBox .dialogControls a {
+  cursor: pointer;
+}
+.gwt-DialogBox .dialogControls .x {
+  display: block;
+  height: 13px;
+  width: 13px;  
+  background: transparent url(x.png) center center no-repeat;
+  -background: transparent url(x.gif) center center no-repeat;
+}

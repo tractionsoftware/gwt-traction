@@ -1,0 +1,26 @@
+.gwt-traction-input-autosize {
+  display: block;
+  overflow: hidden;
+}
+
+.gwt-traction-input-autosize textarea {
+    resize: none;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 14px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    outline: 0;
+}
+
+.gwt-traction-input-shadow {
+  position: absolute;
+  left: -10000px;
+  top: -10000px;
+  max-height: none;
+  min-height: 0;
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+

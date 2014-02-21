@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<title>GroupedListBox Demo</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<style>
+button { margin-right: 10px; }
+</style>
+<script language='javascript' src='com.tractionsoftware.gwt.demo.groupedlistbox.GroupedListBoxDemo.nocache.js'></script>
+</head>
+<body>
+<div class="desc">
+This control uses the OPTGROUP tag to group OPTIONS in a SELECT element. It is a subclass of ListBox and works the same way.
+ <p> 
+ The text before the first "|" character is used as the group name and is
+ used to group elements inside an OPTGROUP of that name. The rest
+ of the text is used as the text of the OPTION.
+ <p>
+ It uses "doubling" for escaping so if "||" appears in the 
+ name, it is converted to a single "|" and the first single "|"
+ is used as the delimiter.
+</div>
+
+<h2>GroupedListBox Demo</h2>
+<table border="0" cellpadding="5"><tr valign="top"><td>
+<h3>Single Select</h3>
+<div id="select1"></div>
+</td><td>
+<h3>Multiple Select</h3>
+<div id="select2"></div>
+</td></tr></table>
+
+<h3>Add new items to each GroupedListBox</h3>
+<div id="controls">
+</div>
+</body>
+</html>
