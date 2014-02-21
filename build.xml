@@ -105,11 +105,11 @@
         <include name="**/demo/**" />
       </fileset>
     </jar>
-    <copy todir="${project.root}/demo">
+    <copy todir="${project.root}/gh-pages/demo">
       <fileset dir="${demo.out.dir}">
       </fileset>
     </copy>
-    <copy todir="${project.root}/javadoc">
+    <copy todir="${project.root}/gh-pages/javadoc">
       <fileset dir="${project.javadoc}">
       </fileset>
     </copy>
@@ -136,8 +136,9 @@
     <delete dir="${project.javadoc}" />
     <mkdir dir="${project.javadoc}" />
     <javadoc destdir="${project.javadoc}" windowtitle="gwt-traction api">
+      <arg value="-notimestamp" />
       <!-- Link to GWT Javadoc -->
-      <link href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.1" />
+      <link href="http://www.gwtproject.org/javadoc/latest/" />
       <packageset dir="src">
         <include name="com/tractionsoftware/gwt/**" />
         <exclude name="**/impl/**" />
