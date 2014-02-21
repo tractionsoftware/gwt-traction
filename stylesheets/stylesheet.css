@@ -314,6 +314,7 @@ Full-Width Styles
 }
 
 #downloads {
+  display: none;
   position: absolute;
   width: 210px;
   z-index: 10;
