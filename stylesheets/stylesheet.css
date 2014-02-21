@@ -232,7 +232,6 @@ hr {
 }
 
 table {
-  border: 1px solid #373737;
   margin-bottom: 20px;
   text-align: left;
  }
@@ -245,9 +244,7 @@ th {
  }
 
 td {
-  padding: 10px;
-  border: 1px solid #373737;
- }
+}
 
 form {
   background: #f2f2f2;
