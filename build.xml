@@ -1,8 +1,18 @@
 
-<project name="gwt-traction" default="build">
+<project name="gwt-traction" default="dist">
 
   <!-- "build" is the default gwt-traction target -->
   <property name="project.target" value="build" />
+
+  <!-- find the built gwt-traction.jar -->
+  <path id="gwt-traction.jar.id">
+    <fileset dir="target">
+      <include name="gwt-traction-*.jar"/>
+      <exclude name="gwt-traction-*-sources.jar"/>
+      <exclude name="gwt-traction-*-javadoc.jar"/>
+    </fileset>
+  </path>
+  <property name="gwt-traction.jar" refid="gwt-traction.jar.id"/>
 
   <!-- Set up initial environment -->
   <property name="project.root" location="." />
@@ -19,9 +29,6 @@
   <!-- import common config -->
   <import file="${project.root}/common.ant.xml" />
 
-  <!-- Specify project jars -->
-  <property name="project.jar" value="${project.dist}/gwt-traction.jar" />
-
   <available file="${gwt.tools}" type="dir" property="gwt.tools.exists" />
 
   <!-- Setting up the project bin -->
@@ -36,20 +43,6 @@
   <property name="demo.js.style" value="OBFUSCATED" />
   <property name="demo.filter" value="**/demo/**/*.gwt.xml" />
 
-  <!--As the ant task selector puts tasks in the order given by the build file,
-    we have sorted all common public tasks first-->
-  <target name="build" depends="checksetup, compile" description="Packages the gwt-traction jar">
-    <mkdir dir="build" />
-    <mkdir dir="${project.dist}" />
-    <jar destfile="${project.jar}">
-      <fileset dir="src">
-      </fileset>
-      <fileset dir="${project.bin}">
-        <exclude name="**/demo/**" />
-      </fileset>
-    </jar>
-  </target>
-
   <target name="help" description="Short description of gwt-traction properties and tasks">
     <echo>
             gwt-traction properties
@@ -60,8 +53,8 @@
             gwt.tools
             The location of your GWT tools dir.
             
-            project.jar
-            Where should the gwt-traction jar be created.
+            gwt-traction.jar
+            Where should the gwt-traction jar be found.
                         
             project.build.properties
             Where you have defined the above propeties.
@@ -73,11 +66,11 @@
   </target>
 
   <target name="classpath">
-    <echo>export CLASSPATH=src:src-demo:${project.jar}:${gwt.user.jar}:${gwt.dev.jar}:${gwt.validation.api.jar}:${gwt.validation.api.sources.jar}</echo>
+    <echo>export CLASSPATH=src-demo:${gwt-traction.jar}:${gwt.user.jar}:${gwt.dev.jar}:${gwt.validation.api.jar}:${gwt.validation.api.sources.jar}</echo>
   </target>
 
   <target name="dist"
-          depends="build, build.demos, createJavadoc"
+          depends="checksetup, build.demos"
           description="Assembles the full gwt-traction distribution.">
     <mkdir dir="${project.out}" />
     <mkdir dir="${project.demos}" />
@@ -91,7 +84,7 @@
            nowarn="${javac.nowarn}"
            encoding="${javac.encoding}">
       <classpath>
-        <pathelement location="${project.jar}" />
+        <pathelement location="${gwt-traction.jar}" />
         <pathelement location="${gwt.user.jar}" />
         <pathelement location="${gwt.validation.api.jar}" />
         <pathelement location="${gwt.validation.api.sources.jar}" />
@@ -109,18 +102,7 @@
       <fileset dir="${demo.out.dir}">
       </fileset>
     </copy>
-    <copy todir="${project.root}/gh-pages/javadoc">
-      <fileset dir="${project.javadoc}">
-      </fileset>
-    </copy>
 
-    <mkdir dir="${project.dist}" />
-    <zip destfile="${project.dist}/gwt-traction.zip">
-      <zipfileset dir="${project.out}" >
-         <include name="javadoc/**" />
-      </zipfileset>
-      <zipfileset file="${project.jar}" />
-    </zip>
   </target>
 
   <target name="clean" description="Cleans intermediate and output files">
@@ -129,38 +111,17 @@
 
   <target name="all"
           description="Cleans, builds, and packages gwt-traction"
-          depends="clean,build,dist" />
+          depends="clean,dist" />
 
-
-  <target name="createJavadoc">
-    <delete dir="${project.javadoc}" />
-    <mkdir dir="${project.javadoc}" />
-    <javadoc destdir="${project.javadoc}" windowtitle="gwt-traction api">
-      <arg value="-notimestamp" />
-      <!-- Link to GWT Javadoc -->
-      <link href="http://www.gwtproject.org/javadoc/latest/" />
-      <packageset dir="src">
-        <include name="com/tractionsoftware/gwt/**" />
-        <exclude name="**/impl/**" />
-      </packageset>
-      <!-- Javadoc has a bug in it that requires the jars on the class path or the index.html will not be created.-->
-      <classpath>
-        <pathelement location="${project.jar}" />
-        <pathelement location="${gwt.user.jar}" />
-        <pathelement location="${gwt.validation.api.jar}" />
-        <pathelement location="${gwt.validation.api.sources.jar}" />
-        <pathelement location="${gwt.dev.jar}" />
-        <pathelement location="${gwt.tools.lib}/junit/junit-3.8.1.jar" />
-      </classpath>
-    </javadoc>
-  </target>
 
   <!-- helper tasks -->
   <target name="checksetup">
     <fail message="unknown platform" unless="gwt.platform" />
+    <fail message="mvn package first" unless="gwt-traction.jar" />
     <echo message="gwt.home = ${gwt.home}" />
     <echo message="gwt.tools = ${gwt.tools}" />
     <echo message="gwt.platform = ${gwt.platform}" />
+    <echo message="gwt-traction.jar = ${gwt-traction.jar}" />
   </target>
 
   <!-- Compile the project -->
@@ -205,7 +166,7 @@
       <arg value="${gwtc.module.name}" />
       <classpath>
         <path path="${gwtc.src.dir}" />
-        <path path="${project.jar}" />
+        <path path="${gwt-traction.jar}" />
         <pathelement location="${gwt.user.jar}" />
         <pathelement location="${gwt.validation.api.jar}" />
         <pathelement location="${gwt.validation.api.sources.jar}" />
@@ -228,7 +189,7 @@
     <delete dir="${demo.out.dir}" />
   </target>
 
-  <target name="build.demos" depends="build, clean.demos, build.demos.body" />
+  <target name="build.demos" depends="clean.demos, build.demos.body" />
 
   <target name="build.demos.body">
     <delete dir="${demo.out.dir}" />
