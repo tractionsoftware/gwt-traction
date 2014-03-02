@@ -11,7 +11,7 @@
   <groupId>com.tractionsoftware</groupId>
   <artifactId>gwt-traction</artifactId>
   <packaging>jar</packaging>
-  <version>1.5.9-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <name>gwt-traction</name>
   <description>Useful GWT widgets and utilities contributed by Traction Software, Inc.</description>
   <url>http://tractionsoftware.github.io/gwt-traction/</url>
@@ -84,75 +84,93 @@
     <!-- Generate compiled stuff in the folder used for developing mode -->
     <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
 
-    <plugins>
-      
-      <!-- Javadoc links -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9.1</version>
-        <configuration>
-          <additionalparam>
-            -notimestamp
-          </additionalparam>
-          <links>
-            <link>http://www.gwtproject.org/javadoc/latest/</link>
-          </links>
-          <destDir>gh-pages/javadoc</destDir>
-          <minmemory>128m</minmemory>
-          <maxmemory>1g</maxmemory>
-        </configuration>
-      </plugin>      
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.java</include>
+          <include>**/*.gwt.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
 
-      <!-- GWT Maven Plugin -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>gwt-maven-plugin</artifactId>
-        <version>2.6.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>test</goal>
-              <goal>generateAsync</goal>
-              <goal>resources</goal>
-            </goals>
-          </execution>
-        </executions>
-        <!-- Plugin configuration. There are many available options, see 
-          gwt-maven-plugin documentation at codehaus.org -->
-        <configuration>
-          <hostedWebapp>${webappDirectory}</hostedWebapp>
-        </configuration>
-      </plugin>
+    <pluginManagement>
+      <plugins>
 
-      <!-- Copy static web files before executing gwt:run -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.1.1</version>
-        <executions>
-          <execution>
-            <phase>compile</phase>
-            <goals>
-              <goal>exploded</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <webappDirectory>${webappDirectory}</webappDirectory>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-    </plugins>
+        <!-- Javadoc links -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.9.1</version>
+          <configuration>
+            <additionalparam>
+              -notimestamp
+            </additionalparam>
+            <links>
+              <link>http://www.gwtproject.org/javadoc/latest/</link>
+            </links>
+            <destDir>gh-pages/javadoc</destDir>
+            <minmemory>128m</minmemory>
+            <maxmemory>1g</maxmemory>
+          </configuration>
+        </plugin>      
+
+        <!-- GWT Maven Plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>gwt-maven-plugin</artifactId>
+          <version>2.6.0</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>compile</goal>
+                <goal>test</goal>
+                <goal>generateAsync</goal>
+                <goal>resources</goal>
+              </goals>
+            </execution>
+          </executions>
+          <!-- Plugin configuration. There are many available options, see 
+               gwt-maven-plugin documentation at codehaus.org -->
+          <configuration>
+            <hostedWebapp>${webappDirectory}</hostedWebapp>
+          </configuration>
+        </plugin>
+
+        <!-- Copy static web files before executing gwt:run -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.1.1</version>
+          <executions>
+            <execution>
+              <phase>compile</phase>
+              <goals>
+                <goal>exploded</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <webappDirectory>${webappDirectory}</webappDirectory>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3.2</version>
+          <configuration>
+            <source>1.7</source>
+            <target>1.7</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>
