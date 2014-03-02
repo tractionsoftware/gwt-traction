@@ -7,9 +7,7 @@
   <!-- find the built gwt-traction.jar -->
   <path id="gwt-traction.jar.id">
     <fileset dir="target">
-      <include name="gwt-traction-*.jar"/>
-      <exclude name="gwt-traction-*-sources.jar"/>
-      <exclude name="gwt-traction-*-javadoc.jar"/>
+      <include name="gwt-traction-*-SNAPSHOT.jar"/>
     </fileset>
   </path>
   <property name="gwt-traction.jar" refid="gwt-traction.jar.id"/>
@@ -70,11 +68,12 @@
   </target>
 
   <target name="dist"
-          depends="checksetup, build.demos"
+          depends="checksetup, compile, build.demos"
           description="Assembles the full gwt-traction distribution.">
     <mkdir dir="${project.out}" />
     <mkdir dir="${project.demos}" />
 
+    <mkdir dir="${project.bin}" />
     <javac srcdir="${project.root}/src-demo"
            destdir="${project.bin}"
            debug="${javac.debug}"
@@ -208,51 +207,77 @@
 
   <target name="dev.color" description="Run ColorDemo">
     <java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
-        <classpath>
-            <pathelement location="${project.class.path}" />
-            <pathelement location="${project.src}" />
-            <pathelement location="${demo.src.dir}" />
-            <pathelement location="${gwt.user.jar}" />
-            <pathelement location="${gwt.validation.api.jar}" />
-            <pathelement location="${gwt.validation.api.sources.jar}" />
-            <pathelement location="${gwt.dev.jar}" />
-        </classpath>
-        <jvmarg value="-Xmx512M" />
-        <jvmarg value="-Xdebug" />
-        <arg value="-startupUrl" />
-        <arg value="http://localhost:8888/com.tractionsoftware.gwt.demo.color.ColorDemo/ColorDemo.html" />
-        <arg value="-war" />
-        <arg value="." />
-        <arg value="-logLevel" />
-        <arg value="DEBUG" />
-        <arg value="-bindAddress" />
-        <arg value="192.168.46.1" />
-        <arg value="com.tractionsoftware.gwt.demo.color.ColorDemo" />
+      <classpath>
+        <pathelement location="${gwt-traction.jar}" />
+        <pathelement location="${project.class.path}" />
+        <pathelement location="${project.src}" />
+        <pathelement location="${demo.src.dir}" />
+        <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.validation.api.jar}" />
+        <pathelement location="${gwt.validation.api.sources.jar}" />
+        <pathelement location="${gwt.dev.jar}" />
+      </classpath>
+      <jvmarg value="-Xmx512M" />
+      <jvmarg value="-Xdebug" />
+      <arg value="-startupUrl" />
+      <arg value="http://localhost:8888/com.tractionsoftware.gwt.demo.color.ColorDemo/ColorDemo.html" />
+      <arg value="-war" />
+      <arg value="." />
+      <arg value="-logLevel" />
+      <arg value="DEBUG" />
+      <arg value="-bindAddress" />
+      <arg value="192.168.46.1" />
+      <arg value="com.tractionsoftware.gwt.demo.color.ColorDemo" />
     </java>
   </target>
 
   <target name="dev.autosize" description="Run AutoSizingTextAreaDemo">
     <java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
-        <classpath>
-            <pathelement location="${project.class.path}" />
-            <pathelement location="${project.src}" />
-            <pathelement location="${demo.src.dir}" />
-            <pathelement location="${gwt.user.jar}" />
-            <pathelement location="${gwt.validation.api.jar}" />
-            <pathelement location="${gwt.validation.api.sources.jar}" />
-            <pathelement location="${gwt.dev.jar}" />
-        </classpath>
-        <jvmarg value="-Xmx512M" />
-        <jvmarg value="-Xdebug" />
-        <arg value="-startupUrl" />
-        <arg value="http://localhost:8888/com.tractionsoftware.gwt.demo.autosizingtextarea.AutoSizingTextAreaDemo/AutoSizingTextAreaDemo.html" />
-        <arg value="-war" />
-        <arg value="." />
-        <arg value="-logLevel" />
-        <arg value="DEBUG" />
-        <arg value="-bindAddress" />
-        <arg value="192.168.46.1" />
-        <arg value="com.tractionsoftware.gwt.demo.autosizingtextarea.AutoSizingTextAreaDemo" />
+      <classpath>
+        <pathelement location="${gwt-traction.jar}" />
+        <pathelement location="${project.class.path}" />
+        <pathelement location="${project.src}" />
+        <pathelement location="${demo.src.dir}" />
+        <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.validation.api.jar}" />
+        <pathelement location="${gwt.validation.api.sources.jar}" />
+        <pathelement location="${gwt.dev.jar}" />
+      </classpath>
+      <jvmarg value="-Xmx512M" />
+      <jvmarg value="-Xdebug" />
+      <arg value="-startupUrl" />
+      <arg value="http://localhost:8888/com.tractionsoftware.gwt.demo.autosizingtextarea.AutoSizingTextAreaDemo/AutoSizingTextAreaDemo.html" />
+      <arg value="-war" />
+      <arg value="." />
+      <arg value="-logLevel" />
+      <arg value="DEBUG" />
+      <arg value="-bindAddress" />
+      <arg value="192.168.46.1" />
+      <arg value="com.tractionsoftware.gwt.demo.autosizingtextarea.AutoSizingTextAreaDemo" />
+    </java>
+  </target>
+
+  <target name="dev.dialog" description="Run TractionDialogBox">
+    <java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
+      <classpath>
+        <pathelement location="${gwt-traction.jar}" />
+        <pathelement location="${project.class.path}" />
+        <pathelement location="${project.src}" />
+        <pathelement location="${demo.src.dir}" />
+        <pathelement location="${gwt.user.jar}" />
+        <pathelement location="${gwt.validation.api.jar}" />
+        <pathelement location="${gwt.validation.api.sources.jar}" />
+        <pathelement location="${gwt.dev.jar}" />
+      </classpath>
+      <jvmarg value="-Xmx512M" />
+      <jvmarg value="-Xdebug" />
+      <arg value="-startupUrl" />
+      <arg value="http://localhost:8888/com.tractionsoftware.gwt.demo.dialogbox.DialogBoxDemo/DialogBoxDemo.html" />
+      <arg value="-war" />
+      <arg value="." />
+      <arg value="-logLevel" />
+      <arg value="DEBUG" />
+      <arg value="com.tractionsoftware.gwt.demo.dialogbox.DialogBoxDemo" />
     </java>
   </target>
 
