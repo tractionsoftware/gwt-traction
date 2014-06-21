@@ -11,7 +11,7 @@
   <groupId>com.tractionsoftware</groupId>
   <artifactId>gwt-traction</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>1.5.9-SNAPSHOT</version>
   <name>gwt-traction</name>
   <description>Useful GWT widgets and utilities contributed by Traction Software, Inc.</description>
   <url>http://tractionsoftware.github.io/gwt-traction/</url>
@@ -40,7 +40,7 @@
 
   <properties>
     <!-- Convenience property to set the GWT version -->
-    <gwtVersion>2.6.0</gwtVersion>
+    <gwtVersion>2.6.1</gwtVersion>
     <!-- GWT needs at least java 1.5 -->
     <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -125,7 +125,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
-          <version>2.6.0</version>
+          <version>2.6.1</version>
           <executions>
             <execution>
               <goals>
@@ -140,6 +140,7 @@
                gwt-maven-plugin documentation at codehaus.org -->
           <configuration>
             <hostedWebapp>${webappDirectory}</hostedWebapp>
+            <mode>htmlunit</mode>
           </configuration>
         </plugin>
 
@@ -169,6 +170,7 @@
             <target>1.7</target>
           </configuration>
         </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
