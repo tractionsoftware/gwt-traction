@@ -1,12 +1,12 @@
 /*
  * Copyright 2010 Traction Software, Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -34,12 +34,12 @@ import com.google.gwt.dom.client.SelectElement;
  * used to group elements inside an OPTGROUP of that name. The rest of
  * the text is used as the text of the OPTION.
  * <p>
- * It uses "doubling" for escaping so if "||" appears in the 
+ * It uses "doubling" for escaping so if "||" appears in the
  * name, it is converted to a single "|" and the first single "|"
  * is used as the delimiter.
  * <p>
  * As a simple example, in a normal listbox I might have:
- * 
+ *
  * <pre>
  * - Item 1A
  * - Item 2A
@@ -49,7 +49,7 @@ import com.google.gwt.dom.client.SelectElement;
  * <p>
  * You could imaging using a text prefix to represent groups so that
  * you have:
- * 
+ *
  * <pre>
  * - Group A | Item 1
  * - Group A | Item 2
@@ -60,7 +60,7 @@ import com.google.gwt.dom.client.SelectElement;
  * The ListBox would get wide and hard to read. But if you add those
  * same items to a GroupedListBox, it will create OPTGROUPS
  * automatically so that you will have:
- * 
+ *
  * <pre>
  * - Group A
  * -- Item 1
@@ -73,16 +73,16 @@ import com.google.gwt.dom.client.SelectElement;
  * With regard to indexes and selection, it will mostly work the same
  * as a normal ListBox. The one difference is that it will not repeat
  * groups. This means that if you add the items in this order:
- * 
+ *
  * <pre>
  * - Group A | Item 1
  * - Group B | Item 1
  * - Group A | Item 2
  * - Group B | Item 2
  * </pre>
- * 
+ *
  * then you will rearrange the items to group them:
- * 
+ *
  * <pre>
  * - Group A
  * -- Item 1
@@ -91,11 +91,11 @@ import com.google.gwt.dom.client.SelectElement;
  * -- Item 1
  * -- Item 2
  * </pre>
- * 
+ *
  * Note: Though it can be used with a multiple select control, this
  * extends SingleListBox to provide {@link #setValue(String)} and
  * other useful methods.
- * 
+ *
  */
 public class GroupedListBox extends SingleListBox {
 
@@ -105,21 +105,21 @@ public class GroupedListBox extends SingleListBox {
 
         protected String name;
         protected int count = 0;
-        
+
         public OptGroup(String name) {
             this.name = name;
         }
-        
+
         public boolean isMatchingGroup(String groupName) {
             return name.equals(groupName);
         }
-        
+
         public int getCount() {
             return count;
         }
-        
+
         public abstract void remove();
-        public abstract OptionElement getChildOption(int index);        
+        public abstract OptionElement getChildOption(int index);
         public abstract Node getInsertBeforeElement(int index);
         public abstract Element getInsertParent();
 
@@ -130,23 +130,23 @@ public class GroupedListBox extends SingleListBox {
         public void decrement() {
             count--;
         }
-        
+
     }
-    
+
     /**
      * Keeps track of OptGroup elements to avoid hitting the DOM
      * constantly.
      */
     private final class RealOptGroup extends OptGroup {
-        
+
         private OptGroupElement element;
-        
+
         public RealOptGroup(String name) {
             super(name);
             this.element = Document.get().createOptGroupElement();
             this.element.setLabel(name);
         }
-        
+
         @Override
         public void remove() {
             element.removeFromParent();
@@ -183,7 +183,7 @@ public class GroupedListBox extends SingleListBox {
         public Element getInsertParent() {
             return element;
         }
-        
+
         public Element getElement() {
             return element;
         }
@@ -192,18 +192,18 @@ public class GroupedListBox extends SingleListBox {
         public OptionElement getChildOption(int index) {
             return option(element.getChild(index));
         }
-        
+
     }
 
     /**
      * Used for ungrouped elements at the beginning of the list.
      */
     private final class FakeOptGroup extends OptGroup {
-        
+
         public FakeOptGroup() {
             super("");
         }
-        
+
         @Override
         public void remove() {
             Element select = getElement();
@@ -247,11 +247,11 @@ public class GroupedListBox extends SingleListBox {
         }
 
     }
-    
+
     public GroupedListBox() {
         this(false);
     }
-    
+
     public GroupedListBox(boolean isMultipleSelect) {
         super(true,isMultipleSelect);
         addFakeOptGroup();
@@ -259,13 +259,12 @@ public class GroupedListBox extends SingleListBox {
 
     @Override
     public void clear() {
-        super.clear();
-        
+
         // we need special handling to remove any OPTGROUP elements
         for (OptGroup group : groups) {
             group.remove();
         }
-        
+
         groups.clear();
         addFakeOptGroup();
     }
@@ -274,7 +273,7 @@ public class GroupedListBox extends SingleListBox {
     public int getItemCount() {
         return getElement().getElementsByTagName("OPTION").getLength();
     }
-    
+
     /**
      * This is provided for testing purposes only. getItemCount() uses
      * the DOM and this uses the data-structures that we maintain to
@@ -287,13 +286,13 @@ public class GroupedListBox extends SingleListBox {
         }
         return ret;
     }
-    
+
     @Override
     public String getItemText(int index) {
         OptionElement opt = getOption(index);
         return opt.getInnerText();
     }
-    
+
     @Override
     public int getSelectedIndex() {
         int sz = getItemCount();
@@ -308,13 +307,13 @@ public class GroupedListBox extends SingleListBox {
         OptionElement option = getOption(index);
         return option.getValue();
     }
-    
+
     @Override
     protected void onLoad() {
         super.onLoad();
         addFakeOptGroup();
     }
-    
+
     @Override
     protected void onUnload() {
         super.onUnload();
@@ -334,7 +333,7 @@ public class GroupedListBox extends SingleListBox {
         if (pipe != -1) {
             group = item.substring(0, pipe).trim();
             item = item.substring(pipe + 1).trim();
-            
+
             // make sure we convert || -> | in the group name
             group = group.replace("||", "|");
         }
@@ -349,7 +348,7 @@ public class GroupedListBox extends SingleListBox {
 
         Element parent;
         Node before;
-        
+
         OptGroup optgroup = findOptGroup(group);
         if (optgroup != null) {
             parent = optgroup.getInsertParent();
@@ -361,7 +360,7 @@ public class GroupedListBox extends SingleListBox {
             before = null;
         }
         optgroup.increment();
-                
+
         OptionElement option = createOption(item, value);
         parent.insertBefore(option, before);
     }
@@ -374,25 +373,25 @@ public class GroupedListBox extends SingleListBox {
 
     @Override
     public void removeItem(int index) {
-        
+
         int childIndex = index;
         for (int i=0; i<groups.size(); i++) {
-            OptGroup group = groups.get(i);            
+            OptGroup group = groups.get(i);
             int count = group.getCount();
             if (childIndex < count) {
-                
+
                 // do the remove
                 OptionElement element = group.getChildOption(childIndex);
                 element.removeFromParent();
-                
+
                 group.decrement();
-                
+
                 // remove empty groups
                 if (group.getCount() <= 0) {
                     group.remove();
                     groups.remove(i);
                 }
-                
+
                 return;
             }
             else {
@@ -400,7 +399,7 @@ public class GroupedListBox extends SingleListBox {
             }
         }
 
-        throw new IndexOutOfBoundsException("problem in removeItem: index="+index+" range=[0-"+(getItemCount()-1)+"]");                
+        throw new IndexOutOfBoundsException("problem in removeItem: index="+index+" range=[0-"+(getItemCount()-1)+"]");
     }
 
     @Override
@@ -436,7 +435,7 @@ public class GroupedListBox extends SingleListBox {
     protected SelectElement getSelectElement() {
         return getElement().cast();
     }
-    
+
     protected void checkIndex(int index) {
         if (index < 0 || index >= getItemCount()) {
             throw new IndexOutOfBoundsException(index+" out of range [0-"+(getItemCount()-1)+"]");
@@ -446,13 +445,13 @@ public class GroupedListBox extends SingleListBox {
     // ----------------------------------------------------------------------
     // Convenience for dealing with the DOM directly instead of using
     // SelectElement.getOptions, etc
-    
+
     protected int getChildCount() {
         // number in the ungrouped group, plus the number of groups,
         // minus one for the fake, ungrouped group
         return groups.get(0).getCount() + groups.size() - 1;
     }
-    
+
     /**
      * We always keep a FakeOptGroup at the top.
      */
@@ -468,7 +467,7 @@ public class GroupedListBox extends SingleListBox {
     private OptGroup getFakeOptGroup() {
         return groups.get(0);
     }
-    
+
     protected OptGroup findOptGroup(String groupName) {
         for (OptGroup group : groups) {
             if (group.isMatchingGroup(groupName)) {
@@ -476,8 +475,8 @@ public class GroupedListBox extends SingleListBox {
             }
         }
         return null;
-    }    
-    
+    }
+
     protected OptGroup getOptGroup(int index) {
         int childIndex = index;
         for (OptGroup group : groups) {
@@ -490,22 +489,22 @@ public class GroupedListBox extends SingleListBox {
             }
         }
 
-        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");                
+        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");
     }
-    
+
     protected RealOptGroup createOptGroup(String groupName) {
         RealOptGroup newgroup = new RealOptGroup(groupName);
         groups.add(newgroup);
 
         // make sure we put the new OPTGROUP in the SELECT
         getElement().appendChild(newgroup.getElement());
-        
+
         return newgroup;
-    }    
-    
+    }
+
     protected OptionElement getOption(int index) {
         checkIndex(index);
-        
+
         int childIndex = index;
         for (OptGroup group : groups) {
             int count = group.getCount();
@@ -517,9 +516,9 @@ public class GroupedListBox extends SingleListBox {
             }
         }
 
-        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");        
+        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");
     }
-    
+
     private OptionElement option(Node node) {
         if (node == null) return null;
         return OptionElement.as(Element.as(node));
@@ -528,12 +527,12 @@ public class GroupedListBox extends SingleListBox {
     protected int getIndexOfFirstGroup() {
         return getFakeOptGroup().getCount();
     }
-    
+
     protected int getIndexInGroup(String groupName, int index) {
         if (groupName == null) return index;
-        
+
         int adjusted = index;
-        
+
         for (OptGroup group : groups) {
             if (group.isMatchingGroup(groupName)) {
                 break;
@@ -544,7 +543,7 @@ public class GroupedListBox extends SingleListBox {
         }
         return adjusted;
     }
-    
+
     protected OptionElement createOption(String item, String value) {
         OptionElement option = Document.get().createOptionElement();
         option.setText(item);
@@ -552,5 +551,5 @@ public class GroupedListBox extends SingleListBox {
         option.setValue(value);
         return option;
     }
-        
+
 }
