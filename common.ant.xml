@@ -52,7 +52,7 @@
   <property name="project.out" location="${project.build}/out" />
   <property name="project.dist" location="${project.build}/dist" />
   <property name="project.demos" location="${project.build}/out/demos" />
-  <property name="project.src" location="${project.root}/src" />
+  <property name="project.src" location="${project.root}/src/main" />
 
   <!-- GWT specific properties -->
   <property name="gwt.threadsPerProcessor" value="1" />
