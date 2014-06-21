@@ -1,10 +1,10 @@
-.gwt-DialogBox .dialogContainer {
+.gwt-DialogBox .Caption {
   position: relative;  
 }
 .gwt-DialogBox .dialogControls { 
   position: absolute;
-  top: -24px;
-  right: 4px;
+  top: 6px;
+  right: 6px;
 }
 .gwt-DialogBox .dialogControls a {
   cursor: pointer;
