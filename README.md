@@ -8,3 +8,13 @@ While building our new GWT-based Proteus skin for [TeamPage](http://tractionsoft
 All of the widgets are written with minimal dependencies and can be used independently of each other.
 
 [Demos and Documentation](http://tractionsoftware.github.io/gwt-traction/)
+
+[Maven](http://search.maven.org/#search%7Cga%7C1%7Cgwt-traction)
+
+```xml
+<dependency>
+  <groupId>com.tractionsoftware</groupId>
+  <artifactId>gwt-traction</artifactId>
+  <version>1.5.9</version>
+</dependency>
+```
