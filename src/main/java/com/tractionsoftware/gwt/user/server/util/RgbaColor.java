@@ -665,11 +665,11 @@ public final class RgbaColor {
      * and <a
      * href="http://www.w3.org/TR/css3-color/#hsl-color">w3c</a></i>
      *
-     * @param h
+     * @param H
      *            Hue [0,360)
-     * @param s
+     * @param S
      *            Saturation [0,100]
-     * @param l
+     * @param L
      *            Lightness [0,100]
      *
      *
