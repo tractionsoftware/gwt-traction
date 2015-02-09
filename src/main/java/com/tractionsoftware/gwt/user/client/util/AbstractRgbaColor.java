@@ -44,30 +44,37 @@ public abstract class AbstractRgbaColor {
      * Creates an RgbaColor as rgba(0,0,0,1)
      */
     public AbstractRgbaColor() {
-	this(0,0,0,1);
+        this(0, 0, 0, 1);
     }
 
     /**
      * Creates an RgbaColor with alpha=1
      *
-     * @param r the red component [0-255]
-     * @param g the green component [0-255]
-     * @param b the blue component [0-255]
+     * @param r
+     *            the red component [0-255]
+     * @param g
+     *            the green component [0-255]
+     * @param b
+     *            the blue component [0-255]
      */
     public AbstractRgbaColor(int r, int g, int b) {
-	this(r,g,b,1);
+        this(r, g, b, 1);
     }
 
     /**
      * Creates an RgbaColor
      *
-     * @param r the red component [0-255]
-     * @param g the green component [0-255]
-     * @param b the blue component [0-255]
-     * @param a the alpha component [0-1]
+     * @param r
+     *            the red component [0-255]
+     * @param g
+     *            the green component [0-255]
+     * @param b
+     *            the blue component [0-255]
+     * @param a
+     *            the alpha component [0-1]
      */
     public AbstractRgbaColor(int r, int g, int b, float a) {
-        initWithRgba(r,g,b,a);
+        initWithRgba(r, g, b, a);
     }
 
     // ----------------------------------------------------------------------
@@ -78,39 +85,41 @@ public abstract class AbstractRgbaColor {
     //
 
     protected void initWithRgb(int r, int g, int b) {
-        initWithRgba(r,g,b,1);
+        initWithRgba(r, g, b, 1);
     }
 
     protected void initWithRgba(int r, int g, int b, float a) {
-	this.r = rgbCheck(r);
-	this.g = rgbCheck(g);
-	this.b = rgbCheck(b);
-	this.a = alphaCheck(a);
+        this.r = rgbCheck(r);
+        this.g = rgbCheck(g);
+        this.b = rgbCheck(b);
+        this.a = alphaCheck(a);
     }
 
     /**
-     * Parses an RgbaColor from a hexadecimal, rgb, rgba, hsl, or hsla value.
+     * Parses an RgbaColor from a hexadecimal, rgb, rgba, hsl, or hsla
+     * value.
+     *
      * @return returns the parsed color
      */
     protected void initWithString(String color) {
-	if (color.startsWith("#")) {
-	    initWithHex(color);
-	}
-	else if (color.startsWith("rgba")) {
-	    initWithRgba(color);
-	}
-	else if (color.startsWith("rgb")) {
-	    initWithRgb(color);
-	}
-	else if (color.startsWith("hsla")) {
-	    initWithHsla(color);
-	}
-	else if (color.startsWith("hsl")) {
-	    initWithHsl(color);
-	}
-	else {
-	    initWithDefaultColor();
-	}
+        if (color.startsWith("#")) {
+            initWithHex(color);
+        }
+        else if (color.startsWith("rgba")) {
+            initWithRgba(color);
+        }
+        else if (color.startsWith("rgb")) {
+            initWithRgb(color);
+        }
+        else if (color.startsWith("hsla")) {
+            initWithHsla(color);
+        }
+        else if (color.startsWith("hsl")) {
+            initWithHsl(color);
+        }
+        else {
+            initWithDefaultColor();
+        }
     }
 
     /**
@@ -191,18 +200,20 @@ public abstract class AbstractRgbaColor {
     }
 
     /**
-     * Parses an RgbaColor from a CSS3 HSL value, e.g. hsl(25, 100%, 80%)
+     * Parses an RgbaColor from a CSS3 HSL value, e.g. hsl(25, 100%,
+     * 80%)
+     *
      * @return the parsed color
      */
     protected void initWithHsl(String hsl) {
-       String[] parts = getHslParts(hsl).split(",");
-       if (parts.length == 3) {
-           float[] HSL = new float[] { parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]) };
-           initWithHsl(HSL);
-       }
-       else {
-           initWithDefaultColor();
-       }
+        String[] parts = getHslParts(hsl).split(",");
+        if (parts.length == 3) {
+            float[] HSL = new float[] { parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]) };
+            initWithHsl(HSL);
+        }
+        else {
+            initWithDefaultColor();
+        }
     }
 
     /**
@@ -224,7 +235,8 @@ public abstract class AbstractRgbaColor {
     }
 
     /**
-     * Convenience to get back to RGB from HSL array returned by toHSL.
+     * Convenience to get back to RGB from HSL array returned by
+     * toHSL.
      */
     protected void initWithHsl(float[] hsl) {
         initWithHsl(hsl[0], hsl[1], hsl[2]);
@@ -240,7 +252,8 @@ public abstract class AbstractRgbaColor {
     }
 
     /**
-     * The default color to use if parsing fails or null to detect parse errors.
+     * The default color to use if parsing fails or null to detect
+     * parse errors.
      */
     protected abstract void initWithDefaultColor();
 
@@ -253,8 +266,7 @@ public abstract class AbstractRgbaColor {
     public boolean isValid() {
         return (r == rgbCheck(r) &&
                 g == rgbCheck(g) &&
-                b == rgbCheck(b) &&
-                a == alphaCheck(a));
+                b == rgbCheck(b) && a == alphaCheck(a));
     }
 
     // ----------------------------------------------------------------------
@@ -282,21 +294,24 @@ public abstract class AbstractRgbaColor {
     }
 
     /**
-     * Returns the value of the hue component of this color as HSL [0-360)
+     * Returns the value of the hue component of this color as HSL
+     * [0-360)
      */
     public float hue() {
         return convertToHsl()[0];
     }
 
     /**
-     * Returns the value of the saturation component of this color as HSL [0-100]
+     * Returns the value of the saturation component of this color as
+     * HSL [0-100]
      */
     public float saturation() {
         return convertToHsl()[1];
     }
 
     /**
-     * Returns the value of the lightness component of this color as HSL [0-100]
+     * Returns the value of the lightness component of this color as
+     * HSL [0-100]
      */
     public float lightness() {
         return convertToHsl()[2];
@@ -316,39 +331,42 @@ public abstract class AbstractRgbaColor {
      * Returns the value of the red component (0-255)
      */
     public int r() {
-	return red();
+        return red();
     }
 
     /**
      * Returns the value of the green component (0-255)
      */
     public int g() {
-	return green();
+        return green();
     }
 
     /**
      * Returns the value of the blue component (0-255)
      */
     public int b() {
-	return blue();
+        return blue();
     }
 
     /**
-     * Returns the value of the hue component of this color as HSL [0-360)
+     * Returns the value of the hue component of this color as HSL
+     * [0-360)
      */
     public float h() {
         return hue();
     }
 
     /**
-     * Returns the value of the saturation component of this color as HSL [0-100]
+     * Returns the value of the saturation component of this color as
+     * HSL [0-100]
      */
     public float s() {
         return saturation();
     }
 
     /**
-     * Returns the value of the lightness component of this color as HSL [0-100]
+     * Returns the value of the lightness component of this color as
+     * HSL [0-100]
      */
     public float l() {
         return lightness();
@@ -358,63 +376,71 @@ public abstract class AbstractRgbaColor {
      * Returns the value of the alpha component [0-1]
      */
     public float a() {
-	return alpha();
+        return alpha();
     }
 
     // ----------------------------------------------------------------------
     // "mutator" methods which make copies
 
     /**
-     * Returns a new RgbaColor with the red component set to the specified value.
+     * Returns a new RgbaColor with the red component set to the
+     * specified value.
      */
     public RgbaColor withRed(int red) {
         return new RgbaColor(red, g, b, a);
     }
 
     /**
-     * Returns a new RgbaColor with the blue component set to the specified value.
+     * Returns a new RgbaColor with the blue component set to the
+     * specified value.
      */
     public RgbaColor withBlue(int blue) {
         return new RgbaColor(r, g, blue, a);
     }
 
     /**
-     * Returns a new RgbaColor with the green component set to the specified value.
+     * Returns a new RgbaColor with the green component set to the
+     * specified value.
      */
     public RgbaColor withGreen(int green) {
         return new RgbaColor(r, green, b, a);
     }
 
     /**
-     * Returns a new RgbaColor with the alpha component set to the specified value.
+     * Returns a new RgbaColor with the alpha component set to the
+     * specified value.
      */
     public RgbaColor withAlpha(float alpha) {
         return new RgbaColor(r, g, b, alpha);
     }
 
     /**
-     * Returns a new RgbaColor with the hue component set to the specified value.
+     * Returns a new RgbaColor with the hue component set to the
+     * specified value.
      */
     public RgbaColor withHue(float hue) {
         return withHsl(0, hueCheck(hue));
     }
 
     /**
-     * Returns a new RgbaColor with the saturation component set to the specified value.
+     * Returns a new RgbaColor with the saturation component set to
+     * the specified value.
      */
     public RgbaColor withSaturation(float saturation) {
         return withHsl(1, slCheck(saturation));
     }
 
     /**
-     * Returns a new RgbaColor with the lightness component set to the specified value.
+     * Returns a new RgbaColor with the lightness component set to the
+     * specified value.
      */
     public RgbaColor withLightness(float lightness) {
         return withHsl(2, slCheck(lightness));
     }
 
     /**
-     * Returns a new color with a new value of the specified HSL component.
+     * Returns a new color with a new value of the specified HSL
+     * component.
      */
     protected RgbaColor withHsl(int index, float value) {
         float[] HSL = convertToHsl();
@@ -522,10 +548,11 @@ public abstract class AbstractRgbaColor {
     // palettes
 
     public RgbaColor[] getPaletteVaryLightness(int count) {
-        // a max of 80 and an offset of 10 keeps us away from the edges
+        // a max of 80 and an offset of 10 keeps us away from the
+        // edges
         float[] spread = getSpreadInRange(l(), count, 80, 10);
         RgbaColor[] ret = new RgbaColor[count];
-        for (int i=0; i<count; i++) {
+        for (int i = 0; i < count; i++) {
             ret[i] = withLightness(spread[i]);
         }
         return ret;
@@ -630,23 +657,27 @@ public abstract class AbstractRgbaColor {
 
     /**
      * Returns a triple of hue [0-360), saturation [0-100], and
-     * lightness [0-100]. These are kept as float[] so that for any RgbaColor color,
+     * lightness [0-100]. These are kept as float[] so that for any
+     * RgbaColor color,
      * color.equals(RgbaColor.fromHsl(color.convertToHsl())) is true.
      *
-     * <p><i>Implementation based on <a href="http://en.wikipedia.org/wiki/HSL_and_HSV">wikipedia</a></i>
+     * <p>
+     * <i>Implementation based on <a
+     * href="http://en.wikipedia.org/wiki/HSL_and_HSV"
+     * >wikipedia</a></i>
      */
     public float[] convertToHsl() {
 
         float H, S, L;
 
         // first normalize [0,1]
-        float R = r/255f;
-        float G = g/255f;
-        float B = b/255f;
+        float R = r / 255f;
+        float G = g / 255f;
+        float B = b / 255f;
 
         // compute min and max
-        float M = max(R,G,B);
-        float m = min(R,G,B);
+        float M = max(R, G, B);
+        float m = min(R, G, B);
 
         L = (M + m) / 2f;
 
@@ -680,8 +711,11 @@ public abstract class AbstractRgbaColor {
     /**
      * Creates a new RgbaColor from the specified HSL components.
      *
-     * <p><i>Implementation based on <a href="http://en.wikipedia.org/wiki/HSL_and_HSV">wikipedia</a>
-     * and <a href="http://www.w3.org/TR/css3-color/#hsl-color">w3c</a></i>
+     * <p>
+     * <i>Implementation based on <a
+     * href="http://en.wikipedia.org/wiki/HSL_and_HSV">wikipedia</a>
+     * and <a
+     * href="http://www.w3.org/TR/css3-color/#hsl-color">w3c</a></i>
      *
      * @param H
      *            Hue [0,360)
@@ -708,9 +742,9 @@ public abstract class AbstractRgbaColor {
         else {
             float m2 = L <= 0.5 ? L * (S + 1f) : L + S - L * S;
             float m1 = 2f * L - m2;
-            R = hue2rgb(m1, m2, H + 1/3f);
+            R = hue2rgb(m1, m2, H + 1 / 3f);
             G = hue2rgb(m1, m2, H);
-            B = hue2rgb(m1, m2, H - 1/3f);
+            B = hue2rgb(m1, m2, H - 1 / 3f);
         }
 
         // convert [0-1] to [0-255]
@@ -728,7 +762,7 @@ public abstract class AbstractRgbaColor {
         if (h > 1) h -= 1;
         if (h * 6f < 1) return m1 + (m2 - m1) * 6f * h;
         if (h * 2f < 1) return m2;
-        if (h * 3f < 2) return m1 + (m2 - m1) * (2/3f - h) * 6f;
+        if (h * 3f < 2) return m1 + (m2 - m1) * (2 / 3f - h) * 6f;
         return m1;
     }
 
@@ -739,27 +773,28 @@ public abstract class AbstractRgbaColor {
      * Returns the color in hexadecimal format (#rrggbb)
      */
     public String toHex() {
-	String rs = hexpad(Integer.toHexString(r));
-	String gs = hexpad(Integer.toHexString(g));
-	String bs = hexpad(Integer.toHexString(b));
-	return "#" + rs + gs + bs;
+        String rs = hexpad(Integer.toHexString(r));
+        String gs = hexpad(Integer.toHexString(g));
+        String bs = hexpad(Integer.toHexString(b));
+        return "#" + rs + gs + bs;
     }
+
     protected static String hexpad(String s) {
-	return (s.length() == 1) ? "0" + s : s;
+        return (s.length() == 1) ? "0" + s : s;
     }
 
     /**
      * Returns the color in rgb format, e.g. rgb(r,g,b)
      */
     public String toRgb() {
-	return "rgb("+r+","+g+","+b+")";
+        return "rgb(" + r + "," + g + "," + b + ")";
     }
 
     /**
      * Returns the color in rgba format, e.g. rgba(r,g,b,a)
      */
     public String toRgba() {
-	return "rgba("+r+","+g+","+b+","+a+")";
+        return "rgba(" + r + "," + g + "," + b + "," + a + ")";
     }
 
     /**
@@ -767,15 +802,16 @@ public abstract class AbstractRgbaColor {
      */
     public String toHsl() {
         float[] HSL = convertToHsl();
-        return "hsl("+Math.round(HSL[0])+","+Math.round(HSL[1])+"%,"+Math.round(HSL[2])+"%)";
+        return "hsl(" + Math.round(HSL[0]) + "," + Math.round(HSL[1]) + "%," + Math.round(HSL[2]) + "%)";
     }
 
     /**
-     * Returns the CSS3 HSLA representation, e.g. hsl(120, 100%, 50%, 0.5)
+     * Returns the CSS3 HSLA representation, e.g. hsl(120, 100%, 50%,
+     * 0.5)
      */
     public String toHsla() {
         float[] HSL = convertToHsl();
-        return "hsl("+Math.round(HSL[0])+","+Math.round(HSL[1])+"%,"+Math.round(HSL[2])+"%,"+a+")";
+        return "hsl(" + Math.round(HSL[0]) + "," + Math.round(HSL[1]) + "%," + Math.round(HSL[2]) + "%," + a + ")";
     }
 
     // ----------------------------------------------------------------------
@@ -783,7 +819,7 @@ public abstract class AbstractRgbaColor {
 
     @Override
     public int hashCode() {
-        return (int) (r*g*b*a);
+        return (int) (r * g * b * a);
     }
 
     @Override
@@ -797,7 +833,7 @@ public abstract class AbstractRgbaColor {
 
     @Override
     public String toString() {
-	return toHex();
+        return toHex();
     }
 
     // ----------------------------------------------------------------------
@@ -888,18 +924,18 @@ public abstract class AbstractRgbaColor {
     // utility methods used for parsing
 
     protected int parseHex(String hex, int s, int e) {
-	int v = parseInt(hex.substring(s,e), 16);
+        int v = parseInt(hex.substring(s, e), 16);
 
-	// handle single character parsing (e.g. #abc = #aabbcc)
-	return (s+1 == e) ? 16*v+v : v;
+        // handle single character parsing (e.g. #abc = #aabbcc)
+        return (s + 1 == e) ? 16 * v + v : v;
     }
 
     protected final int parseInt(String val) {
-	return parseInt(val, 10);
+        return parseInt(val, 10);
     }
 
     protected final float parseFloat(String val) {
-	return parseFloat(val, 10);
+        return parseFloat(val, 10);
     }
 
     // These parsing methods are implemented differently in
@@ -911,11 +947,15 @@ public abstract class AbstractRgbaColor {
     // separated string that will be split to create the components.
 
     protected abstract String getRgbParts(String str);
+
     protected abstract String getRgbaParts(String str);
+
     protected abstract String getHslParts(String str);
+
     protected abstract String getHslaParts(String str);
 
     protected abstract int parseInt(String val, int radix);
+
     protected abstract float parseFloat(String val, int radix);
 
 }
