@@ -1,0 +1,10 @@
+<module rename-to="gwttestrgbacolor">
+  <inherits name='com.google.gwt.user.User'/>
+
+  <source path='client'>
+    <include name='util/RgbaColor.java' />
+    <include name='util/GwtTestRgbaColor.java' />
+  </source>  
+
+</module>
+
