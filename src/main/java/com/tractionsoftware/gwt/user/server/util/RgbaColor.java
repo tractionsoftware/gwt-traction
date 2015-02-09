@@ -23,17 +23,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.tractionsoftware.gwt.user.client.util;
+package com.tractionsoftware.gwt.user.server.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.tractionsoftware.gwt.user.client.util.AbstractRgbaColor;
 
 /**
  * Represents an rgba color with HSL access. Immutable with factory
  * methods for adjustments.
  *
- * This version uses native JavaScript RegExp expressions for parsing
- * and is intended for use on the client-side with GWT.
+ * This version uses the java.util.regex package for parsing and is
+ * intended for use on the server-side.
  */
-public final class RgbaColor extends AbstractRgbaColor {
+public class RgbaColor extends AbstractRgbaColor {
 
     // ----------------------------------------------------------------------
     // private members and constructors
@@ -170,50 +174,69 @@ public final class RgbaColor extends AbstractRgbaColor {
      */
     @Override
     protected void initWithDefaultColor() {
-        initWithRgb(255, 255, 255);
+        initWithInvalid();
     }
 
     // ----------------------------------------------------------------------
     // utility methods used for parsing
 
-    @Override
-    protected native String getRgbParts(String str)
-    /*-{
-      var re = new RegExp("rgb\\s*\\(\\s*([0-9]+).*,\\s*([0-9]+).*,\\s*([0-9]+).*\\)", "gi");
-      return str.replace(re, "$1,$2,$3");
-    }-*/;
+    private static final Pattern rgb = Pattern.compile("^rgb\\s*\\(\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9]+)\\)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final Pattern rgba = Pattern.compile("^rgba\\s*\\(\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9]+),\\s*([0-9]*\\.?[0-9]+)\\)$",
+                                                        Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final Pattern hsl = Pattern.compile("^hsl\\s*\\(\\s*([0-9]+),\\s*([0-9]+)%?,\\s*([0-9]+)%?\\)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final Pattern hsla = Pattern.compile("^hsla\\s*\\(\\s*([0-9]+),\\s*([0-9]+)%?,\\s*([0-9]+)%?,\\s*([0-9]*\\.?[0-9]+)\\)$",
+                                                        Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
     @Override
-    protected native String getRgbaParts(String str)
-    /*-{
-      var re = new RegExp("rgba\\s*\\(\\s*([0-9]+).*,\\s*([0-9]+).*,\\s*([0-9]+).*,\\s*([0-9]*\\.?[0-9]+).*\\)", "gi");
-      return str.replace(re, "$1,$2,$3,$4");
-    }-*/;
+    protected int parseHex(String hex, int s, int e) {
+        int v = parseInt(hex.substring(s, e), 16);
+
+        // handle single character parsing (e.g. #abc = #aabbcc)
+        return (s + 1 == e) ? 16 * v + v : v;
+    }
 
     @Override
-    protected native String getHslParts(String str)
-    /*-{
-      var re = new RegExp("hsl\\s*\\(\\s*([0-9]+).*,\\s*([0-9]+).*,\\s*([0-9]+).*\\)", "gi");
-      return str.replace(re, "$1,$2,$3");
-    }-*/;
+    protected String getRgbParts(String str) {
+        Matcher m = rgb.matcher(str);
+        return m.matches() ? m.replaceFirst("$1,$2,$3") : "";
+    }
 
     @Override
-    protected native String getHslaParts(String str)
-    /*-{
-      var re = new RegExp("hsla\\s*\\(\\s*([0-9]+).*,\\s*([0-9]+).*,\\s*([0-9]+).*,\\s*([0-9]*\\.?[0-9]+).*\\)", "gi");
-      return str.replace(re, "$1,$2,$3,$4");
-    }-*/;
+    protected String getRgbaParts(String str) {
+        Matcher m = rgba.matcher(str);
+        return m.matches() ? m.replaceFirst("$1,$2,$3,$4") : "";
+    }
 
     @Override
-    protected final native int parseInt(String val, int radix)
-    /*-{
-      return parseInt(val, radix) || 0;
-      }-*/;
+    protected String getHslParts(String str) {
+        Matcher m = hsl.matcher(str);
+        return m.matches() ? m.replaceFirst("$1,$2,$3") : "";
+    }
 
     @Override
-    protected final native float parseFloat(String val, int radix)
-    /*-{
-      return parseFloat(val, radix) || 0;
-      }-*/;
+    protected String getHslaParts(String str) {
+        Matcher m = hsla.matcher(str);
+        return m.matches() ? m.replaceFirst("$1,$2,$3,$4") : "";
+    }
+
+    @Override
+    protected int parseInt(String val, int radix) {
+        try {
+            return Integer.parseInt(val, radix);
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    @Override
+    protected float parseFloat(String val, int radix) {
+        try {
+            return Float.parseFloat(val);
+        }
+        catch (NumberFormatException e) {
+            return 0;
+        }
+    }
 
 }
