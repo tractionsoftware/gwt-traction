@@ -15,6 +15,6 @@ All of the widgets are written with minimal dependencies and can be used indepen
 <dependency>
   <groupId>com.tractionsoftware</groupId>
   <artifactId>gwt-traction</artifactId>
-  <version>1.5.9</version>
+  <version>1.6.0</version>
 </dependency>
 ```
