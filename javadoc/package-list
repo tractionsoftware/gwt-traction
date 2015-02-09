@@ -6,3 +6,4 @@ com.tractionsoftware.gwt.user.client.ui
 com.tractionsoftware.gwt.user.client.ui.impl
 com.tractionsoftware.gwt.user.client.util
 com.tractionsoftware.gwt.user.server
+com.tractionsoftware.gwt.user.server.util
