@@ -159,6 +159,14 @@ public class UTCDateBox extends Composite implements HasValue<Long>, HasValueCha
     // ----------------------------------------------------------------------
     
     /**
+     * Sets the DateTimeFormat for this UTCDateBox. The HTML5
+     * implementation will ignore this.
+     */
+    public void setDateFormat(DateTimeFormat dateFormat) {
+        impl.setDateFormat(dateFormat);
+    }
+    
+    /**
      * Sets the visible length of the text input for this date box.
      * This will be ignored for HTML5 inputs.
      */
