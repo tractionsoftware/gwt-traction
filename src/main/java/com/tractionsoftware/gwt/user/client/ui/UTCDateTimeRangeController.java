@@ -1,12 +1,12 @@
 /*
  * Copyright 2010 Traction Software, Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -26,27 +26,119 @@ import com.google.gwt.user.client.ui.HasValue;
  * adjusting the end time when the start time changes. These behaviors
  * are consistent with other date/time range controls in other
  * commonly used software.
- * 
+ *
  * @author andy
  */
 public class UTCDateTimeRangeController {
 
+    /**
+     * This allows us to treat a datetime as a single value, making it
+     * easy for comparison and adjustment. We don't actually expose
+     * this because the timezone issues make it too confusing to
+     * clients.
+     */
+    private static long getCombinedValue(UTCDateBox date, UTCTimeBox time) {
+
+        Long dateValue = date.getValue();
+        Long timeValue = time.getValue();
+
+        if (dateValue != null) {
+            if (timeValue != null) {
+                return dateValue + timeValue;
+            }
+            return dateValue;
+        }
+
+        if (timeValue != null) {
+            return timeValue;
+        }
+        return 0;
+
+    }
+
+    /**
+     * Sets the "combined" date and time value by modifying the values
+     * of the given UTCDateBox and UTCTimeBox controls.
+     *
+     * <p>
+     * This makes it easy to treat a date/time composite as a single
+     * value for comparison and adjustment purposes. We don't actually
+     * expose this because the time zone and other issues would be
+     * confusing for clients.
+     *
+     * @implNote Even if both controls' values are modified, only one
+     *           {@link ValueChangeEvent} is fired: if the date value
+     *           is modified, the ValueChangeEvent will be fired for
+     *           that control; and if the time value is modified, the
+     *           ValueChangeEvent will be fired for that control
+     *           instead.
+     *
+     * @param dateControl
+     *            the UTCDateBox field control that handles the date
+     *            part of the date/time value being set.
+     * @param timeControl
+     *            the UTCTimeBox field control that handles the time
+     *            part of the date/time value being set, if any.
+     */
+    private static void setCombinedValue(UTCDateBox dateControl, UTCTimeBox timeControl, long newValue) {
+        boolean setDate = setDateValue(dateControl, newValue, false);
+        boolean setTime = setTimeValue(timeControl, newValue, false);
+        // Fire only one of these events to publish the change to
+        // listeners. Otherwise, event listener loops may result.
+        if (setDate) {
+            ValueChangeEvent.fire(dateControl, dateControl.getValue());
+        }
+        else if (setTime) {
+            ValueChangeEvent.fire(timeControl, timeControl.getValue());
+        }
+    }
+
+    private static boolean setDateValue(UTCDateBox dateControl, long newValue, boolean fireEvent) {
+        long newDateValue = datePartMillis(newValue);
+        Long currentDateValue = dateControl.getValue();
+        if (currentDateValue == null || currentDateValue.longValue() != newDateValue) {
+            dateControl.setValue(newDateValue, fireEvent);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean setTimeValue(UTCTimeBox timeControl, long newValue, boolean fireEvent) {
+        long newTimeValue = timePartMillis(newValue);
+        Long currentTimeValue = timeControl.getValue();
+        if (currentTimeValue == null || currentTimeValue.longValue() != newTimeValue) {
+            timeControl.setValue(newTimeValue, fireEvent);
+            return true;
+        }
+        return false;
+    }
+
+    private static long datePartMillis(long datetime) {
+        return datetime - timePartMillis(datetime);
+    }
+
+    private static long timePartMillis(long datetime) {
+        return datetime % UTCDateBox.DAY_IN_MS;
+    }
+
     private UTCDateBox startDate;
+
     private UTCTimeBox startTime;
-    
+
     private UTCDateBox endDate;
+
     private UTCTimeBox endTime;
-    
+
     private HasValue<Boolean> allDayCheckbox;
-    
+
     // we need to keep track of interval because once the fields
     // change, it's too late to know what they were. note that the
     // interval is always measured in millis and may be greater than
     // DAY_IN_MS
     private long intervalMillis;
-    
+
     private long defaultIntervalMillis = 60*60*1000L; // 1 hr
-    
+
     /**
      * Creates a controller that will manage the date/time range
      * consisting of 2 date/time controls and an optional
@@ -73,13 +165,13 @@ public class UTCDateTimeRangeController {
         if (allDayCheckbox != null) {
             allDayCheckbox.addValueChangeHandler(new AllDayCheckboxHandler());
         }
-        
+
         StartDateTimeHandler startHandler = new StartDateTimeHandler();
         EndDateTimeHandler endHandler = new EndDateTimeHandler();
-        
+
         startDate.addValueChangeHandler(startHandler);
         startTime.addValueChangeHandler(startHandler);
-        
+
         endDate.addValueChangeHandler(endHandler);
         endTime.addValueChangeHandler(endHandler);
     }
@@ -102,21 +194,21 @@ public class UTCDateTimeRangeController {
     }
 
     // ----------------------------------------------------------------------
-    // values 
-    
+    // values
+
     /**
      * Returns true if the all day checkbox is checked
      */
     public boolean isAllDay() {
         return allDayCheckbox != null && allDayCheckbox.getValue();
     }
-    
+
     // ----------------------------------------------------------------------
     // interval management
-    
+
     private void updateInterval() {
         intervalMillis = getCombinedValue(endDate, endTime) - getCombinedValue(startDate, startTime);
-        
+
         // if this is zero, most likely the times aren't set and the
         // dates are the same. in this case we don't really want a
         // zero interval. if we *really* want a zero interval, the
@@ -125,37 +217,39 @@ public class UTCDateTimeRangeController {
             intervalMillis = defaultIntervalMillis;
         }
     }
-    
+
     // ----------------------------------------------------------------------
-    // handlers
-    
-    private class AllDayCheckboxHandler implements ValueChangeHandler<Boolean> {
-        
+    // ValueChangeHandlers
+
+    private final class AllDayCheckboxHandler implements ValueChangeHandler<Boolean> {
+
         @Override
         public void onValueChange(ValueChangeEvent<Boolean> event) {
             boolean allDay = event.getValue();
             startTime.setVisible(!allDay);
             endTime.setVisible(!allDay);
         }
-        
+
     }
-    
+
     /**
      * When the start date changes, we want to push end date forward,
      * matching the existing interval.
      */
-    private class StartDateTimeHandler implements ValueChangeHandler<Long> {
+    private final class StartDateTimeHandler implements ValueChangeHandler<Long> {
 
         @Override
         public void onValueChange(ValueChangeEvent<Long> event) {
             if (startTime.getValue() != null) {
-                setCombinedValue(endDate, endTime, getCombinedValue(startDate, startTime) + intervalMillis, true);
+                long newCombinedValue = getCombinedValue(startDate, startTime) + intervalMillis;
+                setCombinedValue(endDate, endTime, newCombinedValue);
             }
             else {
-                setCombinedValue(endDate, endTime, getCombinedValue(startDate, startTime) + datePartMillis(intervalMillis), false);                
+                long newCombinedValue = getCombinedValue(startDate, startTime) + datePartMillis(intervalMillis);
+                setDateValue(endDate, newCombinedValue, true);
             }
         }
-        
+
     }
 
     /**
@@ -163,18 +257,22 @@ public class UTCDateTimeRangeController {
      * end), we want to adjust the start backward, maintaining the
      * interval.
      */
-    private class EndDateTimeHandler implements ValueChangeHandler<Long> {
+    private final class EndDateTimeHandler implements ValueChangeHandler<Long> {
 
         @Override
         public void onValueChange(ValueChangeEvent<Long> event) {
+
             long startCombined = getCombinedValue(startDate, startTime);
             long endCombined = getCombinedValue(endDate, endTime);
+
             if (isMissingStartDate() || isMissingOnlyStartTime() || (endCombined != 0 && startCombined > endCombined)) {
                 if (endTime.getValue() != null) {
-                    setCombinedValue(startDate, startTime, endCombined - intervalMillis, true);
+                    long newCombinedValue = endCombined - intervalMillis;
+                    setCombinedValue(startDate, startTime, newCombinedValue);
                 }
                 else {
-                    setCombinedValue(startDate, startTime, endCombined - datePartMillis(intervalMillis), false);                    
+                    long newCombinedValue = endCombined - datePartMillis(intervalMillis);
+                    setDateValue(startDate, newCombinedValue, true);
                 }
             }
             else {
@@ -185,65 +283,11 @@ public class UTCDateTimeRangeController {
         private boolean isMissingStartDate() {
             return startDate.getValue() == null;
         }
-        
+
         private boolean isMissingOnlyStartTime() {
             return startTime.getValue() == null && startDate.getValue() != null && endDate.getValue() != null && endTime.getValue() != null;
         }
-        
+
     }
-    
-    /**
-     * This allows us to treat a datetime as a single value, making it
-     * easy for comparison and adjustment. We don't actually expose
-     * this because the timezone issues make it too confusing to
-     * clients.
-     */
-    private long getCombinedValue(UTCDateBox date, UTCTimeBox time) {
-        Long dateValue = date.getValue();
-        Long timeValue = time.getValue();
-    
-        if (dateValue != null) {
-            if (timeValue != null) {
-                return dateValue + timeValue;
-            }
-            else {
-                return dateValue;
-            }
-        }
-        else {
-            if (timeValue != null) {
-                return timeValue;
-            }
-            else {
-                return 0;
-            }
-        }
-    }
-    
-    /**
-     * This allows us to treat a datetime as a single value, making it
-     * easy for comparison and adjustment. We don't actually expose
-     * this because the timezone issues make it too confusing to
-     * clients.
-     * 
-     * @param setTimeValue
-     *            Sometimes we don't want to set the time value
-     *            explicitly. Generally this is the case when we
-     *            haven't specified a time.
-     */
-    private void setCombinedValue(UTCDateBox date, UTCTimeBox time, long value, boolean setTimeValue) {
-        date.setValue(datePartMillis(value), false);        
-        if (setTimeValue) {
-            time.setValue(timePartMillis(value), false);
-        }
-    }
-    
-    private long datePartMillis(long datetime) {
-        return datetime - timePartMillis(datetime);
-    }
-    
-    private long timePartMillis(long datetime) {
-        return datetime % UTCDateBox.DAY_IN_MS;        
-    }
-    
+
 }
