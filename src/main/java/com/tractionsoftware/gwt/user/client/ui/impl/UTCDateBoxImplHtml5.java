@@ -1,12 +1,12 @@
 /*
  * Copyright 2010 Traction Software, Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -28,30 +28,30 @@ import com.tractionsoftware.gwt.user.client.util.DomUtils;
 
 /**
  * Uses an HTML5 input type=date control to implement the UTCDateBox
- * 
+ *
  * @author andy
  */
 public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
 
     private static final DateTimeFormat dateInputFormat = DateTimeFormat.getFormat("yyyy-MM-dd");
-    
+
     private DateTimeFormat dateFormat;
     private InputWidget widget;
-    
+
     public UTCDateBoxImplHtml5() {
         widget = new InputWidget("date");
         setDateFormat(dateInputFormat);
-        
-        widget.addValueChangeHandler(new ValueChangeHandler() {
+
+        widget.addValueChangeHandler(new ValueChangeHandler<String>() {
 
             @Override
-            public void onValueChange(ValueChangeEvent event) {
+            public void onValueChange(ValueChangeEvent<String> event) {
                 fireValueChangeEvent(getValue());
             }
-            
+
         });
-        
-        initWidget(widget);        
+
+        initWidget(widget);
     }
 
     /**
@@ -69,10 +69,10 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
     }
 
     // ----------------------------------------------------------------------
-    
+
     @Override
     public Long getValue() {
-        return string2long(widget.getValue(), dateInputFormat); 
+        return string2long(widget.getValue(), dateInputFormat);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
     }
 
     // ----------------------------------------------------------------------
-    
+
     @Override
     public String getText() {
         return long2string(getValue(), dateFormat != null ? dateFormat : dateInputFormat);
@@ -94,7 +94,7 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
         Long value = null;
         if (dateFormat != null) {
             value = string2long(text, dateFormat);
-        }       
+        }
         if (value == null) {
             value = string2long(text, dateInputFormat);
         }
@@ -102,7 +102,7 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
     }
 
     // ----------------------------------------------------------------------
-    
+
     @Override
     public boolean isEnabled() {
         return DomUtils.isEnabled(widget.getElement());
@@ -111,10 +111,10 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
     @Override
     public void setEnabled(boolean enabled) {
         DomUtils.setEnabled(widget.getElement(), enabled);
-    }    
-    
+    }
+
     // ----------------------------------------------------------------------
-    
+
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Long> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
@@ -125,28 +125,28 @@ public class UTCDateBoxImplHtml5 extends UTCDateBoxImplShared {
     }
 
     // ----------------------------------------------------------------------
-    
+
     /**
      * Parses the supplied text and converts it to a Long
      * corresponding to that midnight in UTC on the specified date.
-     * 
+     *
      * @return null if it fails to parsing using the specified
      *         DateTimeFormat
      */
     private Long string2long(String text, DateTimeFormat fmt) {
-        
+
         // null or "" returns null
         if (text == null) return null;
         text = text.trim();
         if (text.length() == 0) return null;
-        
+
         Date date = fmt.parse(text);
         return date != null ? UTCDateBox.date2utc(date) : null;
     }
 
     /**
      * Formats the supplied value using the specified DateTimeFormat.
-     * 
+     *
      * @return "" if the value is null
      */
     private String long2string(Long value, DateTimeFormat fmt) {
