@@ -1,12 +1,12 @@
 /*
  * Copyright 2010 Traction Software, Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,6 +20,7 @@ import java.util.Date;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
@@ -27,6 +28,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
+import com.tractionsoftware.gwt.user.client.ui.impl.UTCDateBoxImpl;
 import com.tractionsoftware.gwt.user.client.ui.impl.UTCTimeBoxImpl;
 import com.tractionsoftware.gwt.user.client.util.DomUtils;
 
@@ -36,14 +38,14 @@ import com.tractionsoftware.gwt.user.client.util.DomUtils;
 public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueChangeHandlers<Long>, HasText, HasEnabled {
 
     public UTCTimeBoxImpl impl;
-    
+
     /**
      * By default the predefined SHORT time format will be used.
      */
     public UTCTimeBox() {
         this(DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT));
     }
-    
+
     /**
      * Allows a UTCTimeBox to be created with a specified format.
      */
@@ -53,47 +55,88 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         impl.setTimeFormat(timeFormat);
         initWidget(impl.asWidget());
     }
-    
+
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Long> handler) {
         return impl.addValueChangeHandler(handler);
     }
 
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        impl.fireEvent(event);
+    }
+
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     @Override
     public Long getValue() {
         return impl.getValue();
     }
 
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     @Override
     public void setValue(Long value) {
         impl.setValue(value);
     }
 
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     @Override
     public void setValue(Long value, boolean fireEvents) {
         impl.setValue(value, fireEvents);
     }
 
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     @Override
     public String getText() {
         return impl.getText();
     }
 
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     @Override
     public void setText(String text) {
         impl.setText(text);
     }
 
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     @Override
     public boolean isEnabled() {
         return DomUtils.isEnabled(getElement());
     }
 
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     @Override
     public void setEnabled(boolean enabled) {
         DomUtils.setEnabled(getElement(), enabled);
-    }    
-    
+    }
+
     /**
      * The HTML5 implementation will ignore this.
      */
@@ -101,18 +144,25 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
         impl.setVisibleLength(length);
     }
 
+    /**
+     * This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
+     */
     public void setTabIndex(int tabIndex) {
         impl.setTabIndex(tabIndex);
     }
-    
+
     /**
      * If this is a text based control, it will validate the value
      * that has been typed.
+     *
+     * <p>This implementation defers to the wrapped
+     * {@link UTCDateBoxImpl}.
      */
     public void validate() {
         impl.validate();
     }
-    
+
     // ----------------------------------------------------------------------
     // utils
 
