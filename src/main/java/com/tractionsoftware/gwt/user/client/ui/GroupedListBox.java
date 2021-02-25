@@ -274,6 +274,10 @@ public class GroupedListBox extends SingleListBox {
         return getElement().getElementsByTagName("OPTION").getLength();
     }
 
+    public int getGroupCount() {
+        return groups.size();
+    }
+
     /**
      * This is provided for testing purposes only. getItemCount() uses
      * the DOM and this uses the data-structures that we maintain to
@@ -489,7 +493,7 @@ public class GroupedListBox extends SingleListBox {
             }
         }
 
-        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");
+        throw new IndexOutOfBoundsException("problem in getOptGroup: index="+index+" range=[0-"+(getGroupCount()-1)+"]");
     }
 
     protected RealOptGroup createOptGroup(String groupName) {
@@ -504,19 +508,7 @@ public class GroupedListBox extends SingleListBox {
 
     protected OptionElement getOption(int index) {
         checkIndex(index);
-
-        int childIndex = index;
-        for (OptGroup group : groups) {
-            int count = group.getCount();
-            if (childIndex < count) {
-                return group.getChildOption(childIndex);
-            }
-            else {
-                childIndex -= count;
-            }
-        }
-
-        throw new IndexOutOfBoundsException("problem in getOption: index="+index+" range=[0-"+(getItemCount()-1)+"]");
+        return (OptionElement) getElement().getElementsByTagName("OPTION").getItem(index);
     }
 
     private OptionElement option(Node node) {
