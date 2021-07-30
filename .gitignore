@@ -6,5 +6,6 @@ gh-pages
 .project
 .classpath
 .settings
+.idea
 gwt-unitCache
 www-test
