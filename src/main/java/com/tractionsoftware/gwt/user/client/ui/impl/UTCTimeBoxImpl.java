@@ -28,12 +28,20 @@ import com.google.gwt.user.client.ui.IsWidget;
  * @author andy
  */
 public interface UTCTimeBoxImpl extends IsWidget, HasValue<Long>, HasValueChangeHandlers<Long>, HasText {
-    
+
     /**
      * Sets the DateTimeFormat for this UTCTimeBox. The HTML5
      * implementation will ignore this.
      */
     public void setTimeFormat(DateTimeFormat timeFormat); 
+
+    /**
+     * Sets the desired time step in minutes for the time control.
+     * The HTML5 control should get a step= attribute set (or removed
+     * if the value is 0 or negative). The HTML4 control should get
+     * different steps listed in the suggested times.
+     */
+    public void setTimeStepMinutes(int timeStepMinutes); 
     
     /**
      * Sets the visible length of the time input. The HTML5

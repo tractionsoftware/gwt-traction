@@ -40,19 +40,34 @@ public class UTCTimeBox extends Composite implements HasValue<Long>, HasValueCha
     public UTCTimeBoxImpl impl;
 
     /**
-     * By default the predefined SHORT time format will be used.
+     * By default, a 30 minute time step and the predefined SHORT time format will be used.
      */
     public UTCTimeBox() {
-        this(DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT));
+	this(30);
+    }
+
+    /**
+     * By default the predefined SHORT time format will be used.
+     */
+    public UTCTimeBox(int stepInMinutes) {
+        this(stepInMinutes, DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT));
+    }
+
+    /**
+     * By default, a 30 minute time step and the predefined SHORT time format will be used.
+     */
+    public UTCTimeBox(DateTimeFormat timeFormat) {
+	this(30, DateTimeFormat.getFormat(PredefinedFormat.TIME_SHORT));
     }
 
     /**
      * Allows a UTCTimeBox to be created with a specified format.
      */
-    public UTCTimeBox(DateTimeFormat timeFormat) {
+    public UTCTimeBox(int stepInMinutes, DateTimeFormat timeFormat) {
         // used deferred binding for the implementation
         impl = GWT.create(UTCTimeBoxImpl.class);
         impl.setTimeFormat(timeFormat);
+        impl.setTimeStepMinutes(stepInMinutes);
         initWidget(impl.asWidget());
     }
 

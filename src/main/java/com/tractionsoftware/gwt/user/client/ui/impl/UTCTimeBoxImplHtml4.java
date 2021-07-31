@@ -65,6 +65,21 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
 
     private static final String CLASSNAME_INVALID = "invalid";
 
+    private static final int getValidMenuOptionStepInMinutes(int timeStepMinutes) {
+	switch (timeStepMinutes) {
+	case 5:
+	case 6:
+	case 10:
+	case 12:
+	case 15:
+	case 20:
+	case 30:
+	    return timeStepMinutes;
+	default:
+	    return 30;
+	}
+    }
+
     private TextBox textbox;
     private TimeBoxMenu menu;
     private Long lastKnownValue;
@@ -185,31 +200,36 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
      */
     private class TimeBoxMenu extends PopupPanel {
 
-        private static final long INTERVAL = 30 * 60 * 1000L;
-        private static final long DAY = 24 * 60 * 60 * 1000L;
+        private static final long DURATION_DAY_IN_SECONDS = 24 * 60 * DURATION_MINUTE_IN_SECONDS;
 
         private TimeBoxMenuOption[] options;
+
         private int highlightedOptionIndex = -1;
 
         public TimeBoxMenu() {
+
             super(true);
+
             setStyleName("gwt-TimeBox-menu");
             addAutoHidePartner(textbox.getElement());
 
             FlowPanel container = new FlowPanel();
 
-            int numOptions = (int) (DAY / INTERVAL);
+	    long timeStepSeconds = UTCTimeBoxImplHtml4.this.timeStepMinutes * DURATION_MINUTE_IN_SECONDS;
+            int numOptions = (int) (DURATION_DAY_IN_SECONDS / timeStepSeconds);
+	    long timeStepMs = timeStepSeconds * 1000L;
             options = new TimeBoxMenuOption[numOptions];
 
             // we need to use times for formatting, but we don't keep
             // them around. the purpose is only to generate text to
             // insert into the textbox.
             for (int i = 0; i < numOptions; i++) {
-                options[i] = new TimeBoxMenuOption(i * INTERVAL);
+                options[i] = new TimeBoxMenuOption(i * timeStepMs);
                 container.add(options[i]);
             }
 
             add(container);
+
         }
 
         /**
@@ -333,6 +353,7 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
      * Allows a UTCTimeBox to be created with a specified format.
      */
     public UTCTimeBoxImplHtml4() {
+
         this.textbox = new TextBox();
 
         TextBoxHandler handler = new TextBoxHandler();
@@ -343,14 +364,21 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
         textbox.setStyleName("gwt-TimeBox");
         
         initWidget(textbox);
+
     }
-    
+
     @Override
     public void setTimeFormat(DateTimeFormat timeFormat) {
         super.setTimeFormat(timeFormat);
-        this.menu = new TimeBoxMenu();
-    }    
+        refreshTimeBoxMenu();
+    }
 
+    @Override
+    public void setTimeStepMinutes(int timeStepMinutes) {
+        super.setTimeStepMinutes(timeStepMinutes);
+        refreshTimeBoxMenu();
+    }
+    
     /**
      * Returns the TextBox on which this control is based.
      */
@@ -360,6 +388,10 @@ public class UTCTimeBoxImplHtml4 extends UTCTimeBoxImplShared {
 
     // ----------------------------------------------------------------------
     // menu
+
+    private final void refreshTimeBoxMenu() {
+        this.menu = new TimeBoxMenu();
+    }
 
     /**
      * Displays the time picker menu

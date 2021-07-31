@@ -28,9 +28,16 @@ import com.tractionsoftware.gwt.user.client.ui.UTCDateBox;
 public abstract class UTCTimeBoxImplShared extends Composite implements UTCTimeBoxImpl {
 
     protected static DateTimeFormat[] fallbackTimeFormats = null;
+
     protected static String[] fallbackFormatStrings = new String[] { "hh:mma", "HH:mm" };
 
+    protected static final long DURATION_MINUTE_IN_SECONDS = 60;
+
+    protected static final int DURATION_DEFAULT_STEP_MINUTES = 30;
+
     protected DateTimeFormat timeFormat;
+
+    protected int timeStepMinutes = DURATION_DEFAULT_STEP_MINUTES;
 
     // ----------------------------------------------------------------------
     
@@ -39,8 +46,13 @@ public abstract class UTCTimeBoxImplShared extends Composite implements UTCTimeB
      * implementation will ignore this.
      */
     @Override
-    public void setTimeFormat(DateTimeFormat timeFormat) { 
+    public void setTimeFormat(DateTimeFormat timeFormat) {
         this.timeFormat = timeFormat;
+    }
+
+    @Override
+    public void setTimeStepMinutes(int timeStepMinutes) {
+        this.timeStepMinutes = timeStepMinutes;
     }
     
     /**

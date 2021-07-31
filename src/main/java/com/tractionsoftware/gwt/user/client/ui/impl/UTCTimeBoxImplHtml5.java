@@ -33,8 +33,10 @@ public class UTCTimeBoxImplHtml5 extends UTCTimeBoxImplShared {
     private InputWidget widget;
 
     public UTCTimeBoxImplHtml5() {
+
         widget = new InputWidget("time");
         setTimeFormat(timeInputFormat);
+	setTimeStepMinutes(DURATION_DEFAULT_STEP_MINUTES);
 
         widget.addValueChangeHandler(new ValueChangeHandler<String>() {
 
@@ -46,6 +48,19 @@ public class UTCTimeBoxImplHtml5 extends UTCTimeBoxImplShared {
         });
 
         initWidget(widget);
+
+    }
+
+    @Override
+    public void setTimeStepMinutes(int timeStepMinutes) {
+        super.setTimeStepMinutes(timeStepMinutes);
+        if (timeStepMinutes > 0) {
+	    long timeStepSeconds = DURATION_MINUTE_IN_SECONDS * (long) timeStepMinutes;
+	    widget.getElement().setAttribute("step", "" + timeStepSeconds);
+        }
+	else {
+	    widget.getElement().removeAttribute("step");
+	}
     }
 
     @Override
