@@ -206,9 +206,16 @@ public class UTCDateTimeRangeController {
     // ----------------------------------------------------------------------
     // interval management
 
-    private void updateInterval() {
+    /**
+     * Updates the interval used to keep the delta between the start and end date/time values in sync when the
+     * start date/time value is modified. This is generally for use internally by event listeners that track
+     * changes to the controls' effective values, but can also be called, e.g., on form initialization to ensure
+     * the interval reflects the form's initial values in case the fields didn't have their initial values at
+     * the time this instance was created, or in case the values are updated from an external source in such a
+     * way that value change events aren't fired.
+     */
+    public void updateInterval() {
         intervalMillis = getCombinedValue(endDate, endTime) - getCombinedValue(startDate, startTime);
-
         // if this is zero, most likely the times aren't set and the
         // dates are the same. in this case we don't really want a
         // zero interval. if we *really* want a zero interval, the
