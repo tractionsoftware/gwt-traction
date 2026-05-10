@@ -5,13 +5,13 @@
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>7</version>
-  </parent>  
+  </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.tractionsoftware</groupId>
   <artifactId>gwt-traction</artifactId>
   <packaging>jar</packaging>
-  <version>1.6.1-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <name>gwt-traction</name>
   <description>Useful GWT widgets and utilities contributed by Traction Software, Inc.</description>
   <url>http://tractionsoftware.github.io/gwt-traction/</url>
@@ -25,10 +25,20 @@
   
   <developers>
     <developer>
-      <id>andykellr</id>
       <name>Andy Keller</name>
+      <id>andykellr</id>
       <organization>Traction Software, Inc</organization>
-      <organizationUrl>http://tractionsoftware.com</organizationUrl>
+      <organizationUrl>https://tractionsoftware.com</organizationUrl>
+    </developer>
+    <developer>
+      <name>Dave Shepperton</name>
+      <id>dshepperton</id>
+      <email>shep@tractionsoftware.com</email>
+      <organization>Traction Software, Inc.</organization>
+      <organizationUrl>https://tractionsoftware.com/</organizationUrl>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
     </developer>
   </developers>
 
@@ -39,22 +49,20 @@
   </scm>
 
   <properties>
-    <!-- Convenience property to set the GWT version -->
-    <gwtVersion>2.6.1</gwtVersion>
-    <!-- GWT needs at least java 1.5 -->
+    <gwtVersion>2.13.0</gwtVersion>
     <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-servlet</artifactId>
       <version>${gwtVersion}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>com.google.gwt</groupId>
+      <groupId>org.gwtproject</groupId>
       <artifactId>gwt-user</artifactId>
       <version>${gwtVersion}</version>
       <scope>provided</scope>
@@ -62,19 +70,19 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.7</version>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>1.0.0.GA</version>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <version>3.1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>1.0.0.GA</version>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <version>3.1.1</version>
       <classifier>sources</classifier>
       <scope>test</scope>
     </dependency>
@@ -107,7 +115,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.9.1</version>
+          <version>3.12.0</version>
           <configuration>
             <additionalparam>
               -notimestamp
@@ -125,7 +133,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
-          <version>2.6.1</version>
+          <version>2.10.0</version>
           <executions>
             <execution>
               <goals>
@@ -148,7 +156,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.1.1</version>
+          <version>3.5.1</version>
           <executions>
             <execution>
               <phase>compile</phase>
@@ -164,10 +172,10 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
+          <version>3.15.0</version>
           <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
+            <source>26</source>
+            <target>26</target>
           </configuration>
         </plugin>
 
