@@ -1,18 +1,21 @@
 /*
- * Copyright 2010 Traction Software, Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ *    Copyright 1996-2026 Traction Software, Inc.
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
  */
+
 package com.tractionsoftware.gwt.user.client.ui;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -20,22 +23,17 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
 
 /**
- * The date/time range controller just manages existing controls and
- * is not a control itself. It ensures that a range is consistent
- * (start < end) and provides some conveniences like automatically
- * adjusting the end time when the start time changes. These behaviors
- * are consistent with other date/time range controls in other
- * commonly used software.
+ * The date/time range controller just manages existing controls and is not a control itself. It ensures that a range is
+ * consistent (start < end) and provides some conveniences like automatically adjusting the end time when the start time
+ * changes. These behaviors are consistent with other date/time range controls in other commonly used software.
  *
- * @author andy
+ * @author Andy Keller
  */
 public class UTCDateTimeRangeController {
 
     /**
-     * This allows us to treat a datetime as a single value, making it
-     * easy for comparison and adjustment. We don't actually expose
-     * this because the timezone issues make it too confusing to
-     * clients.
+     * This allows us to treat a datetime as a single value, making it easy for comparison and adjustment. We don't
+     * actually expose this because the timezone issues make it too confusing to clients.
      */
     private static long getCombinedValue(UTCDateBox date, UTCTimeBox time) {
 
@@ -57,28 +55,19 @@ public class UTCDateTimeRangeController {
     }
 
     /**
-     * Sets the "combined" date and time value by modifying the values
-     * of the given UTCDateBox and UTCTimeBox controls.
+     * Sets the "combined" date and time value by modifying the values of the given UTCDateBox and UTCTimeBox controls.
      *
      * <p>
-     * This makes it easy to treat a date/time composite as a single
-     * value for comparison and adjustment purposes. We don't actually
-     * expose this because the time zone and other issues would be
-     * confusing for clients.
-     *
-     * @implNote Even if both controls' values are modified, only one
-     *           {@link ValueChangeEvent} is fired: if the date value
-     *           is modified, the ValueChangeEvent will be fired for
-     *           that control; and if the time value is modified, the
-     *           ValueChangeEvent will be fired for that control
-     *           instead.
+     * This makes it easy to treat a date/time composite as a single value for comparison and adjustment purposes. We
+     * don't actually expose this because the time zone and other issues would be confusing for clients.
      *
      * @param dateControl
-     *            the UTCDateBox field control that handles the date
-     *            part of the date/time value being set.
+     *     the UTCDateBox field control that handles the date part of the date/time value being set.
      * @param timeControl
-     *            the UTCTimeBox field control that handles the time
-     *            part of the date/time value being set, if any.
+     *     the UTCTimeBox field control that handles the time part of the date/time value being set, if any.
+     * @implNote Even if both controls' values are modified, only one {@link ValueChangeEvent} is fired: if the date
+     *     value is modified, the ValueChangeEvent will be fired for that control; and if the time value is modified,
+     *     the ValueChangeEvent will be fired for that control instead.
      */
     private static void setCombinedValue(UTCDateBox dateControl, UTCTimeBox timeControl, long newValue) {
         boolean setDate = setDateValue(dateControl, newValue, false);
@@ -137,11 +126,10 @@ public class UTCDateTimeRangeController {
     // DAY_IN_MS
     private long intervalMillis;
 
-    private long defaultIntervalMillis = 60*60*1000L; // 1 hr
+    private long defaultIntervalMillis = 60 * 60 * 1000L; // 1 hr
 
     /**
-     * Creates a controller that will manage the date/time range
-     * consisting of 2 date/time controls and an optional
+     * Creates a controller that will manage the date/time range consisting of 2 date/time controls and an optional
      * allDayCheckbox.
      */
     public UTCDateTimeRangeController(UTCDateBox startDate, UTCTimeBox startTime, UTCDateBox endDate, UTCTimeBox endTime) {
@@ -149,8 +137,7 @@ public class UTCDateTimeRangeController {
     }
 
     /**
-     * Creates a controller that will manage the date/time range
-     * consisting of 2 date/time controls and an optional
+     * Creates a controller that will manage the date/time range consisting of 2 date/time controls and an optional
      * allDayCheckbox.
      */
     public UTCDateTimeRangeController(UTCDateBox startDate, UTCTimeBox startTime, UTCDateBox endDate, UTCTimeBox endTime, HasValue<Boolean> allDayCheckbox) {
@@ -184,9 +171,8 @@ public class UTCDateTimeRangeController {
     }
 
     /**
-     * Sets the default time interval in milliseconds. By default this
-     * is 60 minutes (60*60*1000). The is the default between the
-     * start and end date/time.
+     * Sets the default time interval in milliseconds. By default this is 60 minutes (60*60*1000). The is the default
+     * between the start and end date/time.
      */
     public void setDefaultIntervalMillis(long defaultIntervalMillis) {
         this.defaultIntervalMillis = defaultIntervalMillis;
@@ -207,12 +193,12 @@ public class UTCDateTimeRangeController {
     // interval management
 
     /**
-     * Updates the interval used to keep the delta between the start and end date/time values in sync when the
-     * start date/time value is modified. This is generally for use internally by event listeners that track
-     * changes to the controls' effective values, but can also be called, e.g., on form initialization to ensure
-     * the interval reflects the form's initial values in case the fields didn't have their initial values at
-     * the time this instance was created, or in case the values are updated from an external source in such a
-     * way that value change events aren't fired.
+     * Updates the interval used to keep the delta between the start and end date/time values in sync when the start
+     * date/time value is modified. This is generally for use internally by event listeners that track changes to the
+     * controls' effective values, but can also be called, e.g., on form initialization to ensure the interval reflects
+     * the form's initial values in case the fields didn't have their initial values at the time this instance was
+     * created, or in case the values are updated from an external source in such a way that value change events aren't
+     * fired.
      */
     public void updateInterval() {
         intervalMillis = getCombinedValue(endDate, endTime) - getCombinedValue(startDate, startTime);
@@ -240,8 +226,7 @@ public class UTCDateTimeRangeController {
     }
 
     /**
-     * When the start date changes, we want to push end date forward,
-     * matching the existing interval.
+     * When the start date changes, we want to push end date forward, matching the existing interval.
      */
     private final class StartDateTimeHandler implements ValueChangeHandler<Long> {
 
@@ -260,9 +245,8 @@ public class UTCDateTimeRangeController {
     }
 
     /**
-     * When the end date changes, if the interval is improper (start >
-     * end), we want to adjust the start backward, maintaining the
-     * interval.
+     * When the end date changes, if the interval is improper (start > end), we want to adjust the start backward,
+     * maintaining the interval.
      */
     private final class EndDateTimeHandler implements ValueChangeHandler<Long> {
 
@@ -292,7 +276,10 @@ public class UTCDateTimeRangeController {
         }
 
         private boolean isMissingOnlyStartTime() {
-            return startTime.getValue() == null && startDate.getValue() != null && endDate.getValue() != null && endTime.getValue() != null;
+            return startTime.getValue() == null &&
+                   startDate.getValue() != null &&
+                   endDate.getValue() != null &&
+                   endTime.getValue() != null;
         }
 
     }

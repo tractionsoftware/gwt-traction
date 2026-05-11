@@ -1,23 +1,25 @@
 /*
- * Copyright 2010-2015 Traction Software, Inc.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ *    Copyright 1996-2026 Traction Software, Inc.
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
  */
+
 package com.tractionsoftware.gwt.user.client.util;
 
 /**
- * Represents an rgba color with HSL access. Immutable with factory
- * methods for adjustments.
+ * Represents an rgba color with HSL access. Immutable with factory methods for adjustments.
  */
 public final class RgbaColor {
 
@@ -40,11 +42,11 @@ public final class RgbaColor {
      * Creates an RgbaColor with alpha=1
      *
      * @param r
-     *            the red component [0-255]
+     *     the red component [0-255]
      * @param g
-     *            the green component [0-255]
+     *     the green component [0-255]
      * @param b
-     *            the blue component [0-255]
+     *     the blue component [0-255]
      */
     public RgbaColor(int r, int g, int b) {
         this(r, g, b, 1);
@@ -54,13 +56,13 @@ public final class RgbaColor {
      * Creates an RgbaColor
      *
      * @param r
-     *            the red component [0-255]
+     *     the red component [0-255]
      * @param g
-     *            the green component [0-255]
+     *     the green component [0-255]
      * @param b
-     *            the blue component [0-255]
+     *     the blue component [0-255]
      * @param a
-     *            the alpha component [0-1]
+     *     the alpha component [0-1]
      */
     public RgbaColor(int r, int g, int b, float a) {
         this.r = rgbCheck(r);
@@ -73,8 +75,7 @@ public final class RgbaColor {
     // parsing methods
 
     /**
-     * Parses an RgbaColor from a hexadecimal, rgb, rgba, hsl, or hsla
-     * value.
+     * Parses an RgbaColor from a hexadecimal, rgb, rgba, hsl, or hsla value.
      *
      * @return returns the parsed color
      */
@@ -105,22 +106,28 @@ public final class RgbaColor {
      * @return returns the parsed color
      */
     public static RgbaColor fromHex(String hex) {
-        if (hex.length() == 0 || hex.charAt(0) != '#') return getDefaultColor();
+        if (hex.length() == 0 || hex.charAt(0) != '#') {
+            return getDefaultColor();
+        }
 
         // #rgb
         if (hex.length() == 4) {
 
-            return new RgbaColor(parseHex(hex, 1, 2),
-                                 parseHex(hex, 2, 3),
-                                 parseHex(hex, 3, 4));
+            return new RgbaColor(
+                parseHex(hex, 1, 2),
+                parseHex(hex, 2, 3),
+                parseHex(hex, 3, 4)
+            );
 
         }
         // #rrggbb
         else if (hex.length() == 7) {
 
-            return new RgbaColor(parseHex(hex, 1, 3),
-                                 parseHex(hex, 3, 5),
-                                 parseHex(hex, 5, 7));
+            return new RgbaColor(
+                parseHex(hex, 1, 3),
+                parseHex(hex, 3, 5),
+                parseHex(hex, 5, 7)
+            );
 
         }
         else {
@@ -134,13 +141,17 @@ public final class RgbaColor {
      * @return the parsed color
      */
     public static RgbaColor fromRgb(String rgb) {
-        if (rgb.length() == 0) return getDefaultColor();
+        if (rgb.length() == 0) {
+            return getDefaultColor();
+        }
 
         String[] parts = getRgbParts(rgb).split(",");
         if (parts.length == 3) {
-            return new RgbaColor(parseInt(parts[0]),
-                                 parseInt(parts[1]),
-                                 parseInt(parts[2]));
+            return new RgbaColor(
+                parseInt(parts[0]),
+                parseInt(parts[1]),
+                parseInt(parts[2])
+            );
         }
         else {
             return getDefaultColor();
@@ -153,14 +164,18 @@ public final class RgbaColor {
      * @return the parsed color
      */
     public static RgbaColor fromRgba(String rgba) {
-        if (rgba.length() == 0) return getDefaultColor();
+        if (rgba.length() == 0) {
+            return getDefaultColor();
+        }
 
         String[] parts = getRgbaParts(rgba).split(",");
         if (parts.length == 4) {
-            return new RgbaColor(parseInt(parts[0]),
-                                 parseInt(parts[1]),
-                                 parseInt(parts[2]),
-                                 parseFloat(parts[3]));
+            return new RgbaColor(
+                parseInt(parts[0]),
+                parseInt(parts[1]),
+                parseInt(parts[2]),
+                parseFloat(parts[3])
+            );
         }
         else {
             return getDefaultColor();
@@ -168,8 +183,7 @@ public final class RgbaColor {
     }
 
     /**
-     * Parses an RgbaColor from a CSS3 HSL value, e.g. hsl(25, 100%,
-     * 80%)
+     * Parses an RgbaColor from a CSS3 HSL value, e.g. hsl(25, 100%, 80%)
      *
      * @return the parsed color
      */
@@ -185,8 +199,7 @@ public final class RgbaColor {
     }
 
     /**
-     * Parses an RgbaColor from a CSS3 HSLA value, e.g. hsla(25, 100%,
-     * 80%, 0.5)
+     * Parses an RgbaColor from a CSS3 HSLA value, e.g. hsla(25, 100%, 80%, 0.5)
      *
      * @return returns the parsed color
      */
@@ -206,8 +219,7 @@ public final class RgbaColor {
     }
 
     /**
-     * Convenience to get back to RGB from HSL array returned by
-     * toHSL.
+     * Convenience to get back to RGB from HSL array returned by toHSL.
      */
     public static RgbaColor fromHsl(float[] hsl) {
         return fromHsl(hsl[0], hsl[1], hsl[2]);
@@ -238,24 +250,21 @@ public final class RgbaColor {
     }
 
     /**
-     * Returns the value of the hue component of this color as HSL
-     * [0-360)
+     * Returns the value of the hue component of this color as HSL [0-360)
      */
     public float hue() {
         return convertToHsl()[0];
     }
 
     /**
-     * Returns the value of the saturation component of this color as
-     * HSL [0-100]
+     * Returns the value of the saturation component of this color as HSL [0-100]
      */
     public float saturation() {
         return convertToHsl()[1];
     }
 
     /**
-     * Returns the value of the lightness component of this color as
-     * HSL [0-100]
+     * Returns the value of the lightness component of this color as HSL [0-100]
      */
     public float lightness() {
         return convertToHsl()[2];
@@ -293,24 +302,21 @@ public final class RgbaColor {
     }
 
     /**
-     * Returns the value of the hue component of this color as HSL
-     * [0-360)
+     * Returns the value of the hue component of this color as HSL [0-360)
      */
     public float h() {
         return hue();
     }
 
     /**
-     * Returns the value of the saturation component of this color as
-     * HSL [0-100]
+     * Returns the value of the saturation component of this color as HSL [0-100]
      */
     public float s() {
         return saturation();
     }
 
     /**
-     * Returns the value of the lightness component of this color as
-     * HSL [0-100]
+     * Returns the value of the lightness component of this color as HSL [0-100]
      */
     public float l() {
         return lightness();
@@ -327,64 +333,56 @@ public final class RgbaColor {
     // "mutator" methods which make copies
 
     /**
-     * Returns a new RgbaColor with the red component set to the
-     * specified value.
+     * Returns a new RgbaColor with the red component set to the specified value.
      */
     public RgbaColor withRed(int red) {
         return new RgbaColor(red, g, b, a);
     }
 
     /**
-     * Returns a new RgbaColor with the blue component set to the
-     * specified value.
+     * Returns a new RgbaColor with the blue component set to the specified value.
      */
     public RgbaColor withBlue(int blue) {
         return new RgbaColor(r, g, blue, a);
     }
 
     /**
-     * Returns a new RgbaColor with the green component set to the
-     * specified value.
+     * Returns a new RgbaColor with the green component set to the specified value.
      */
     public RgbaColor withGreen(int green) {
         return new RgbaColor(r, green, b, a);
     }
 
     /**
-     * Returns a new RgbaColor with the alpha component set to the
-     * specified value.
+     * Returns a new RgbaColor with the alpha component set to the specified value.
      */
     public RgbaColor withAlpha(float alpha) {
         return new RgbaColor(r, g, b, alpha);
     }
 
     /**
-     * Returns a new RgbaColor with the hue component set to the
-     * specified value.
+     * Returns a new RgbaColor with the hue component set to the specified value.
      */
     public RgbaColor withHue(float hue) {
         return withHsl(0, hueCheck(hue));
     }
 
     /**
-     * Returns a new RgbaColor with the saturation component set to
-     * the specified value.
+     * Returns a new RgbaColor with the saturation component set to the specified value.
      */
     public RgbaColor withSaturation(float saturation) {
         return withHsl(1, slCheck(saturation));
     }
 
     /**
-     * Returns a new RgbaColor with the lightness component set to the
-     * specified value.
+     * Returns a new RgbaColor with the lightness component set to the specified value.
      */
     public RgbaColor withLightness(float lightness) {
         return withHsl(2, slCheck(lightness));
     }
 
     /**
-     * Returns a new color with a new value of the specified HSL
-     * component.
+     * Returns a new color with a new value of the specified HSL component.
      */
     private RgbaColor withHsl(int index, float value) {
         float[] HSL = convertToHsl();
@@ -396,24 +394,21 @@ public final class RgbaColor {
     // interesting related colors
 
     /**
-     * Returns a new color that is the complement of this color.
-     * Equivalent to adjustHue(180).
+     * Returns a new color that is the complement of this color. Equivalent to adjustHue(180).
      */
     public RgbaColor complement() {
         return adjustHue(180);
     }
 
     /**
-     * Returns a new color that is the grayscale equivalent of this
-     * color (with saturation = 0).
+     * Returns a new color that is the grayscale equivalent of this color (with saturation = 0).
      */
     public RgbaColor grayscale() {
         return withSaturation(0);
     }
 
     /**
-     * Returns a new color that is the inverse of this color where
-     * each rgb component is subtracted from 255.
+     * Returns a new color that is the inverse of this color where each rgb component is subtracted from 255.
      */
     public RgbaColor inverse() {
         return new RgbaColor(255 - r, 255 - g, 255 - b, a);
@@ -423,8 +418,7 @@ public final class RgbaColor {
     // color transforms
 
     /**
-     * Returns a new color that has the hue adjusted by the specified
-     * amount.
+     * Returns a new color that has the hue adjusted by the specified amount.
      */
     public RgbaColor adjustHue(float degrees) {
         float[] HSL = convertToHsl();
@@ -433,32 +427,28 @@ public final class RgbaColor {
     }
 
     /**
-     * Returns a new color that has the alpha adjusted by the
-     * specified amount.
+     * Returns a new color that has the alpha adjusted by the specified amount.
      */
     public RgbaColor opacify(float amount) {
         return new RgbaColor(r, g, b, alphaCheck(a + amount));
     }
 
     /**
-     * Returns a new color that has the alpha adjusted by the
-     * specified amount. Equivalent to opacity(-amount).
+     * Returns a new color that has the alpha adjusted by the specified amount. Equivalent to opacity(-amount).
      */
     public RgbaColor transparentize(float amount) {
         return opacify(-amount);
     }
 
     /**
-     * Returns a new color that has the lightness adjusted by the
-     * specified amount.
+     * Returns a new color that has the lightness adjusted by the specified amount.
      */
     public RgbaColor lighten(float amount) {
         return adjustSL(2, amount);
     }
 
     /**
-     * Returns a new color that has the lightness adjusted by the
-     * negative of the specified amount. Equivalent to
+     * Returns a new color that has the lightness adjusted by the negative of the specified amount. Equivalent to
      * lighten(-amount).
      */
     public RgbaColor darken(float amount) {
@@ -466,16 +456,14 @@ public final class RgbaColor {
     }
 
     /**
-     * Returns a new color that has the saturation adjusted by the
-     * specified amount.
+     * Returns a new color that has the saturation adjusted by the specified amount.
      */
     public RgbaColor saturate(float amount) {
         return adjustSL(1, amount);
     }
 
     /**
-     * Returns a new color that has the saturation adjusted by the
-     * negative of the specified amount. Equivalent to
+     * Returns a new color that has the saturation adjusted by the negative of the specified amount. Equivalent to
      * saturate(-amount).
      */
     public RgbaColor desaturate(float amount) {
@@ -503,8 +491,8 @@ public final class RgbaColor {
     }
 
     /**
-     * Returns a spread of integers in a range [0,max) that includes
-     * count. The spread is sorted from largest to smallest.
+     * Returns a spread of integers in a range [0,max) that includes count. The spread is sorted from largest to
+     * smallest.
      */
     protected static final float[] getSpreadInRange(float member, int count, int max, int offset) {
         // to find the spread, we first find the min that is a
@@ -529,50 +517,43 @@ public final class RgbaColor {
     // Contrast preserving transforms
 
     /**
-     * First attempt to lighten the color and if that overflows the
-     * lightness component, darken the color.
+     * First attempt to lighten the color and if that overflows the lightness component, darken the color.
      */
     public RgbaColor lightenOrDarken(float lighten, float darken) {
         return adjustSL(2, lighten, -darken);
     }
 
     /**
-     * First attempt to darken the color and if that overflows the
-     * lightness component, lighten the color.
+     * First attempt to darken the color and if that overflows the lightness component, lighten the color.
      */
     public RgbaColor darkenOrLighten(float darken, float lighten) {
         return adjustSL(2, -darken, lighten);
     }
 
     /**
-     * First attempt to saturate the color and if that overflows the
-     * saturation component, desaturate the color.
+     * First attempt to saturate the color and if that overflows the saturation component, desaturate the color.
      */
     public RgbaColor saturateOrDesaturate(float saturate, float desaturate) {
         return adjustSL(1, saturate, -desaturate);
     }
 
     /**
-     * First attempt to desaturate the color and if that overflows the
-     * saturation component, saturate the color.
+     * First attempt to desaturate the color and if that overflows the saturation component, saturate the color.
      */
     public RgbaColor desaturateOrSaturate(float desaturate, float saturate) {
         return adjustSL(1, -desaturate, saturate);
     }
 
     /**
-     * Takes two adjustments and applies the one that conforms to the
-     * range. If the first modification moves the value out of range
-     * [0-100], the second modification will be applied <b>and clipped
-     * if necessary</b>.
+     * Takes two adjustments and applies the one that conforms to the range. If the first modification moves the value
+     * out of range [0-100], the second modification will be applied <b>and clipped if necessary</b>.
      *
      * @param index
-     *            The index in HSL
+     *     The index in HSL
      * @param first
-     *            The first modification that will be applied and
-     *            bounds checked
+     *     The first modification that will be applied and bounds checked
      * @param second
-     *            If 0, the first is always applied
+     *     If 0, the first is always applied
      */
     private RgbaColor adjustSL(int index, float first, float second) {
         float[] HSL = convertToHsl();
@@ -600,15 +581,12 @@ public final class RgbaColor {
     // Conversion to/from HSL
 
     /**
-     * Returns a triple of hue [0-360), saturation [0-100], and
-     * lightness [0-100]. These are kept as float[] so that for any
-     * RgbaColor color,
-     * color.equals(RgbaColor.fromHsl(color.convertToHsl())) is true.
+     * Returns a triple of hue [0-360), saturation [0-100], and lightness [0-100]. These are kept as float[] so that for
+     * any RgbaColor color, color.equals(RgbaColor.fromHsl(color.convertToHsl())) is true.
      *
      * <p>
      * <i>Implementation based on <a
-     * href="http://en.wikipedia.org/wiki/HSL_and_HSV"
-     * >wikipedia</a></i>
+     * href="http://en.wikipedia.org/wiki/HSL_and_HSV" >wikipedia</a></i>
      */
     public float[] convertToHsl() {
 
@@ -657,16 +635,15 @@ public final class RgbaColor {
      *
      * <p>
      * <i>Implementation based on <a
-     * href="http://en.wikipedia.org/wiki/HSL_and_HSV">wikipedia</a>
-     * and <a
+     * href="http://en.wikipedia.org/wiki/HSL_and_HSV">wikipedia</a> and <a
      * href="http://www.w3.org/TR/css3-color/#hsl-color">w3c</a></i>
      *
      * @param H
-     *            Hue [0,360)
+     *     Hue [0,360)
      * @param S
-     *            Saturation [0,100]
+     *     Saturation [0,100]
      * @param L
-     *            Lightness [0,100]
+     *     Lightness [0,100]
      *
      *
      */
@@ -703,11 +680,21 @@ public final class RgbaColor {
      * See http://www.w3.org/TR/css3-color/#hsl-color
      */
     private static float hue2rgb(float m1, float m2, float h) {
-        if (h < 0) h += 1;
-        if (h > 1) h -= 1;
-        if (h * 6f < 1) return m1 + (m2 - m1) * 6f * h;
-        if (h * 2f < 1) return m2;
-        if (h * 3f < 2) return m1 + (m2 - m1) * (2 / 3f - h) * 6f;
+        if (h < 0) {
+            h += 1;
+        }
+        if (h > 1) {
+            h -= 1;
+        }
+        if (h * 6f < 1) {
+            return m1 + (m2 - m1) * 6f * h;
+        }
+        if (h * 2f < 1) {
+            return m2;
+        }
+        if (h * 3f < 2) {
+            return m1 + (m2 - m1) * (2 / 3f - h) * 6f;
+        }
         return m1;
     }
 
@@ -751,8 +738,7 @@ public final class RgbaColor {
     }
 
     /**
-     * Returns the CSS3 HSLA representation, e.g. hsl(120, 100%, 50%,
-     * 0.5)
+     * Returns the CSS3 HSLA representation, e.g. hsl(120, 100%, 50%, 0.5)
      */
     public String toHsla() {
         float[] HSL = convertToHsl();
@@ -769,8 +755,12 @@ public final class RgbaColor {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other) return true;
-        if (!(other instanceof RgbaColor)) return false;
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof RgbaColor)) {
+            return false;
+        }
 
         RgbaColor o = (RgbaColor) other;
         return (r == o.r && g == o.g && b == o.b && a == o.a);
@@ -891,7 +881,7 @@ public final class RgbaColor {
      * @return new RgbaColor(255,255,255)
      */
     private static RgbaColor getDefaultColor() {
-        return new RgbaColor(255,255,255);
+        return new RgbaColor(255, 255, 255);
     }
 
     // ----------------------------------------------------------------------

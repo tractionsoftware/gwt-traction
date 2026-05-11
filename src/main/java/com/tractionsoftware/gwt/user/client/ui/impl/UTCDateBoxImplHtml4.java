@@ -1,18 +1,21 @@
 /*
- * Copyright 2010 Traction Software, Inc.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ *
+ *    Copyright 1996-2026 Traction Software, Inc.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
  */
+
 package com.tractionsoftware.gwt.user.client.ui.impl;
 
 import java.util.Date;
@@ -29,7 +32,7 @@ import com.tractionsoftware.gwt.user.client.ui.UTCDateBox;
 import com.tractionsoftware.gwt.user.client.util.DomUtils;
 
 /**
- * @author andy
+ * @author Andy Keller
  */
 public class UTCDateBoxImplHtml4 extends UTCDateBoxImplShared {
 
@@ -49,7 +52,7 @@ public class UTCDateBoxImplHtml4 extends UTCDateBoxImplShared {
             }
         });
     }
-    
+
     @Override
     public Widget asWidget() {
         return datebox;
@@ -62,7 +65,7 @@ public class UTCDateBoxImplHtml4 extends UTCDateBoxImplShared {
 
     @Override
     public void setValue(Long value, boolean fireEvents) {
-        datebox.setValue(UTCDateBox.utc2date(value), fireEvents);        
+        datebox.setValue(UTCDateBox.utc2date(value), fireEvents);
     }
 
     @Override
@@ -76,7 +79,7 @@ public class UTCDateBoxImplHtml4 extends UTCDateBoxImplShared {
         datebox.getTextBox().setValue(text, true);
         if (oldValue == null || !oldValue.equals(text)) {
             ValueChangeEvent.fire(this, getValue());
-        }        
+        }
     }
 
     @Override
@@ -87,8 +90,8 @@ public class UTCDateBoxImplHtml4 extends UTCDateBoxImplShared {
     @Override
     public void setEnabled(boolean enabled) {
         DomUtils.setEnabled(datebox.getTextBox().getElement(), enabled);
-    }    
-    
+    }
+
     @Override
     public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Long> handler) {
         return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
@@ -98,13 +101,13 @@ public class UTCDateBoxImplHtml4 extends UTCDateBoxImplShared {
     public void fireEvent(GwtEvent<?> event) {
         handlerManager.fireEvent(event);
     }
-    
+
     public void fireValueChangeEvent(long value) {
-        ValueChangeEvent.fire(this, new Long(value));             
+        ValueChangeEvent.fire(this, new Long(value));
     }
 
-    // ----------------------------------------------------------------------    
-    
+    // ----------------------------------------------------------------------
+
     @Override
     public void setDateFormat(DateTimeFormat dateFormat) {
         datebox.setFormat(new DateBox.DefaultFormat(dateFormat));
