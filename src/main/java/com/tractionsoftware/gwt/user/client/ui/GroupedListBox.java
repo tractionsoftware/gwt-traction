@@ -321,6 +321,8 @@ public class GroupedListBox extends SingleListBox {
     @Override
     protected void onUnload() {
         super.onUnload();
+        // Call 'clear' to remove child options/optgroups in an orderly fashion
+        clear();
         groups.clear();
     }
 
